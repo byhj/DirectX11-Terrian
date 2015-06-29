@@ -22,7 +22,7 @@ struct VS_OUT
 
 float4 PS(VS_OUT ps_in) : SV_TARGET
 {
-/*
+
    ps_in.Normal = normalize(ps_in.Normal);
    float4 pixelColor = cbLight.ambient;
 
@@ -32,9 +32,10 @@ float4 PS(VS_OUT ps_in) : SV_TARGET
 
    pixelColor += diffuse;
    return saturate(pixelColor);
-   */
 
+   /*
     ps_in.Normal = normalize(ps_in.Normal);
 	float nz = abs(ps_in.Normal.z);
 	return float4(nz, nz, nz, 1.0f) ;
+	*/
 }

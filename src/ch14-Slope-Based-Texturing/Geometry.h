@@ -34,7 +34,9 @@ public:
 		pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
 
 		pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
-		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pGrassTexSRV);
+		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pSlopeTexSRV);
+		pD3D11DeviceContext->PSSetShaderResources(2, 1, &m_pRockTexSRV);
 		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
 
 		// Set vertex buffer stride and offset
@@ -103,7 +105,9 @@ private:
 	ID3D11Buffer             *m_pMVPBuffer;
 	ID3D11Buffer             *m_pLightBuffer;
 	ID3D11InputLayout        *m_pInputLayout;
-	ID3D11ShaderResourceView *m_pTextureSRV;
+	ID3D11ShaderResourceView *m_pGrassTexSRV;
+	ID3D11ShaderResourceView *m_pSlopeTexSRV;
+	ID3D11ShaderResourceView *m_pRockTexSRV;
 	ID3D11SamplerState       *m_pTexSamplerState;
 
 	int m_VertexCount;

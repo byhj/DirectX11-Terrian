@@ -5,7 +5,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 {
 	HRESULT hr;
 
-	loadHeightMap("../../media/textures/heightmap01.bmp");
+	loadHeightMap("../../media/textures/heightmap.bmp");
 	//NormalizeHeightMap();
 	/////////////////////////////Vertex Buffer//////////////////////////////
 
@@ -15,7 +15,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 
 	m_VertexCount = gridMesh.VertexData.size();
 	for (int i = 0; i != m_VertexCount; ++i)
-	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
+	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 15.0f;
 	CalcNormal(gridMesh);
 
 	D3D11_BUFFER_DESC gridVBDesc;
@@ -67,9 +67,9 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	lightDesc.CPUAccessFlags = 0;
 	lightDesc.MiscFlags      = 0;
 
-	cbLight.ambient  = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	cbLight.diffuse  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	cbLight.lightDir = XMFLOAT3(4.0f, -1.0f, 4.0f);
+	cbLight.ambient  = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
+	cbLight.diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	cbLight.lightDir = XMFLOAT3(-0.5f, -1.0f, 0.0f);
 	cbLight.pad      = 0.0f;
 
 	D3D11_SUBRESOURCE_DATA lightVBO;
@@ -205,9 +205,12 @@ void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 void Geometry::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,NULL, &m_pTextureSRV, NULL);
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/grass.dds", NULL,NULL, &m_pGrassTexSRV, NULL);
 	DebugHR(hr);
-
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/slope.dds", NULL,NULL, &m_pSlopeTexSRV, NULL);
+	DebugHR(hr);
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/rock.dds", NULL,NULL, &m_pRockTexSRV, NULL);
+	DebugHR(hr);
 	// Create a texture sampler state description.
 	D3D11_SAMPLER_DESC samplerDesc;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
