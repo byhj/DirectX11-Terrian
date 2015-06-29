@@ -16,6 +16,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	m_VertexCount = gridMesh.VertexData.size();
 	for (int i = 0; i != m_VertexCount; ++i)
 	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
+	CalcNormal(gridMesh);
 
 	D3D11_BUFFER_DESC gridVBDesc;
 	gridVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
@@ -56,6 +57,24 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
 	hr = pD3D11Device->CreateBuffer(&mvpDesc, NULL, &m_pMVPBuffer);
+	DebugHR(hr);
+
+	D3D11_BUFFER_DESC lightDesc;	
+	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
+	lightDesc.Usage          = D3D11_USAGE_DEFAULT;
+	lightDesc.ByteWidth      = sizeof(LightBuffer);
+	lightDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
+	lightDesc.CPUAccessFlags = 0;
+	lightDesc.MiscFlags      = 0;
+
+	cbLight.ambient  = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+	cbLight.diffuse  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	cbLight.lightDir = XMFLOAT3(4.0f, -1.0f, 4.0f);
+	cbLight.pad      = 0.0f;
+
+	D3D11_SUBRESOURCE_DATA lightVBO;
+	lightVBO.pSysMem = &cbLight;
+	hr = pD3D11Device->CreateBuffer(&lightDesc, &lightVBO, &m_pLightBuffer);
 	DebugHR(hr);
 }
 
@@ -149,9 +168,36 @@ void Geometry::loadHeightMap(const char *filename)
 }
 
 
-void Geometry::NormalizeHeightMap()
+void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 {
-	for(int j = 0; j < m_TerrainHeight; j++)
-		for(int i = 0; i < m_TerrainWidth;  i++)
-			m_Hightmap[(m_TerrainHeight * j) + i].y /= 15.0f;
+	for (int i = 0; i != mesh.IndexData.size(); i += 3)
+	{
+		int index1 = mesh.IndexData[i];
+		int index2 = mesh.IndexData[i+1];
+		int index3 = mesh.IndexData[i+2];
+		XMFLOAT3 pos1 = mesh.VertexData[index1].Pos;
+		XMFLOAT3 pos2 = mesh.VertexData[index2].Pos;
+		XMFLOAT3 pos3 = mesh.VertexData[index3].Pos;
+
+		XMVECTOR v1 = XMLoadFloat3(&pos1);
+        XMVECTOR v2 = XMLoadFloat3(&pos2);
+        XMVECTOR v3 = XMLoadFloat3(&pos3);
+
+		XMVECTOR edge1 = v1 - v2;
+		XMVECTOR edge2 = v2 - v3;
+
+		XMVECTOR n1 = XMVector3Cross(edge1, edge2);
+		XMVECTOR normal = XMVector3Normalize(n1);
+		XMStoreFloat3(&mesh.VertexData[index1].Normal, normal);
+		XMStoreFloat3(&mesh.VertexData[index2].Normal, normal);
+		XMStoreFloat3(&mesh.VertexData[index3].Normal, normal);
+	}
+
+	for (int i = 0; i != mesh.VertexData.size(); ++i)
+	{
+		XMVECTOR n = XMLoadFloat3(&mesh.VertexData[i].Normal);
+		XMVECTOR normal = XMVector3Normalize(n);
+		XMStoreFloat3(&mesh.VertexData[i].Normal, normal);
+	}
+
 }

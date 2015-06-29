@@ -62,6 +62,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ch05-Quad-Tree.cpp" />
+    <ClCompile Include="Geometry.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Geometry.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="grid.psh" />
+    <None Include="grid.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
