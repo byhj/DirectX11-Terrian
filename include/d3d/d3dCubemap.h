@@ -1,8 +1,8 @@
 #ifndef D3DCUBEMAP_H
 #define D3DCUBEMAP_H
 
-#include "common/d3dShader.h"
-#include "common/d3dDebug.h"
+#include "d3d/d3dShader.h"
+#include "d3d/d3dDebug.h"
 
 #include <windows.h>
 #include <d3dx11.h>
@@ -58,7 +58,7 @@ private:
 	ID3D11DepthStencilState  *m_pDSLessEqual;
 	ID3D11RasterizerState    *m_pRSCullNone;
 	ID3D11SamplerState       *m_pTexSamplerState;
-	Shader SkymapShader;
+	D3DShader SkymapShader;
 };
 
 
@@ -310,10 +310,9 @@ void D3DSkymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX MVP)
 	SkymapShader.use(pD3D11DeviceContext);
 
 	pD3D11DeviceContext->OMSetDepthStencilState(m_pDSLessEqual, 0);
-
+	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pD3D11DeviceContext->RSSetState(m_pRSCullNone);
 	pD3D11DeviceContext->DrawIndexed(NumSphereFaces * 3, 0, 0 );
-	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	pD3D11DeviceContext->OMSetDepthStencilState(NULL, 0);
 }

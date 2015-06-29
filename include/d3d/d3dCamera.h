@@ -49,7 +49,7 @@ public:
 	void OnMouseMove(WPARAM btnState, int x, int y);
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseWheel(WPARAM btnState, int x, int y, float aspect);
-	void OnKeyDown();
+	//void OnKeyDown();
 private:
 
 	float m_Theta;

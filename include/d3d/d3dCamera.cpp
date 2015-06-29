@@ -20,6 +20,7 @@ void D3DCamera::update()
 	m_Proj  = XMMatrixPerspectiveFovLH(XMConvertToRadians(zoom), aspect, 1.0f, 1000.0f);
 }
 
+/*
 void D3DCamera::OnKeyDown()
 {
 		float speed = 15.0f * time;
@@ -43,7 +44,7 @@ void D3DCamera::OnKeyDown()
 		camTarget = camPosition + camTarget;	
 
 }
-
+*/
 void D3DCamera::OnMouseWheel(WPARAM btnState, int x, int y, float aspect)
 {
 	zoom += x * 0.01f;
