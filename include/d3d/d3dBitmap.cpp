@@ -1,106 +1,15 @@
-#ifndef D3DRTT_H
-#define D3DRTT_H
+#include "d3dBitmap.h"
 
-#include "common/d3dApp.h"
-#include <common/d3dShader.h>
 
-class D3DRTT
+void D3DBitmap::init_window(int posX, int posY, int width, int height)
 {
-public:
-	D3DRTT()
-	{
-		m_pInputLayout        = NULL;
-		m_pMVPBuffer          = NULL;
-		m_pVertexBuffer       = NULL;
-		m_pIndexBuffer        = NULL;
-	}
-
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, ID3D11ShaderResourceView *pTexture,const XMMATRIX &Model,  
-		        const XMMATRIX &View, const XMMATRIX &Proj);
-
-	void shutdown()
-	{
-		    ReleaseCOM(m_pRenderTargetView  )
-			ReleaseCOM(m_pMVPBuffer         )
-			ReleaseCOM(m_pVertexBuffer      )
-			ReleaseCOM(m_pIndexBuffer       )
-	}
-
-	void init_window(int ScreenWidth , int ScreenHeight, int BitmapWidth, int BitmapHeight);
-	bool init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
-	bool init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
-
-private:
-
-	struct MatrixBuffer
-	{
-		XMMATRIX  model;
-		XMMATRIX  view;
-		XMMATRIX  proj;
-
-	};
-	MatrixBuffer cbMatrix;
-
-	struct  Vertex
-	{
-		D3DXVECTOR3 Pos;
-		D3DXVECTOR2 Tex;
-	};
-
-	ID3D11RenderTargetView   *m_pRenderTargetView;
-	ID3D11Buffer             *m_pMVPBuffer;
-	ID3D11Buffer             *m_pVertexBuffer;
-	ID3D11Buffer             *m_pIndexBuffer;
-	ID3D11SamplerState       *m_pTexSamplerState;
-	ID3D11InputLayout        *m_pInputLayout;
-
-
-	int m_VertexCount;
-	int m_IndexCount;
-
-    int m_posX  ;
-	int m_posY  ; 
-	int m_width ; 
-	int m_height;
-
-	Shader D3DRTTShader;
-};
-
-void D3DRTT::init_window(int posX, int posY, int width, int height)
-{
-    m_posX  = posX;
+	m_posX  = posX;
 	m_posY  = posY;
 	m_width = width; 
 	m_height = height;
 }
 
-void D3DRTT::Render(ID3D11DeviceContext *pD3D11DeviceContext, ID3D11ShaderResourceView *pTexture, const XMMATRIX &Model,  
-				  const XMMATRIX &View, const XMMATRIX &Proj)
-{
-
-	cbMatrix.model  = XMMatrixTranspose(Model);
-	cbMatrix.view   = XMMatrixTranspose(View);
-	cbMatrix.proj   = XMMatrixTranspose(Proj);
-	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0 );
-	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
-
-	unsigned int stride;
-	unsigned int offset;
-	stride = sizeof(Vertex); 
-	offset = 0;
-
-	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pD3D11DeviceContext->PSSetShaderResources(0, 1, &pTexture);  
-	pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState );
-
-	D3DRTTShader.use(pD3D11DeviceContext);
-	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
-
-}
-
-bool D3DRTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+bool D3DBitmap::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 
@@ -129,24 +38,24 @@ bool D3DRTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 	}
 
 	// First triangle.
-	VertexData[0].Pos = D3DXVECTOR3(m_posX, m_posY, 0.0f);  // Top left.
-	VertexData[0].Tex = D3DXVECTOR2(0.0f, 0.0f);
+	VertexData[0].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Top left.
+	VertexData[0].Tex = XMFLOAT2(0.0f, 0.0f);
 
-	VertexData[1].Pos = D3DXVECTOR3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
-	VertexData[1].Tex = D3DXVECTOR2(1.0f, 1.0f);
+	VertexData[1].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
+	VertexData[1].Tex = XMFLOAT2(1.0f, 1.0f);
 
-	VertexData[2].Pos = D3DXVECTOR3(m_posX, m_posY - m_height, 0.0f);  // Bottom left.
-	VertexData[2].Tex = D3DXVECTOR2(0.0f, 1.0f);
+	VertexData[2].Pos = XMFLOAT3(m_posX, m_posY - m_height, 0.0f);  // Bottom left.
+	VertexData[2].Tex = XMFLOAT2(0.0f, 1.0f);
 
 	// Second triangle.
-	VertexData[3].Pos = D3DXVECTOR3(m_posX, m_posY, 0.0f);   // Top left.
-	VertexData[3].Tex = D3DXVECTOR2(0.0f, 0.0f);
+	VertexData[3].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);   // Top left.
+	VertexData[3].Tex = XMFLOAT2(0.0f, 0.0f);
 
-	VertexData[4].Pos = D3DXVECTOR3(m_posX + m_width, m_posY, 0.0f); // Top right.
-	VertexData[4].Tex = D3DXVECTOR2(1.0f, 0.0f);
+	VertexData[4].Pos = XMFLOAT3(m_posX + m_width, m_posY, 0.0f); // Top right.
+	VertexData[4].Tex = XMFLOAT2(1.0f, 0.0f);
 
-	VertexData[5].Pos = D3DXVECTOR3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
-	VertexData[5].Tex = D3DXVECTOR2(1.0f, 1.0f);
+	VertexData[5].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
+	VertexData[5].Tex = XMFLOAT2(1.0f, 1.0f);
 
 	///////////////////////////Index Buffer ////////////////////////////////
 
@@ -225,7 +134,7 @@ bool D3DRTT::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11
 }
 
 
-bool D3DRTT::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+bool D3DBitmap::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	HRESULT result;
 
@@ -249,12 +158,37 @@ bool D3DRTT::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
 
 	D3DRTTShader.init(pD3D11Device, hWnd);
-	D3DRTTShader.attachVS(L"rtt.vsh", pInputLayoutDesc, numElements);
-	D3DRTTShader.attachPS(L"rtt.psh");
+	D3DRTTShader.attachVS(L"bitmap.vsh", pInputLayoutDesc, numElements);
+	D3DRTTShader.attachPS(L"bitmap.psh");
 	D3DRTTShader.end();
 
 	return true;
 }
 
 
-#endif
+void D3DBitmap::init_texture(ID3D11Device *pD3D11Device)
+{
+	HRESULT hr;
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/colorm01.dds", NULL,NULL, &m_pTextureSRV, NULL);
+	DebugHR(hr);
+
+	// Create a texture sampler state description.
+	D3D11_SAMPLER_DESC samplerDesc;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
+	DebugHR(hr);
+}
