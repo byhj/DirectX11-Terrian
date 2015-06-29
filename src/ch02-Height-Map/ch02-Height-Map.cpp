@@ -56,7 +56,7 @@ public:
 		Proj  = m_camera.GetProjMatrix();
 		m_grid.Render(m_pD3D11DeviceContext, Model, View, Proj);
 
-		DrawMessage();
+		DrawMessage(m_TriangleCnt);
 
 		m_pSwapChain->Present(0, 0);
 	}
@@ -79,7 +79,7 @@ private:
 	void init_device();
 	void init_object();
 	void init_camera();
-	void DrawMessage();
+	void DrawMessage(int triCnt);
 
 private:
 
@@ -103,6 +103,7 @@ private:
 	int m_videoCardMemory;
 	WCHAR m_videoCardInfo[255];
 	float fps;
+	int m_TriangleCnt;
 };
 
 CALL_MAIN(D3DRenderSystem)
@@ -199,6 +200,7 @@ void D3DRenderSystem::init_object()
 
 	m_grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
 	m_grid.init_shader(m_pD3D11Device, m_hWnd);
+	m_TriangleCnt = m_grid.GetTriangle();
 }
 
 void D3DRenderSystem::init_camera()
@@ -223,7 +225,7 @@ void D3DRenderSystem::init_camera()
 }
 
 
-void D3DRenderSystem::DrawMessage()
+void D3DRenderSystem::DrawMessage(int triCnt)
 {
 	static bool flag = true;
 	if (flag)
@@ -252,6 +254,9 @@ void D3DRenderSystem::DrawMessage()
 	m_font.drawText(m_pD3D11DeviceContext, WinInfo, 22.0f, 10.0f, 40.0f, 0xff0099ff);
 	m_font.drawText(m_pD3D11DeviceContext, m_videoCardInfo, 22.0f, 10.0f, 70.0f, 0xff0099ff);
 
+	static WCHAR triangleStr[255];
+	wsprintfW(triangleStr, L"Triangle: %u", (UINT)triCnt);
+	m_font.drawText(m_pD3D11DeviceContext, triangleStr, 22.0f, 10.0f, 100.0f, 0xff0099ff);
 }
 void  D3DRenderSystem::v_OnMouseDown(WPARAM btnState, int x, int y)
 {
