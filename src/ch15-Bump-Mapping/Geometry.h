@@ -35,6 +35,8 @@ public:
 
 		pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
 		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pNormalTexSRV);
+
 		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
 
 		// Set vertex buffer stride and offset
@@ -64,6 +66,8 @@ public:
 
 	void loadHeightMap(const char *filename);
 	void CalcNormal(D3DGeometry::MeshData &mesh);
+	void CalcBump(D3DGeometry::MeshData &mesh);
+
 	int GetTriangle()
 	{
 		return m_IndexCount / 3;
@@ -88,12 +92,19 @@ private:
 	};
 	LightBuffer cbLight;
 
-	struct  Vertex
-	{
+	struct Vertex {
+		// Position
 		XMFLOAT3 Pos;
+		// Normal
 		XMFLOAT3 Normal;
+		// TexCoords
 		XMFLOAT2 Tex;
+
+		XMFLOAT3 Tangent;
+
+		XMFLOAT3 BiTangent;
 	};
+	std::vector<Vertex> m_VertexData;
 
 	std::vector<XMFLOAT3> m_Hightmap;
 
@@ -105,6 +116,7 @@ private:
 	ID3D11InputLayout        *m_pInputLayout;
 	ID3D11ShaderResourceView *m_pTextureSRV;
 	ID3D11SamplerState       *m_pTexSamplerState;
+	ID3D11ShaderResourceView *m_pNormalTexSRV;
 
 	int m_VertexCount;
 	int m_IndexCount;

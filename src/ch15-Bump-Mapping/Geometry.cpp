@@ -1,6 +1,7 @@
 #include "Geometry.h"
 #include "d3d/d3dUtil.h"
 
+
 void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
@@ -17,6 +18,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	for (int i = 0; i != m_VertexCount; ++i)
 	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 5.0f;
 	CalcNormal(gridMesh);
+	CalcBump(gridMesh);
 
 	D3D11_BUFFER_DESC gridVBDesc;
 	gridVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
@@ -27,7 +29,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	gridVBDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA gridVBO;
-	gridVBO.pSysMem = &gridMesh.VertexData[0];
+	gridVBO.pSysMem = &m_VertexData[0];
 	hr = pD3D11Device->CreateBuffer(&gridVBDesc, &gridVBO, &m_pGridVB);
 	DebugHR(hr);
 
@@ -81,7 +83,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
+	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[5];
 	pInputLayoutDesc[0].SemanticName         = "POSITION";
 	pInputLayoutDesc[0].SemanticIndex        = 0;
 	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -105,6 +107,22 @@ void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc[2].AlignedByteOffset    = 24;
 	pInputLayoutDesc[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc[2].InstanceDataStepRate = 0;
+
+	pInputLayoutDesc[3].SemanticName         = "TANGENT";
+	pInputLayoutDesc[3].SemanticIndex        = 0;
+	pInputLayoutDesc[3].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc[3].InputSlot            = 0;
+	pInputLayoutDesc[3].AlignedByteOffset    = 32;
+	pInputLayoutDesc[3].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc[3].InstanceDataStepRate = 0;
+
+	pInputLayoutDesc[4].SemanticName         = "BITANGENT";
+	pInputLayoutDesc[4].SemanticIndex        = 0;
+	pInputLayoutDesc[4].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc[4].InputSlot            = 0;
+	pInputLayoutDesc[4].AlignedByteOffset    = 44;
+	pInputLayoutDesc[4].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc[4].InstanceDataStepRate = 0;
 
 	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
 
@@ -202,12 +220,63 @@ void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 
 }
 
+void Geometry::CalcBump(D3DGeometry::MeshData &mesh)
+{
+	XMVECTOR v[3];
+	XMVECTOR uv[3];
+	int j = 0;
+	for (int i = 3; i != mesh.VertexData.size(); i += 3)
+	{
+		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i-2].Pos);
+		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i-2].Tex);
+
+		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i-1].Pos);
+		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i-1].Tex);
+
+		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i].Pos);
+		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i].Tex);
+
+		// Edges of the triangle : postion delta
+		XMVECTOR deltaPos1 = v[1]  - v[0];
+		XMVECTOR deltaPos2 = v[2]  - v[0];
+		XMVECTOR deltaUV1  = uv[1] - uv[0];
+		XMVECTOR deltaUV2  = uv[2] - uv[0];
+
+		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		XMVECTOR tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y) * r;
+		XMVECTOR bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x) * r;
+        Vertex v1;
+		v1.Pos = mesh.VertexData[i-2].Pos;
+		v1.Pos = mesh.VertexData[i-2].Normal;
+		v1.Tex = mesh.VertexData[i-2].Tex;
+
+		XMStoreFloat3(&v1.Tangent, tangent);
+		XMStoreFloat3(&v1.BiTangent, bitangent);
+		m_VertexData.push_back(v1);
+		v1.Pos = mesh.VertexData[i-1].Pos;
+		v1.Pos = mesh.VertexData[i-1].Normal;
+		v1.Tex = mesh.VertexData[i-1].Tex;
+		XMStoreFloat3(&v1.Tangent, tangent);
+		XMStoreFloat3(&v1.BiTangent, bitangent);
+		m_VertexData.push_back(v1);
+
+		v1.Pos = mesh.VertexData[i].Pos;
+		v1.Pos = mesh.VertexData[i].Normal;
+		v1.Tex = mesh.VertexData[i].Tex;
+		XMStoreFloat3(&v1.Tangent, tangent);
+		XMStoreFloat3(&v1.BiTangent, bitangent);
+		m_VertexData.push_back(v1);
+	}
+}
+
 void Geometry::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
 	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,NULL, &m_pTextureSRV, NULL);
 	DebugHR(hr);
 
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/bump.dds", NULL,NULL, &m_pNormalTexSRV, NULL);
+	DebugHR(hr);
 	// Create a texture sampler state description.
 	D3D11_SAMPLER_DESC samplerDesc;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

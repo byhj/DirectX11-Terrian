@@ -69,7 +69,7 @@
     <ClCompile Include="..\..\include\d3d\d3dShader.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dTimer.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
-    <ClCompile Include="ch15-Bump-Mapping" />
+    <ClCompile Include="ch15-Bump-Mapping.cpp" />
     <ClCompile Include="Geometry.cpp" />
   </ItemGroup>
   <ItemGroup>
