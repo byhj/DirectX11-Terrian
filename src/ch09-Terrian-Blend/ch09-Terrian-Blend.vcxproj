@@ -63,6 +63,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\d3d\d3dApp.h" />
+    <ClInclude Include="..\..\include\d3d\d3dCamera.h" />
+    <ClInclude Include="..\..\include\d3d\d3dDebug.h" />
+    <ClInclude Include="..\..\include\d3d\d3dFont.h" />
+    <ClInclude Include="..\..\include\d3d\d3dGeometry.h" />
+    <ClInclude Include="..\..\include\d3d\d3dShader.h" />
+    <ClInclude Include="..\..\include\d3d\d3dTimer.h" />
+    <ClInclude Include="..\..\include\d3d\d3dUtil.h" />
     <ClInclude Include="Geometry.h" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +78,12 @@
     <None Include="grid.vsh" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\d3d\d3dApp.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dCamera.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dGeometry.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dShader.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dTimer.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
     <ClCompile Include="ch07-Color-Map.cpp" />
     <ClCompile Include="Geometry.cpp" />
   </ItemGroup>
