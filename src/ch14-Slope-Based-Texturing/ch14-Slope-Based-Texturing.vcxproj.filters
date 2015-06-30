@@ -24,6 +24,7 @@
     <None Include="grid.vsh">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ch14-Slope-Based-Texturing.cpp">

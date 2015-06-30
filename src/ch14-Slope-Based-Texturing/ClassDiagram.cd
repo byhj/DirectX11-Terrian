@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="D3DRenderSystem" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIGIAAQQIAIKIIAAAAAEBwIIAAABAAAAhBgUAACgAAQ=</HashCode>
+      <FileName>ch14-Slope-Based-Texturing.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAgSAACEMgCEABABARgCAAAgAAgQCAIBAAAAAgoAA=</HashCode>
+      <FileName>Geometry.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DApp" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AICAEAAAAGIAAAAAAIAABAJQQQIGEQgAgABAAACAABY=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dApp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DCamera" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQgAJCACAIAEAAJgAADACAAAgMAAiABAGAAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dCamera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DFont" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAACAAAAAAAAAAAAAIAAAABAAABAAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dFont.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DGeometry" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAEAAQAAAAAAIEAQAAgAAAAAAABCAAAAAAACAAAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dGeometry.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DShader" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIIBCAAAAAIAAwAgEJQAgAAQAAAIoBAAAAAAAQAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dShader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3DTimer" Collapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAEAAAACAABQIBAIAAEAQAACIAIAAAIAAAABAAAAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dTimer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MathHelper" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAABABAIAAAAEAAiIAAAAAAIEAAAgAAAAAAAAAA=</HashCode>
+      <FileName>E:\GitHub\DirectX\DirectX11-Terrian\include\d3d\d3dUtil.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Microsoft YaHei" Size="9" />
+</ClassDiagram>
