@@ -39,7 +39,7 @@ VS_OUT VS( VS_IN vs_in )
    vs_out.BiTangent = mul(vs_in.BiTangent, (float3x3)model );
    vs_out.worldPos  = mul(vs_in.Pos, model);
 
-   vs_out.Tex = vs_in.Tex;
+   vs_out.Tex = vs_in.Tex * 10.0f;
  
    return vs_out;
 }

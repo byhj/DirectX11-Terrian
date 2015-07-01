@@ -13,6 +13,7 @@
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)\include;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />

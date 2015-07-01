@@ -63,7 +63,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="grid.psh" />
     <None Include="grid.vsh" />
   </ItemGroup>

@@ -1,3 +1,4 @@
+
 #include "Geometry.h"
 #include "d3d/d3dUtil.h"
 
@@ -205,17 +206,32 @@ void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 		XMVECTOR edge2 = v2 - v3;
 
 		XMVECTOR n1 = XMVector3Cross(edge1, edge2);
-		XMVECTOR normal = XMVector3Normalize(n1);
-		XMStoreFloat3(&mesh.VertexData[index1].Normal, normal);
-		XMStoreFloat3(&mesh.VertexData[index2].Normal, normal);
-		XMStoreFloat3(&mesh.VertexData[index3].Normal, normal);
+
+		XMVECTOR addn = XMLoadFloat3(&mesh.VertexData[index1].Normal);
+		addn = addn + n1;
+		XMStoreFloat3(&mesh.VertexData[index1].Normal, addn);
+
+		addn = XMLoadFloat3(&mesh.VertexData[index1].Normal);
+		addn = addn + n1;
+		XMStoreFloat3(&mesh.VertexData[index2].Normal, addn);
+
+		addn = XMLoadFloat3(&mesh.VertexData[index1].Normal);
+		addn = addn + n1;
+		XMStoreFloat3(&mesh.VertexData[index3].Normal, addn);
 	}
+	m_VertexData.resize(mesh.VertexData.size());
 
 	for (int i = 0; i != mesh.VertexData.size(); ++i)
 	{
 		XMVECTOR n = XMLoadFloat3(&mesh.VertexData[i].Normal);
 		XMVECTOR normal = XMVector3Normalize(n);
 		XMStoreFloat3(&mesh.VertexData[i].Normal, normal);
+
+		m_VertexData[i].Pos = mesh.VertexData[i].Pos;
+		m_VertexData[i].Normal = mesh.VertexData[i].Normal;
+		m_VertexData[i].Tex = mesh.VertexData[i].Tex;
+		m_VertexData[i].Tangent = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_VertexData[i].BiTangent = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 
 }
@@ -225,54 +241,74 @@ void Geometry::CalcBump(D3DGeometry::MeshData &mesh)
 	XMVECTOR v[3];
 	XMVECTOR uv[3];
 	int j = 0;
-	for (int i = 3; i != mesh.VertexData.size(); i += 3)
+	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{
-		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i-2].Pos);
-		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i-2].Tex);
+		int index1 = mesh.IndexData[i];
+		int index2 = mesh.IndexData[i+1];
+		int index3 = mesh.IndexData[i+2];
+		XMFLOAT3 pos1 = mesh.VertexData[index1].Pos;
+		XMFLOAT3 pos2 = mesh.VertexData[index2].Pos;
+		XMFLOAT3 pos3 = mesh.VertexData[index3].Pos;
 
-		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i-1].Pos);
-		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i-1].Tex);
+		XMFLOAT2 tex1 = mesh.VertexData[index1].Tex;
+		XMFLOAT2 tex2 = mesh.VertexData[index2].Tex;
+		XMFLOAT2 tex3 = mesh.VertexData[index3].Tex;
 
-		v[j++ % 3]  = XMLoadFloat3(&mesh.VertexData[i].Pos);
-		uv[j++ % 3] = XMLoadFloat2(&mesh.VertexData[i].Tex);
+		XMFLOAT3 normal1 = mesh.VertexData[index1].Normal;
+		XMFLOAT3 normal2 = mesh.VertexData[index2].Normal;
+		XMFLOAT3 normal3 = mesh.VertexData[index3].Normal;
 
+		v[0]  = XMLoadFloat3(&pos1);
+		uv[0] = XMLoadFloat2(&tex1);
+
+		v[1]  = XMLoadFloat3(&pos2);
+		uv[1] = XMLoadFloat2(&tex2);
+
+		v[2]  = XMLoadFloat3(&pos3);
+		uv[2] = XMLoadFloat2(&tex3);
 		// Edges of the triangle : postion delta
 		XMVECTOR deltaPos1 = v[1]  - v[0];
 		XMVECTOR deltaPos2 = v[2]  - v[0];
 		XMVECTOR deltaUV1  = uv[1] - uv[0];
 		XMVECTOR deltaUV2  = uv[2] - uv[0];
 
-		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-		XMVECTOR tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y) * r;
-		XMVECTOR bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x) * r;
+		float u1x = XMVectorGetX(deltaUV1);
+		float u1y = XMVectorGetY(deltaUV1);
+		float u2x = XMVectorGetX(deltaUV2);
+		float u2y = XMVectorGetY(deltaUV2);
+
+		float r = 1.0f / (u1x * u2y - u1y * u2x);
+		XMVECTOR tangent = (deltaPos1 * u2y   - deltaPos2 * u1y) * r;
+		XMVECTOR bitangent = (deltaPos2 * u1x   - deltaPos1 * u2x) * r;
+
         Vertex v1;
-		v1.Pos = mesh.VertexData[i-2].Pos;
-		v1.Pos = mesh.VertexData[i-2].Normal;
-		v1.Tex = mesh.VertexData[i-2].Tex;
+		XMStoreFloat3(&v1.Tangent, tangent);
+		XMStoreFloat3(&v1.BiTangent, bitangent);
 
-		XMStoreFloat3(&v1.Tangent, tangent);
-		XMStoreFloat3(&v1.BiTangent, bitangent);
-		m_VertexData.push_back(v1);
-		v1.Pos = mesh.VertexData[i-1].Pos;
-		v1.Pos = mesh.VertexData[i-1].Normal;
-		v1.Tex = mesh.VertexData[i-1].Tex;
-		XMStoreFloat3(&v1.Tangent, tangent);
-		XMStoreFloat3(&v1.BiTangent, bitangent);
-		m_VertexData.push_back(v1);
+		m_VertexData[index1].Tangent = v1.Tangent;
+		m_VertexData[index1].BiTangent = v1.BiTangent;
+		m_VertexData[index2].Tangent = v1.Tangent;
+		m_VertexData[index2].BiTangent = v1.BiTangent;
+		m_VertexData[index3].Tangent = v1.Tangent;
+		m_VertexData[index3].BiTangent = v1.BiTangent;
+	}
 
-		v1.Pos = mesh.VertexData[i].Pos;
-		v1.Pos = mesh.VertexData[i].Normal;
-		v1.Tex = mesh.VertexData[i].Tex;
-		XMStoreFloat3(&v1.Tangent, tangent);
-		XMStoreFloat3(&v1.BiTangent, bitangent);
-		m_VertexData.push_back(v1);
+	for (int i = 0; i != m_VertexData.size(); ++i)
+	{
+		XMVECTOR tan = XMLoadFloat3(&m_VertexData[i].Tangent);
+		XMVECTOR tangent = XMVector3Normalize(tan);
+		XMStoreFloat3(&m_VertexData[i].Tangent, tangent);
+
+		XMVECTOR bitan = XMLoadFloat3(&m_VertexData[i].BiTangent);
+		XMVECTOR bitangent = XMVector3Normalize(bitan);
+		XMStoreFloat3(&m_VertexData[i].BiTangent, bitangent);
 	}
 }
 
 void Geometry::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,NULL, &m_pTextureSRV, NULL);
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt.dds", NULL,NULL, &m_pTextureSRV, NULL);
 	DebugHR(hr);
 
 	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/bump.dds", NULL,NULL, &m_pNormalTexSRV, NULL);
