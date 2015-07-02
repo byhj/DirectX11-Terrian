@@ -1,0 +1,78 @@
+cbuffer Light
+{
+   float4 ambient;
+   float4 diffuse;
+   float3 lightDir;
+   float  pad; 
+};
+
+struct VS_OUT
+{
+    float4 Pos       : SV_POSITION;
+	float3 Normal    : NORMAL;
+	float2 Tex       : TEXCOORD0;
+	float3 Tangent   : TANGENT;
+	float3 BiTangent : BITANGENT;
+	float3 worldPos  : POSITION;
+};
+
+Texture2D colorTexture1   : register(t0);
+Texture2D colorTexture2   : register(t1);
+Texture2D colorTexture3	  : register(t2);
+Texture2D colorTexture4   : register(t3);
+Texture2D alphaTex	      : register(t4);
+Texture2D texNormal0      : register(t5);
+Texture2D texNormal1      : register(t6);
+
+SamplerState texState : register(s0);
+
+
+
+float4 PS(VS_OUT ps_in) : SV_TARGET
+{
+
+    ps_in.Normal    = normalize(ps_in.Normal);
+	ps_in.Tangent   = normalize(ps_in.Tangent);
+	ps_in.BiTangent = normalize(ps_in.BiTangent);
+
+	float4 normalMap = texNormal0.Sample(texState, ps_in.Tex );
+	normalMap = (2.0f * normalMap) - 1.0f;
+	float3x3 texSpace = float3x3(ps_in.Tangent, ps_in.BiTangent , ps_in.Normal);
+	ps_in.Normal = normalize(mul(normalMap, texSpace));
+    float lightIntensity1 = dot(-lightDir, ps_in.Normal);
+
+	normalMap = texNormal1.Sample(texState, ps_in.Tex );
+	normalMap = (2.0f * normalMap) - 1.0f;
+	ps_in.Normal = normalize(mul(normalMap, texSpace));
+	float lightIntensity2 = dot(-lightDir, ps_in.Normal);
+
+	// Sample the color textures.
+    float4 textureColor1 = colorTexture1.Sample(texState, ps_in.Tex);
+    float4 textureColor2 = colorTexture2.Sample(texState, ps_in.Tex);
+    float4 textureColor3 = colorTexture3.Sample(texState, ps_in.Tex);
+    float4 textureColor4 = colorTexture4.Sample(texState, ps_in.Tex);
+
+	// Add the bump maps to their respective textures.
+    textureColor1 = saturate(lightIntensity1 * textureColor1);
+    textureColor2 = saturate(lightIntensity1 * textureColor2);
+    textureColor3 = saturate(lightIntensity1 * textureColor3);
+    textureColor4 = saturate(lightIntensity2 * textureColor4);
+
+	
+  // Sample the alpha map using second set of texture coordinates.
+	float4 alphaMap1 =  alphaTex.Sample(texState, ps_in.Tex);
+
+	// Set the base color to the first color texture.
+	float4 baseColor = textureColor1;
+
+	// Add the second layer using the red channel of the alpha map.
+	float4 pixelColor = lerp(baseColor, textureColor2, alphaMap1.r);
+
+	// Add the third layer using the green channel of the alpha map.
+	pixelColor = lerp(pixelColor, textureColor3, alphaMap1.g);
+
+	// Add the fourth layer using the blue channel of the alpha map.
+	pixelColor = lerp(pixelColor, textureColor4, alphaMap1.b);
+	
+	return pixelColor;
+}

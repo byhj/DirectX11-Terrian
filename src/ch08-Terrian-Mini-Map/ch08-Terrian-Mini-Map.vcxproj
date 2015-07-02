@@ -71,6 +71,7 @@
     <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
     <ClCompile Include="ch08-Terrian-Mini-Map.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="MiniMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\d3dApp.h" />
@@ -83,6 +84,7 @@
     <ClInclude Include="..\..\include\d3d\d3dTimer.h" />
     <ClInclude Include="..\..\include\d3d\d3dUtil.h" />
     <ClInclude Include="Geometry.h" />
+    <ClInclude Include="MiniMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="grid.psh" />

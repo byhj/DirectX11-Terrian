@@ -42,6 +42,9 @@
     <ClCompile Include="..\..\include\d3d\d3dBitmap.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="MiniMap.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\d3dApp.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\d3dBitmap.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

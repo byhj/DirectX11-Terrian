@@ -78,9 +78,9 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	lightDesc.CPUAccessFlags = 0;
 	lightDesc.MiscFlags      = 0;
 
-	cbLight.ambient  = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	cbLight.diffuse  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	cbLight.lightDir = XMFLOAT3(4.0f, -1.0f, 4.0f);
+	cbLight.ambient  = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
+	cbLight.diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	cbLight.lightDir = XMFLOAT3(-0.5f, -1.0f, 0.0f);
 	cbLight.pad      = 0.0f;
 
 	D3D11_SUBRESOURCE_DATA lightVBO;
