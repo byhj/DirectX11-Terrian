@@ -1,23 +1,57 @@
-#include "Geometry.h"
-#include "d3d/d3dUtil.h"
+#include "grid.h"
+#include "d3d/d3dGeometry.h"
 
-void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+namespace byhj
+{
+
+void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix)
+{
+	//Update the the mvp matrix
+	cbMatrix.model = matrix.model;
+	cbMatrix.view  = matrix.view;
+	cbMatrix.proj  = matrix.proj;
+	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+	pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+
+	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
+	// Set vertex buffer stride and offset
+	unsigned int stride;
+	unsigned int offset;
+	stride = sizeof(Vertex);
+	offset = 0;
+	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pGridVB, &stride, &offset);
+	pD3D11DeviceContext->IASetIndexBuffer(m_pGridIB, DXGI_FORMAT_R32_UINT, 0);
+
+	GridShader.use(pD3D11DeviceContext);
+	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+}
+
+void Grid::Shutdown()
+{
+	ReleaseCOM(m_pMVPBuffer)
+	ReleaseCOM(m_pGridVB)
+	ReleaseCOM(m_pGridIB)
+	ReleaseCOM(m_pInputLayout)
+}
+
+void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 
 	loadHeightMap("../../media/textures/heightmap01.bmp");
-	//NormalizeHeightMap();
-	/////////////////////////////Vertex Buffer//////////////////////////////
-
 	D3DGeometry geom;
 	D3DGeometry::MeshData gridMesh;
 	geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, gridMesh);
 
 	m_VertexCount = gridMesh.VertexData.size();
 	for (int i = 0; i != m_VertexCount; ++i)
-	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 15.0f;
-	CalcNormal(gridMesh);
+		gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
 
+	calcNormal(gridMesh);
+
+	/////////////////////////////Vertex Buffer//////////////////////////////
+	m_VertexCount = gridMesh.VertexData.size();
 	D3D11_BUFFER_DESC gridVBDesc;
 	gridVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	gridVBDesc.ByteWidth           = sizeof(Vertex) * m_VertexCount;
@@ -59,7 +93,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	hr = pD3D11Device->CreateBuffer(&mvpDesc, NULL, &m_pMVPBuffer);
 	DebugHR(hr);
 
-	D3D11_BUFFER_DESC lightDesc;	
+	D3D11_BUFFER_DESC lightDesc;
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	lightDesc.Usage          = D3D11_USAGE_DEFAULT;
 	lightDesc.ByteWidth      = sizeof(LightBuffer);
@@ -78,7 +112,8 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	DebugHR(hr);
 }
 
-void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+
+void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
 	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
@@ -108,13 +143,13 @@ void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 
 	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
 
-	GeometryShader.init(pD3D11Device, hWnd);
-	GeometryShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
-	GeometryShader.attachPS(L"grid.psh");
-	GeometryShader.end();
+	GridShader.init(pD3D11Device, hWnd);
+	GridShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
+	GridShader.attachPS(L"grid.psh");
+	GridShader.end();
 }
 
-void Geometry::loadHeightMap(const char *filename)
+void Grid::loadHeightMap(const char *filename)
 {
 	BITMAPFILEHEADER  bitmapFileHeader;
 	BITMAPINFOHEADER  bitmapInfoHeader;
@@ -146,9 +181,9 @@ void Geometry::loadHeightMap(const char *filename)
 	///////////////////////////////////////////////////////////////
 	int k = 0, index;
 	// Read the image data into the height map.
-	for(int j = 0; j != m_TerrainHeight; ++j)
+	for (int j = 0; j != m_TerrainHeight; ++j)
 	{
-		for(int i = 0; i != m_TerrainWidth; ++i)
+		for (int i = 0; i != m_TerrainWidth; ++i)
 		{
 			height = bitmapImage[k];
 
@@ -156,32 +191,31 @@ void Geometry::loadHeightMap(const char *filename)
 			Pos.x = (float)i;
 			Pos.y = (float)height;
 			Pos.z = (float)j;
-			 m_Hightmap.push_back(Pos);
+			m_Hightmap.push_back(Pos);
 
 			k += 3;
 		}
 	}
 
 	// Release the bitmap image data.
-	delete [] bitmapImage;
+	delete[] bitmapImage;
 	bitmapImage = 0;
 }
 
-
-void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
+void Grid::calcNormal(D3DGeometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{
 		int index1 = mesh.IndexData[i];
-		int index2 = mesh.IndexData[i+1];
-		int index3 = mesh.IndexData[i+2];
+		int index2 = mesh.IndexData[i + 1];
+		int index3 = mesh.IndexData[i + 2];
 		XMFLOAT3 pos1 = mesh.VertexData[index1].Pos;
 		XMFLOAT3 pos2 = mesh.VertexData[index2].Pos;
 		XMFLOAT3 pos3 = mesh.VertexData[index3].Pos;
 
 		XMVECTOR v1 = XMLoadFloat3(&pos1);
-        XMVECTOR v2 = XMLoadFloat3(&pos2);
-        XMVECTOR v3 = XMLoadFloat3(&pos3);
+		XMVECTOR v2 = XMLoadFloat3(&pos2);
+		XMVECTOR v3 = XMLoadFloat3(&pos3);
 
 		XMVECTOR edge1 = v1 - v2;
 		XMVECTOR edge2 = v2 - v3;
@@ -199,5 +233,7 @@ void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 		XMVECTOR normal = XMVector3Normalize(n);
 		XMStoreFloat3(&mesh.VertexData[i].Normal, normal);
 	}
+
+}
 
 }

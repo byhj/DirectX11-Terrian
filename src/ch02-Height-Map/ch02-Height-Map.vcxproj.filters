@@ -29,9 +29,6 @@
     <ClCompile Include="ch02-Height-Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\d3d\d3dApp.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -50,11 +47,17 @@
     <ClCompile Include="..\..\include\d3d\d3dUtil.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\d3dFont.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\d3d\d3dApp.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -78,6 +81,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\d3dUtil.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

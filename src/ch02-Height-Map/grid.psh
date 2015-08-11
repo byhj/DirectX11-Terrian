@@ -7,7 +7,10 @@ struct VS_OUT
 };
 
 
-float4 PS(VS_OUT ps_in) : SV_TARGET
+float4 PS(VS_OUT vs_out) : SV_TARGET
 {
-   return float4(1.0f, 1.0f, 1.0f, 1.0f);
+   vs_out.Normal = normalize(vs_out.Normal);
+   float nz =  abs(vs_out.Normal.z);
+
+   return float4(nz, nz, nz, 1.0f);
 }

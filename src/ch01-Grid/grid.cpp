@@ -1,7 +1,40 @@
-#include "Geometry.h"
-#include "d3d/d3dUtil.h"
+#include "grid.h"
+#include "d3d/d3dGeometry.h"
 
-void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+namespace byhj
+{
+
+void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix)
+{
+	//Update the the mvp matrix
+	cbMatrix.model = matrix.model;
+	cbMatrix.view  = matrix.view;
+	cbMatrix.proj  = matrix.proj;
+	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+	pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+
+	// Set vertex buffer stride and offset
+	unsigned int stride;
+	unsigned int offset;
+	stride = sizeof(Vertex);
+	offset = 0;
+	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pGridVB, &stride, &offset);
+	pD3D11DeviceContext->IASetIndexBuffer(m_pGridIB, DXGI_FORMAT_R32_UINT, 0);
+
+	GridShader.use(pD3D11DeviceContext);
+	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+}
+
+void Grid::Shutdown()
+{
+	ReleaseCOM(m_pMVPBuffer)
+		ReleaseCOM(m_pGridVB)
+		ReleaseCOM(m_pGridIB)
+		ReleaseCOM(m_pInputLayout)
+}
+
+void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 
@@ -55,7 +88,8 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	DebugHR(hr);
 }
 
-void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+
+void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
 	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
@@ -85,8 +119,11 @@ void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 
 	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
 
-	GeometryShader.init(pD3D11Device, hWnd);
-	GeometryShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
-	GeometryShader.attachPS(L"grid.psh");
-	GeometryShader.end();
+	GridShader.init(pD3D11Device, hWnd);
+	GridShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
+	GridShader.attachPS(L"grid.psh");
+	GridShader.end();
+}
+
+
 }
