@@ -27,8 +27,6 @@ void RenderSystem::v_Render()
 
 	BeginScene();
 
-	TurnZBufferOn();
-
 	m_Matrix.view = m_Camera.GetViewMatrix();
 	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix);
 
@@ -159,6 +157,7 @@ void RenderSystem::init_device()
 	// Create the depth stencil state.
 	hr = m_pD3D11Device->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilState);
 	// Set the depth stencil state.
+	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
 	DebugHR(hr);
 
@@ -237,6 +236,8 @@ void RenderSystem::init_camera()
 	ZeroMemory(&vp, sizeof(D3D11_VIEWPORT));
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
 	vp.Width    = static_cast<FLOAT>(m_ScreenWidth);
 	vp.Height   = static_cast<FLOAT>(m_ScreenHeight);
 	m_pD3D11DeviceContext->RSSetViewports(1, &vp);

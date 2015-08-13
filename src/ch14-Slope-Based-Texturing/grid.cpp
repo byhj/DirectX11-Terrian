@@ -1,7 +1,7 @@
-#include "Geometry.h"
+#include "Grid.h"
 #include "d3d/d3dUtil.h"
 
-void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 
@@ -78,7 +78,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	DebugHR(hr);
 }
 
-void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
 	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
@@ -114,7 +114,7 @@ void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	GeometryShader.end();
 }
 
-void Geometry::loadHeightMap(const char *filename)
+void Grid::loadHeightMap(const char *filename)
 {
 	BITMAPFILEHEADER  bitmapFileHeader;
 	BITMAPINFOHEADER  bitmapInfoHeader;
@@ -168,7 +168,7 @@ void Geometry::loadHeightMap(const char *filename)
 }
 
 
-void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
+void Grid::CalcNormal(D3DGeometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{
@@ -202,7 +202,7 @@ void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
 
 }
 
-void Geometry::init_texture(ID3D11Device *pD3D11Device)
+void Grid::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
 	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/grass.dds", NULL,NULL, &m_pGrassTexSRV, NULL);

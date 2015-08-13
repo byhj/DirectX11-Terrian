@@ -73,14 +73,15 @@ void D3DCamera::OnMouseMove(WPARAM btnState, int x, int y)
 	else if( (btnState & MK_RBUTTON) != 0 )
 	{
 		// Make each pixel correspond to 0.005 unit in the scene.
-		float dx = 0.005f*static_cast<float>(x - m_LastMousePos.x);
-		float dy = 0.005f*static_cast<float>(y - m_LastMousePos.y);
+		float dx = 0.05f*static_cast<float>(x - m_LastMousePos.x);
+		float dy = 0.05f*static_cast<float>(y - m_LastMousePos.y);
+
 
 		// Update the camera radius based on input.
-		m_Radius += dx - dy;
+		m_Radius += dx;
 
 		// Restrict the radius.
-		m_Radius = Clamp(m_Radius, 3.0f, 15.0f);
+		//m_Radius = Clamp(m_Radius, 3.0f, 15.0f);
 	}
 
 	m_LastMousePos.x = x;

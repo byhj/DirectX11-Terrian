@@ -9,10 +9,10 @@
 #include "d3d/d3dGeometry.h"
 #include "D3DX11.h"
 
-class Geometry
+class Grid
 {
 public:
-	Geometry()
+	Grid()
 	{
 		m_pGridVB       = NULL;
 		m_pGridIB       = NULL;
@@ -21,15 +21,15 @@ public:
 		m_VertexCount   = 0;
 		m_IndexCount    = 0;
 	}
-	~Geometry() {}
+	~Grid() {}
 
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, XMMATRIX &model,  
-		XMMATRIX &view, XMMATRIX &proj)
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &model,  
+		const XMFLOAT4X4 &view, const XMFLOAT4X4 &proj)
 	{
 		//Update the the mvp matrix
-		cbMatrix.model = XMMatrixTranspose(model);	
-		cbMatrix.view  = XMMatrixTranspose(view);	
-		cbMatrix.proj  = XMMatrixTranspose(proj);
+		cbMatrix.model = model;
+		cbMatrix.view = view;
+		cbMatrix.proj = proj;
 		pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0 );
 		pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
 
@@ -74,9 +74,9 @@ public:
 private:
 	struct MatrixBuffer
 	{
-		XMMATRIX  model;
-		XMMATRIX  view;
-		XMMATRIX  proj;
+		XMFLOAT4X4  model;
+		XMFLOAT4X4  view;
+		XMFLOAT4X4  proj;
 
 	};
 	MatrixBuffer cbMatrix;
@@ -99,7 +99,7 @@ private:
 
 	std::vector<XMFLOAT3> m_Hightmap;
 
-	D3DShader GeometryShader;
+	byhj::Shader GeometryShader;
 	ID3D11Buffer             *m_pGridVB;
 	ID3D11Buffer             *m_pGridIB;
 	ID3D11Buffer             *m_pMVPBuffer;

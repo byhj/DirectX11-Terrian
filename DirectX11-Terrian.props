@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OutDir>$(SolutionDir)\bin\x86</OutDir>
     <IntDir>$(SolutionDir)\temp</IntDir>
-    <IncludePath>$(WINDOW7SDK)\include;$(VCInstallDir)atlmfc\include;$(VCInstallDir)include</IncludePath>
+    <IncludePath>$(Windows7Sdk)\include;$(VCInstallDir)atlmfc\include;$(VCInstallDir)include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

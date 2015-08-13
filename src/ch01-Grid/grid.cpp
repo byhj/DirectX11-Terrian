@@ -29,9 +29,9 @@ void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &
 void Grid::Shutdown()
 {
 	ReleaseCOM(m_pMVPBuffer)
-		ReleaseCOM(m_pGridVB)
-		ReleaseCOM(m_pGridIB)
-		ReleaseCOM(m_pInputLayout)
+	ReleaseCOM(m_pGridVB)
+	ReleaseCOM(m_pGridIB)
+	ReleaseCOM(m_pInputLayout)
 }
 
 void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)

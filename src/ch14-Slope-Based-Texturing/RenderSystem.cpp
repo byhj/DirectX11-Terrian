@@ -27,12 +27,10 @@ void RenderSystem::v_Render()
 
 	BeginScene();
 
-	//TurnZBufferOn();
-
 	m_Matrix.view = m_Camera.GetViewMatrix();
-	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix);
+	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, m_Matrix.proj);
 
-	DrawInfo();
+	//DrawInfo();
 
 	EndScene();
 
@@ -41,7 +39,7 @@ void RenderSystem::v_Render()
 void RenderSystem::v_Shutdown()
 {
 
-	m_Grid.Shutdown();
+	//m_Grid.Shutdown();
 
 	ReleaseCOM(m_pSwapChain);
 	ReleaseCOM(m_pD3D11Device);
@@ -115,20 +113,20 @@ void RenderSystem::init_device()
 	pBackBuffer->Release();
 	DebugHR(hr);
 	
-	//////////////////////////// Initialize the description of the stencil state.///////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-	depthBufferDesc.Width              = m_ScreenWidth;
-	depthBufferDesc.Height             = m_ScreenHeight;
-	depthBufferDesc.MipLevels          = 1;
-	depthBufferDesc.ArraySize          = 1;
-	depthBufferDesc.Format             = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesc.SampleDesc.Count   = 1;
+	depthBufferDesc.Width = m_ScreenWidth;
+	depthBufferDesc.Height = m_ScreenHeight;
+	depthBufferDesc.MipLevels = 1;
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.SampleDesc.Quality = 0;
-	depthBufferDesc.Usage              = D3D11_USAGE_DEFAULT;
-	depthBufferDesc.BindFlags          = D3D11_BIND_DEPTH_STENCIL;
-	depthBufferDesc.CPUAccessFlags     = 0;
-	depthBufferDesc.MiscFlags          = 0;
+	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthBufferDesc.CPUAccessFlags = 0;
+	depthBufferDesc.MiscFlags = 0;
 	// Create the texture for the depth buffer using the filled out description.
 	hr = m_pD3D11Device->CreateTexture2D(&depthBufferDesc, NULL, &m_pDepthStencilBuffer);
 
@@ -137,24 +135,24 @@ void RenderSystem::init_device()
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
 	// Set up the description of the stencil state.
-	depthStencilDesc.DepthEnable      = true;
-	depthStencilDesc.DepthWriteMask   = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc        = D3D11_COMPARISON_LESS_EQUAL;
-	depthStencilDesc.StencilEnable    = true;
-	depthStencilDesc.StencilReadMask  = 0xFF;
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilDesc.StencilEnable = false;
+	depthStencilDesc.StencilReadMask = 0xFF;
 	depthStencilDesc.StencilWriteMask = 0xFF;
 
 	// Stencil operations if pixel is front-facing.
-	depthStencilDesc.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	depthStencilDesc.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Stencil operations if pixel is back-facing.
-	depthStencilDesc.BackFace.StencilFailOp      = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	depthStencilDesc.BackFace.StencilPassOp      = D3D11_STENCIL_OP_KEEP;
-	depthStencilDesc.BackFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
 	hr = m_pD3D11Device->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilState);
@@ -167,15 +165,15 @@ void RenderSystem::init_device()
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
 	// Set up the depth stencil view description.
-	depthStencilViewDesc.Format =  DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
 	hr = m_pD3D11Device->CreateDepthStencilView(m_pDepthStencilBuffer, &depthStencilViewDesc, &m_pDepthStencilView);
 	DebugHR(hr);
-	
 
+	//////////////////////////////////////////////////////////////
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	D3D11_RASTERIZER_DESC rasterDesc;
 	rasterDesc.AntialiasedLineEnable = false;
@@ -183,12 +181,12 @@ void RenderSystem::init_device()
 	rasterDesc.DepthBias             = 0;
 	rasterDesc.DepthBiasClamp        = 0.0f;
 	rasterDesc.DepthClipEnable       = true;
-	rasterDesc.FillMode              = D3D11_FILL_SOLID;
+	rasterDesc.FillMode              =  D3D11_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable     = false;
+	rasterDesc.MultisampleEnable     = false;;
 	rasterDesc.ScissorEnable         = false;
 	rasterDesc.SlopeScaledDepthBias  = 0.0f;
-	// Create the rasterizer state from the description we just filled out.
+
 	hr = m_pD3D11Device->CreateRasterizerState(&rasterDesc, &m_pRasterState);
 	DebugHR(hr);
 
@@ -217,9 +215,10 @@ void RenderSystem::BeginScene()
 	//Render 
 	float bgColor[4] ={ 0.2f, 0.3f, 0.4f, 1.0f };
 
-	m_pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pD3D11DeviceContext->RSSetState(m_pRasterState);
+	//m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 	m_pD3D11DeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	m_pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pD3D11DeviceContext->ClearRenderTargetView(m_pRenderTargetView, bgColor);
 	m_pD3D11DeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -236,11 +235,11 @@ void RenderSystem::init_camera()
 	D3D11_VIEWPORT vp;
 	ZeroMemory(&vp, sizeof(D3D11_VIEWPORT));
 	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	vp.Width    = static_cast<FLOAT>(m_ScreenWidth);
-	vp.Height   = static_cast<FLOAT>(m_ScreenHeight);
+	vp.TopLeftY = 0;	
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
+	vp.Width    = static_cast<FLOAT>(m_ScreenWidth);
+	vp.Height   = static_cast<FLOAT>(m_ScreenHeight);
 	m_pD3D11DeviceContext->RSSetViewports(1, &vp);
 
 	//MVP Matrix
@@ -248,7 +247,7 @@ void RenderSystem::init_camera()
 	XMVECTOR camTarget = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR camUp     = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMMATRIX View      = XMMatrixLookAtLH(camPos, camTarget, camUp);
-	XMMATRIX Proj      = XMMatrixPerspectiveFovLH(0.4f*3.14f, GetAspect(), 1.0f, 1000.0f);
+	XMMATRIX Proj      = XMMatrixPerspectiveFovLH(0.4f*3.14f, GetAspect(), 0.1f, 1000.0f);
 	XMMATRIX Model     = XMMatrixRotationY(60.0f);
 
 
@@ -262,26 +261,18 @@ void RenderSystem::init_object()
 {
 
 	m_Timer.Reset();
+
 	m_Grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
 	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
+	m_Grid.init_texture(m_pD3D11Device);
+
 	m_Font.init(m_pD3D11Device);
 
 	m_Camera.SetRadius(50.0f);
 }
 
 
-void RenderSystem::TurnZBufferOn()
-{
-	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
-	return;
-}
 
-
-void RenderSystem::TurnZBufferOff()
-{
-	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthDisabledStencilState, 1);
-	return;
-}
 void RenderSystem::DrawFps()
 {
 	static bool flag = true;
