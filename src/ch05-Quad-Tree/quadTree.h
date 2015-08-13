@@ -4,6 +4,11 @@
 #include <xnamath.h>
 #include "d3d/d3dFrustum.h"
 
+
+
+namespace byhj
+{
+
 const int MAX_TRIANGLES = 10000;
 
 class QuadTree
@@ -26,12 +31,12 @@ private:
 
 public:
 	 QuadTree();
-	 QuadTree(const QuadTree&);
+	 QuadTree(const QuadTree &qtree);
 	~QuadTree();
 
-	bool Initialize(TerrainClass*, ID3D11Device*);
+	bool Init(TerrainClass*, ID3D11Device* pD3D11Device);
 	void Shutdown();
-	void Render(FrustumClass*, ID3D11DeviceContext*, TerrainShaderClass*);
+	void Render(FrustumClass*, ID3D11DeviceContext* pD3D11DeviceContext, TerrainShaderClass*);
 
 	int GetDrawCount();
 
@@ -44,10 +49,12 @@ private:
 	void RenderNode(Node*, FrustumClass*, ID3D11DeviceContext*, TerrainShaderClass*);
 
 private:
+
 	int m_triangleCount, m_drawCount;
 	Vertex* m_vertexList;
 	Node* m_parentNode;
 };
 
-#endif
+
+}
 #endif

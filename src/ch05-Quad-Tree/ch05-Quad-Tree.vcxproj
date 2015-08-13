@@ -65,14 +65,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\include\d3d\d3dApp.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dCamera.cpp" />
+    <ClCompile Include="..\..\include\d3d\d3dFont.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dGeometry.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dShader.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dTimer.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dFrustum.cpp" />
     <ClCompile Include="ch05-Quad-Tree.cpp" />
-    <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="quadTree.cpp" />
+    <ClCompile Include="grid.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\d3dApp.h" />
@@ -83,9 +83,8 @@
     <ClInclude Include="..\..\include\d3d\d3dShader.h" />
     <ClInclude Include="..\..\include\d3d\d3dTimer.h" />
     <ClInclude Include="..\..\include\d3d\d3dUtil.h" />
-    <ClInclude Include="..\..\include\d3d\d3dFrustum.h" />
-    <ClInclude Include="Geometry.h" />
-    <ClInclude Include="quadTree.h" />
+    <ClInclude Include="grid.h" />
+    <ClInclude Include="RenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="grid.psh" />

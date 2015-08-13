@@ -71,7 +71,8 @@
     <ClInclude Include="..\..\include\d3d\d3dShader.h" />
     <ClInclude Include="..\..\include\d3d\d3dTimer.h" />
     <ClInclude Include="..\..\include\d3d\d3dUtil.h" />
-    <ClInclude Include="Geometry.h" />
+    <ClInclude Include="grid.h" />
+    <ClInclude Include="RenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="grid.psh" />
@@ -85,7 +86,8 @@
     <ClCompile Include="..\..\include\d3d\d3dTimer.cpp" />
     <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
     <ClCompile Include="ch07-Color-Map.cpp" />
-    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="grid.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

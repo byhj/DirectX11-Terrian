@@ -19,7 +19,7 @@ QuadTree::~QuadTree()
 }
 
 
-bool QuadTree::Initialize(TerrainClass* terrain, ID3D11Device* device)
+bool QuadTree::Init(TerrainClass* terrain, ID3D11Device* device)
 {
 	int vertexCount;
 	float centerX, centerZ, width;

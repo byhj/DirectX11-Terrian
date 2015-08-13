@@ -31,7 +31,7 @@ VS_OUT VS( VS_IN vs_in)
    vs_out.Pos = mul(vs_out.Pos, view);
    vs_out.Pos = mul(vs_out.Pos, proj);
 
-   vs_out.Normal = mul(vs_in.Normal, (float3x3)model);
+   vs_out.Normal = vs_in.Normal;
    vs_out.Tex    = vs_in.Tex * 10.0f;
    vs_out.Color  = vs_in.Color;
    return vs_out;
