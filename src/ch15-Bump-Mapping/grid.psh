@@ -23,25 +23,24 @@ Texture2D texNormal	  : register(t1);
 
 float4 PS(VS_OUT ps_in) : SV_TARGET
 {
-    float4 texColor = tex.Sample(texState, ps_in.Tex);
-
     ps_in.Normal    = normalize(ps_in.Normal);
 	ps_in.Tangent   = normalize(ps_in.Tangent);
 	ps_in.BiTangent = normalize(ps_in.BiTangent);
+	
+	float4 texColor = tex.Sample(texState, ps_in.Tex);
 
-	//Set the normal map data
-	float4 normalMap = texNormal.Sample(texState, ps_in.Tex );
+	  float4 normalMap = texNormal.Sample(texState, ps_in.Tex );
 	//Change normal map range from [0, 1] to [-1, 1]
-	normalMap = (2.0f * normalMap) - 1.0f;
-	float3x3 texSpace = float3x3(ps_in.Tangent, ps_in.BiTangent , ps_in.Normal);
-	ps_in.Normal = normalize(mul(normalMap, texSpace));
+	  normalMap = (2.0f * normalMap) - 1.0f;
+	  float3x3 texSpace = float3x3(ps_in.Tangent, ps_in.BiTangent , ps_in.Normal);
+	  ps_in.Normal = normalize( mul(normalMap, texSpace) );
 
 	//calc the diffuse light with normal map
-    float intensity = dot(-lightDir, ps_in.Normal);
-    float4 diff = saturate( max(intensity, 0.0f) * diffuse );
+      float intensity = dot(-lightDir, ps_in.Normal);
+      float4 diff = saturate( max(intensity, 0.0f) * diffuse );
 	
-	//Add the bumping to texture
-	float4 pixelColor = saturate(diffuse * ambient + diff) * texColor;
+	   //Add the bumping to texture
+	   float4 pixelColor = saturate(ambient + diff) * texColor;
 
 	return pixelColor;
 }

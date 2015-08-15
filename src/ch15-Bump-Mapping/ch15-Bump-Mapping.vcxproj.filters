@@ -39,8 +39,14 @@
     <ClCompile Include="ch15-Bump-Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
+    <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\d3dFont.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,7 +74,10 @@
     <ClInclude Include="..\..\include\d3d\d3dUtil.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry.h">
+    <ClInclude Include="grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
