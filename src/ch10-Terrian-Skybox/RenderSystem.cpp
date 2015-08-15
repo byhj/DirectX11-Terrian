@@ -34,7 +34,13 @@ void RenderSystem::v_Render()
 
 /////////////////////////////////////////////////////////////////////
 
-	XMMATRIX sphereWorld = XMMatrixScaling(10.0f, 10.0f, 10.0f);
+	m_Matrix.view._14 = 0.0f;
+	m_Matrix.view._24 = 0.0f;
+	m_Matrix.view._34 = 0.0f;
+	m_Matrix.view._41 = 0.0f;
+	m_Matrix.view._42 = 0.0f;
+	m_Matrix.view._43 = 0.0f;
+	XMMATRIX sphereWorld = XMMatrixIdentity();
 	XMStoreFloat4x4(&m_Matrix.model, XMMatrixTranspose(sphereWorld));
 	m_Skymap.Render(m_pD3D11DeviceContext,m_Matrix);
 
@@ -268,9 +274,6 @@ void RenderSystem::init_camera()
 void RenderSystem::init_object()
 {
 
-	m_Timer.Reset();
-	m_Font.init(m_pD3D11Device);
-	m_Camera.SetRadius(50.0f);
 
 	m_Grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
 	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
@@ -281,6 +284,9 @@ void RenderSystem::init_object()
 	m_Skymap.init_shader(m_pD3D11Device, GetHwnd() );
 
 
+	m_Timer.Reset();
+	m_Font.init(m_pD3D11Device);
+	m_Camera.SetRadius(50.0f);
 }
 
 

@@ -4,6 +4,9 @@ namespace byhj
 {
 void D3DSkymap::createSphere(ID3D11Device*pD3D11Device, int LatLines, int LongLines)
 {
+	XMMATRIX sphereWorld;
+	XMMATRIX Rotationx;
+	XMMATRIX Rotationy;
 
 	HRESULT hr;
 

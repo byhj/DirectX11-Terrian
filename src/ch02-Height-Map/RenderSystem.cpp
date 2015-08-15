@@ -28,7 +28,7 @@ void RenderSystem::v_Render()
 	BeginScene();
 
 	m_Matrix.view = m_Camera.GetViewMatrix();
-	m_Matrix.proj = m_Camera.GetProjMatrix();
+	//m_Matrix.proj = m_Camera.GetProjMatrix();
 	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix);
 
 	DrawInfo();
@@ -42,10 +42,15 @@ void RenderSystem::v_Shutdown()
 
 	m_Grid.Shutdown();
 
-	ReleaseCOM(m_pSwapChain);
-	ReleaseCOM(m_pD3D11Device);
-	ReleaseCOM(m_pD3D11DeviceContext);
-	ReleaseCOM(m_pRenderTargetView);
+	ReleaseCOM(m_pSwapChain)
+	ReleaseCOM(m_pD3D11Device)
+	ReleaseCOM(m_pD3D11DeviceContext)
+	ReleaseCOM(m_pRenderTargetView)
+	ReleaseCOM(m_pDepthStencilView)
+	ReleaseCOM(m_pDepthStencilBuffer)
+	ReleaseCOM(m_pDepthStencilState)
+	ReleaseCOM(m_pDepthDisabledStencilState)
+	ReleaseCOM(m_pRasterState)
 }
 
 
@@ -139,14 +144,14 @@ void RenderSystem::init_device()
 	//////////////////////////////////////////////////////////////
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	D3D11_RASTERIZER_DESC rasterDesc;
-	rasterDesc.AntialiasedLineEnable = true;
+	rasterDesc.AntialiasedLineEnable = false;
 	rasterDesc.CullMode              = D3D11_CULL_BACK;
 	rasterDesc.DepthBias             = 0;
 	rasterDesc.DepthBiasClamp        = 0.0f;
 	rasterDesc.DepthClipEnable       = true;
-	rasterDesc.FillMode              =  D3D11_FILL_SOLID;
+	rasterDesc.FillMode              =  D3D11_FILL_WIREFRAME;
 	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable     = true;;
+	rasterDesc.MultisampleEnable     = false;
 	rasterDesc.ScissorEnable         = false;
 	rasterDesc.SlopeScaledDepthBias  = 0.0f;
 
@@ -227,7 +232,6 @@ void RenderSystem::init_object()
 	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
 	m_Font.init(m_pD3D11Device);
 
-	m_Camera.Init(GetAspect());
 	m_Camera.SetRadius(50.0f);
 }
 

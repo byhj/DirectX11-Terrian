@@ -13,7 +13,7 @@
 namespace byhj
 {
 
-	class RenderSystem : public D3DApp
+class RenderSystem : public D3DApp
 {
 public:
 	RenderSystem();

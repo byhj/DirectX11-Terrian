@@ -53,9 +53,7 @@ private:
 
 	int m_VertexCount;
 	int m_IndexCount;
-	XMMATRIX sphereWorld;
-	XMMATRIX Rotationx;
-	XMMATRIX Rotationy;
+
 
 	int NumSphereVertices;
 	int NumSphereFaces;
