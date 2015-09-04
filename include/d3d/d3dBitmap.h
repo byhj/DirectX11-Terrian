@@ -4,8 +4,8 @@
 #include <d3dx11.h>
 #include <xnamath.h>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
+
+#include "d3d/Shader.h"
 
 class D3DBitmap
 {
@@ -57,14 +57,14 @@ public:
 
 private:
 
-	struct MatrixBuffer
+	struct d3d::MatrixBuffer
 	{
 		XMMATRIX  model;
 		XMMATRIX  view;
 		XMMATRIX  proj;
 
 	};
-	MatrixBuffer cbMatrix;
+	d3d::MatrixBuffer cbMatrix;
 
 	struct  Vertex
 	{

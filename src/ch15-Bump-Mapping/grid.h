@@ -5,10 +5,10 @@
 #include <xnamath.h>
 #include <vector>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
-#include "d3d/d3dUtility.h"
-#include "d3d/d3dGeometry.h"
+
+#include "d3d/Shader.h"
+#include "d3d/Utility.h"
+#include "d3d/Geometry.h"
 
 namespace byhj
 {
@@ -20,7 +20,7 @@ public:
 	Grid() {}
 	~Grid() {}
 
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix);
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
 
 	void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
@@ -28,10 +28,10 @@ public:
 	void init_texture(ID3D11Device *pD3D11Device);
 private:
 	void loadHeightMap(const char *filename);
-	void calcNormal(D3DGeometry::MeshData &mesh);
-	void CalcBump(D3DGeometry::MeshData &mesh);
+	void calcNormal(d3d::Geometry::MeshData &mesh);
+	void CalcBump(d3d::Geometry::MeshData &mesh);
 
-	byhj::MatrixBuffer cbMatrix;
+	d3d::MatrixBuffer cbMatrix;
 
 	struct Vertex {
 		// Position
@@ -46,7 +46,7 @@ private:
 		XMFLOAT3 BiTangent;
 	};
 
-	byhj::Shader GridShader;
+	d3d::Shader GridShader;
 	std::vector<XMFLOAT3> m_Hightmap;
 	std::vector<Vertex> m_VertexData;
 

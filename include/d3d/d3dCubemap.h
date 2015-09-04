@@ -1,9 +1,9 @@
 #ifndef D3DCUBEMAP_H
 #define D3DCUBEMAP_H
 
-#include "d3d/d3dShader.h"
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dUtility.h"
+#include "d3d/Shader.h"
+
+#include "d3d/Utility.h"
 
 #include <windows.h>
 #include <d3dx11.h>
@@ -26,7 +26,7 @@ public:
 	void createSphere(ID3D11Device *pD3D11Device, int LatLines, int LongLines);
 	void load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
 	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const byhj::MatrixBuffer &matrix);
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 
 private:
 
@@ -39,13 +39,13 @@ private:
 		XMFLOAT3 pos;
 	};
 
-	struct MatrixBuffer
+	struct d3d::MatrixBuffer
 	{
 		XMFLOAT4X4  model;
 		XMFLOAT4X4  view;
 		XMFLOAT4X4  proj;
 	};
-	MatrixBuffer m_Matrix;
+	d3d::MatrixBuffer m_Matrix;
 
 	ID3D11Buffer *m_pIndexBuffer;
 	ID3D11Buffer *m_pVertexBuffer;
@@ -62,7 +62,7 @@ private:
 	ID3D11DepthStencilState  *m_pDSLessEqual;
 	ID3D11RasterizerState    *m_pRSCullNone;
 	ID3D11SamplerState       *m_pTexSamplerState;
-	byhj::Shader SkymapShader;
+	d3d::Shader SkymapShader;
 };
 
 

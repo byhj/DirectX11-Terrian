@@ -4,9 +4,9 @@
 #include <d3d11.h>
 #include <xnamath.h>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
-#include "d3d/d3dGeometry.h"
+
+#include "d3d/Shader.h"
+#include "d3d/Geometry.h"
 #include "D3DX11.h"
 
 class Geometry
@@ -68,21 +68,21 @@ public:
 	//Use image to load the color data
 	void loadColorMap(const char *filename);
 
-	void CalcNormal(D3DGeometry::MeshData &mesh);
+	void CalcNormal(d3d::Geometry::MeshData &mesh);
 	int GetTriangle()
 	{
 		return m_IndexCount / 3;
 	}
 
 private:
-	struct MatrixBuffer
+	struct d3d::MatrixBuffer
 	{
 		XMMATRIX  model;
 		XMMATRIX  view;
 		XMMATRIX  proj;
 
 	};
-	MatrixBuffer cbMatrix;
+	d3d::MatrixBuffer cbMatrix;
 
 	struct LightBuffer
 	{

@@ -1,10 +1,10 @@
 #include "grid.h"
-#include "d3d/d3dGeometry.h"
+#include "d3d/Geometry.h"
 
 namespace byhj
 {
 
-void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix)
+void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 {
 	//Update the the mvp matrix
 	cbMatrix.model = matrix.model;
@@ -42,8 +42,8 @@ void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11De
 	HRESULT hr;
 
 	loadHeightMap("../../media/textures/heightmap01.bmp");
-	D3DGeometry geom;
-	D3DGeometry::MeshData gridMesh;
+	d3d::Geometry geom;
+	d3d::Geometry::MeshData gridMesh;
 	geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, gridMesh);
 
 	m_VertexCount = gridMesh.VertexData.size();
@@ -88,7 +88,7 @@ void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11De
 	D3D11_BUFFER_DESC mvpDesc;	
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpDesc.ByteWidth      = sizeof(MatrixBuffer);
+	mvpDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
 	mvpDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
@@ -119,7 +119,7 @@ void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11De
 void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[3];
 	pInputLayoutDesc[0].SemanticName         = "POSITION";
 	pInputLayoutDesc[0].SemanticIndex        = 0;
 	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -144,10 +144,10 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc[2].InstanceDataStepRate = 0;
 
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
+	
 
 	GridShader.init(pD3D11Device, hWnd);
-	GridShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
+	GridShader.attachVS(L"grid.vsh", vInputLayoutDesc);
 	GridShader.attachPS(L"grid.psh");
 	GridShader.end();
 }
@@ -205,7 +205,7 @@ void Grid::loadHeightMap(const char *filename)
 	bitmapImage = 0;
 }
 
-void Grid::calcNormal(D3DGeometry::MeshData &mesh)
+void Grid::calcNormal(d3d::Geometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{

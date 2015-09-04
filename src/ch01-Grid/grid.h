@@ -4,9 +4,9 @@
 #include <d3d11.h>
 #include <xnamath.h>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
-#include "d3d/d3dUtility.h"
+
+#include "d3d/Shader.h"
+#include "d3d/Utility.h"
 
 namespace byhj
 {
@@ -18,7 +18,7 @@ public:
 	Grid() {}
 	~Grid() {}
 
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix);
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
 
 	void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
@@ -26,7 +26,7 @@ public:
 
 private:
 
-	byhj::MatrixBuffer cbMatrix;
+	d3d::MatrixBuffer cbMatrix;
 
 	struct  Vertex
 	{
@@ -35,7 +35,7 @@ private:
 		XMFLOAT2 Tex;
 	};
 
-	byhj::Shader GridShader;
+	d3d::Shader GridShader;
 
 	ID3D11Buffer        *m_pGridVB      = nullptr;
 	ID3D11Buffer        *m_pGridIB      = nullptr;

@@ -8,15 +8,15 @@
 #define _XM_NO_INTRINSICS_
 #endif 
 
-#include "d3d/d3dApp.h"
-#include "d3d/d3dCamera.h"
-#include "d3d/d3dTimer.h"
-#include "d3d/d3dFont.h"
+#include "d3d/App.h"
+#include "d3d/Camera.h"
+#include "d3d/Timer.h"
+#include "d3d/Font.h"
 #include "d3d/d3dBitmap.h"
 
 #include "Geometry.h"
 
-class D3DRenderSystem: public D3DApp
+class D3DRenderSystem: public d3d::App
 {
 public:
 	D3DRenderSystem() 

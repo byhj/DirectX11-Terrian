@@ -10,8 +10,8 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	//NormalizeHeightMap();
 	/////////////////////////////Vertex Buffer//////////////////////////////
 
-	D3DGeometry geom;
-	D3DGeometry::MeshData gridMesh;
+	d3d::Geometry geom;
+	d3d::Geometry::MeshData gridMesh;
 	geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, gridMesh);
 
 	m_VertexCount = gridMesh.VertexData.size();
@@ -63,7 +63,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	D3D11_BUFFER_DESC mvpDesc;	
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpDesc.ByteWidth      = sizeof(MatrixBuffer);
+	mvpDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
 	mvpDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
@@ -92,7 +92,7 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[4];
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[4];
 	pInputLayoutDesc[0].SemanticName         = "POSITION";
 	pInputLayoutDesc[0].SemanticIndex        = 0;
 	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -125,10 +125,10 @@ void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc[3].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc[3].InstanceDataStepRate = 0;
 
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
+	
 
 	GeometryShader.init(pD3D11Device, hWnd);
-	GeometryShader.attachVS(L"grid.vsh", pInputLayoutDesc, numElements);
+	GeometryShader.attachVS(L"grid.vsh", vInputLayoutDesc);
 	GeometryShader.attachPS(L"grid.psh");
 	GeometryShader.end();
 }
@@ -237,7 +237,7 @@ void Geometry::loadColorMap(const char *filename)
 	bitmapImage = 0;
 }
 
-void Geometry::CalcNormal(D3DGeometry::MeshData &mesh)
+void Geometry::CalcNormal(d3d::Geometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{

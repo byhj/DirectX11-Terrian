@@ -5,10 +5,10 @@
 #include <xnamath.h>
 #include <vector>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
-#include "d3d/d3dUtility.h"
-#include "d3d/d3dGeometry.h"
+
+#include "d3d/Shader.h"
+#include "d3d/Utility.h"
+#include "d3d/Geometry.h"
 
 namespace byhj
 {
@@ -20,7 +20,7 @@ public:
 	Grid() {}
 	~Grid() {}
 
-	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &matrix);
+	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
 
 	void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
@@ -31,7 +31,7 @@ private:
 	void loadHeightMap(const char *filename);
 	void loadColorMap(const char *filename);
 
-	void calcNormal(D3DGeometry::MeshData &mesh);
+	void calcNormal(d3d::Geometry::MeshData &mesh);
 
 	struct  Vertex
 	{
@@ -50,8 +50,8 @@ private:
 		float    pad;
 	};
 
-	byhj::MatrixBuffer cbMatrix;
-	byhj::Shader GridShader;
+	d3d::MatrixBuffer cbMatrix;
+	d3d::Shader GridShader;
 	LightBuffer cbLight;
 	std::vector<Vertex> m_VertexData;
 	std::vector<XMFLOAT3> m_Hightmap;	

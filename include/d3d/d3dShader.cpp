@@ -30,7 +30,7 @@ void Shader::Debug(ID3D10Blob *pErrorMessage, HWND hwnd, WCHAR *shaderFileName)
 
 }
 
-bool Shader::attachVS(WCHAR* Filename,  D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[], unsigned numElements)
+bool Shader::attachVS(WCHAR* Filename,  std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[], unsigned numElements)
 {	
 	HRESULT result;
 	ID3D10Blob* errorMessage = 0;

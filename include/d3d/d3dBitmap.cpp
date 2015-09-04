@@ -103,7 +103,7 @@ bool D3DBitmap::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3
 	D3D11_BUFFER_DESC mvpBufferDesc;	
 	ZeroMemory(&mvpBufferDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpBufferDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpBufferDesc.ByteWidth      = sizeof(MatrixBuffer);
+	mvpBufferDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
 	mvpBufferDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpBufferDesc.CPUAccessFlags = 0;
 	mvpBufferDesc.MiscFlags      = 0;
@@ -138,7 +138,7 @@ bool D3DBitmap::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	HRESULT result;
 
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[2];
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[2];
 	pInputLayoutDesc[0].SemanticName = "POSITION";
 	pInputLayoutDesc[0].SemanticIndex = 0;
 	pInputLayoutDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -155,10 +155,10 @@ bool D3DBitmap::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc[1].InstanceDataStepRate = 0;
 
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
+	
 
 	D3DRTTShader.init(pD3D11Device, hWnd);
-	D3DRTTShader.attachVS(L"bitmap.vsh", pInputLayoutDesc, numElements);
+	D3DRTTShader.attachVS(L"bitmap.vsh", vInputLayoutDesc);
 	D3DRTTShader.attachPS(L"bitmap.psh");
 	D3DRTTShader.end();
 

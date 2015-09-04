@@ -4,9 +4,9 @@
 #include <d3d11.h>
 #include <xnamath.h>
 
-#include "d3d/d3dDebug.h"
-#include "d3d/d3dShader.h"
-#include "d3d/d3dGeometry.h"
+
+#include "d3d/Shader.h"
+#include "d3d/Geometry.h"
 #include "D3DX11.h"
 
 class Grid
@@ -65,21 +65,21 @@ public:
 	void init_texture(ID3D11Device *pD3D11Device);
 
 	void loadHeightMap(const char *filename);
-	void CalcNormal(D3DGeometry::MeshData &mesh);
+	void CalcNormal(d3d::Geometry::MeshData &mesh);
 	int GetTriangle()
 	{
 		return m_IndexCount / 3;
 	}
 
 private:
-	struct MatrixBuffer
+	struct d3d::MatrixBuffer
 	{
 		XMFLOAT4X4  model;
 		XMFLOAT4X4  view;
 		XMFLOAT4X4  proj;
 
 	};
-	MatrixBuffer cbMatrix;
+	d3d::MatrixBuffer cbMatrix;
 
 	struct LightBuffer
 	{
@@ -99,7 +99,7 @@ private:
 
 	std::vector<XMFLOAT3> m_Hightmap;
 
-	byhj::Shader GeometryShader;
+	d3d::Shader GeometryShader;
 	ID3D11Buffer             *m_pGridVB;
 	ID3D11Buffer             *m_pGridIB;
 	ID3D11Buffer             *m_pMVPBuffer;

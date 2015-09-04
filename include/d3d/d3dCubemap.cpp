@@ -135,7 +135,7 @@ void D3DSkymap::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	HRESULT result;
 
-	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc[3];
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[3];
 	pInputLayoutDesc[0].SemanticName         = "POSITION";
 	pInputLayoutDesc[0].SemanticIndex        = 0;
 	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -160,10 +160,10 @@ void D3DSkymap::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc[2].InstanceDataStepRate = 0;
 
-	unsigned numElements = ARRAYSIZE(pInputLayoutDesc);
+	
 
 	SkymapShader.init(pD3D11Device, hWnd);
-	SkymapShader.attachVS(L"cubemap.vsh", pInputLayoutDesc, numElements);
+	SkymapShader.attachVS(L"cubemap.vsh", vInputLayoutDesc);
 	SkymapShader.attachPS(L"cubemap.psh");
 	SkymapShader.end();
 
@@ -225,7 +225,7 @@ void D3DSkymap::load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 	D3D11_BUFFER_DESC mvpDesc;
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpDesc.ByteWidth      = sizeof(MatrixBuffer);
+	mvpDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
 	mvpDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
@@ -234,7 +234,7 @@ void D3DSkymap::load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 
 }
 
-void D3DSkymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const byhj::MatrixBuffer &matrix)
+void D3DSkymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 {
 
 
