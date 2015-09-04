@@ -31,7 +31,7 @@ float4 PS(VS_OUT ps_in) : SV_TARGET
 
    float4 textureColor  = tex.Sample(texState, ps_in.Tex);
    float4 textureColor1 = tex1.Sample(texState, ps_in.Tex);
-   float4 textureAlpha  = texAlpha.Sample(texState, ps_in.Tex);
+   float4 textureAlpha  = alphaTex.Sample(texState, ps_in.Tex);
    float4 blendColor = (textureAlpha* textureColor1) + ((1.0 - textureAlpha) * textureColor);
 
    ps_in.Normal = normalize(ps_in.Normal);

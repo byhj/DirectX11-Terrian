@@ -4,10 +4,14 @@
 #include <d3d11.h>
 #include <xnamath.h>
 
-
+#include "d3d/Utility.h"
 #include "d3d/Shader.h"
 #include "d3d/Geometry.h"
 #include "D3DX11.h"
+
+namespace byhj
+{
+
 
 class Grid
 {
@@ -72,13 +76,7 @@ public:
 	}
 
 private:
-	struct d3d::MatrixBuffer
-	{
-		XMFLOAT4X4  model;
-		XMFLOAT4X4  view;
-		XMFLOAT4X4  proj;
 
-	};
 	d3d::MatrixBuffer cbMatrix;
 
 	struct LightBuffer
@@ -117,4 +115,5 @@ private:
 	int m_TerrainHeight;
 };
 
+}
 #endif

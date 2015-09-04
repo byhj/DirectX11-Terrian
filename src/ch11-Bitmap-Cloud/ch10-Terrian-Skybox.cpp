@@ -76,10 +76,10 @@ public:
 		ReleaseCOM(m_pDepthStencilBuffer);
 		ReleaseCOM(m_pRenderTargetView);
 	}
-	void v_OnMouseDown(WPARAM btnState, int x, int y);
-	void v_OnMouseMove(WPARAM btnState, int x, int y);
-	void v_OnMouseUp(WPARAM btnState, int x, int y);
-	void v_OnMouseWheel(WPARAM btnState, int x, int y);
+	
+	
+	
+
 
 private:
 	void init_device();

@@ -30,7 +30,7 @@ void RenderSystem::v_Render()
 	m_Matrix.view = m_Camera.GetViewMatrix();
 	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, m_Matrix.proj);
 
-	//DrawInfo();
+	DrawInfo();
 
 	EndScene();
 
@@ -50,26 +50,9 @@ void RenderSystem::v_Shutdown()
 
 void RenderSystem::UpdateScene()
 {
-	m_Camera.update();
-}
-void  RenderSystem::v_OnMouseDown(WPARAM btnState, int x, int y)
-{
-	m_Camera.OnMouseDown(btnState, x, y, GetHwnd());
+	m_Camera.DetectInput(m_Timer.GetDeltaTime(), GetHwnd());
 }
 
-void  RenderSystem::v_OnMouseMove(WPARAM btnState, int x, int y)
-{
-	m_Camera.OnMouseMove(btnState, x, y);
-}
-
-void  RenderSystem::v_OnMouseUp(WPARAM btnState, int x, int y)
-{
-	m_Camera.OnMouseUp(btnState, x, y);
-}
-void  RenderSystem::v_OnMouseWheel(WPARAM btnState, int x, int y)
-{
-	m_Camera.OnMouseWheel(btnState, x, y, GetAspect());
-}
 void RenderSystem::init_device()
 {
 
@@ -260,15 +243,15 @@ void RenderSystem::init_camera()
 void RenderSystem::init_object()
 {
 
-	m_Timer.Reset();
+
 
 	m_Grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
 	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
 	m_Grid.init_texture(m_pD3D11Device);
 
-	m_Font.init(m_pD3D11Device);
-
-	m_Camera.SetRadius(50.0f);
+	m_Timer.Reset();
+	m_Font.Init(m_pD3D11Device);
+	m_Camera.Init(GetAppInst(), GetHwnd());
 }
 
 

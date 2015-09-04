@@ -5,12 +5,12 @@
 #include "d3d/d3dBitmap.h"
 
 
-class MiniMapClass
+class MiniMap
 {
 public:
-	MiniMapClass();
-	MiniMapClass(const MiniMapClass&);
-	~MiniMapClass();
+	MiniMap();
+	MiniMap(const MiniMap&);
+	~MiniMap();
 
 public:
 

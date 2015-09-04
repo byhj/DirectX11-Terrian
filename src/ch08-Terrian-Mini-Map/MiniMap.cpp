@@ -1,7 +1,7 @@
 
 #include "minimap.h"
 
-MiniMapClass::MiniMapClass()
+MiniMap::MiniMap()
 {
 	m_pMiniMap  = 0;
 	m_pBorder   = 0;
@@ -9,17 +9,17 @@ MiniMapClass::MiniMapClass()
 }
 
 
-MiniMapClass::MiniMapClass(const MiniMapClass& other)
+MiniMap::MiniMap(const MiniMap& other)
 {
 }
 
 
-MiniMapClass::~MiniMapClass()
+MiniMap::~MiniMap()
 {
 }
 
 
-bool MiniMapClass::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight, 
+bool MiniMap::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight, 
 						float terrainWidth,  float terrainHeight, XMMATRIX viewMatrix)
 {
 	bool result;
@@ -48,7 +48,7 @@ bool MiniMapClass::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int sc
 }
 
 
-void MiniMapClass::Shutdown()
+void MiniMap::Shutdown()
 {
 	// Release the point bitmap object.
 	if(m_pLocation)
@@ -78,7 +78,7 @@ void MiniMapClass::Shutdown()
 }
 
 
-bool MiniMapClass::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMMATRIX &Model,  
+bool MiniMap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMMATRIX &Model,  
 						  const XMMATRIX &View, const XMMATRIX &Proj)
 {
     m_pMiniMap->Render(pD3D11DeviceContext, Model, View, Proj);
@@ -88,7 +88,7 @@ bool MiniMapClass::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMMATR
 	return true;
 }
 
-void MiniMapClass::PositionUpdate(float positionX, float positionZ)
+void MiniMap::PositionUpdate(float positionX, float positionZ)
 {
 	float percentX, percentY;
 	// Ensure the point does not leave the minimap borders even if the camera goes past the terrain borders.

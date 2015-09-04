@@ -63,28 +63,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\d3d\d3dApp.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dCamera.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dCubemap.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dFont.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dGeometry.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dShader.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dTimer.cpp" />
-    <ClCompile Include="..\..\include\d3d\d3dUtil.cpp" />
+    <ClCompile Include="..\..\include\d3d\App.cpp" />
+    <ClCompile Include="..\..\include\d3d\Camera.cpp" />
+    <ClCompile Include="..\..\include\d3d\Font.cpp" />
+    <ClCompile Include="..\..\include\d3d\Geometry.cpp" />
+    <ClCompile Include="..\..\include\d3d\Shader.cpp" />
+    <ClCompile Include="..\..\include\d3d\Timer.cpp" />
+    <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="ch10-Terrian-Skybox.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\d3d\d3dApp.h" />
-    <ClInclude Include="..\..\include\d3d\d3dCamera.h" />
-    <ClInclude Include="..\..\include\d3d\d3dCubemap.h" />
-    <ClInclude Include="..\..\include\d3d\d3dDebug.h" />
-    <ClInclude Include="..\..\include\d3d\d3dFont.h" />
-    <ClInclude Include="..\..\include\d3d\d3dGeometry.h" />
-    <ClInclude Include="..\..\include\d3d\d3dShader.h" />
-    <ClInclude Include="..\..\include\d3d\d3dTimer.h" />
-    <ClInclude Include="..\..\include\d3d\d3dUtil.h" />
+    <ClInclude Include="..\..\include\d3d\App.h" />
+    <ClInclude Include="..\..\include\d3d\Camera.h" />
+    <ClInclude Include="..\..\include\d3d\Font.h" />
+    <ClInclude Include="..\..\include\d3d\Geometry.h" />
+    <ClInclude Include="..\..\include\d3d\Shader.h" />
+    <ClInclude Include="..\..\include\d3d\Timer.h" />
+    <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="RenderSystem.h" />
   </ItemGroup>
