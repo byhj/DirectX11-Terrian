@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Cubemap.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cubemap.psh">
@@ -89,6 +92,9 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Utility.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Cubemap.h">
       <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>

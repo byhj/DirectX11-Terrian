@@ -39,12 +39,6 @@ private:
 		XMFLOAT3 pos;
 	};
 
-	struct d3d::MatrixBuffer
-	{
-		XMFLOAT4X4  model;
-		XMFLOAT4X4  view;
-		XMFLOAT4X4  proj;
-	};
 	d3d::MatrixBuffer m_Matrix;
 
 	ID3D11Buffer *m_pIndexBuffer;

@@ -6,7 +6,36 @@ namespace byhj
 
 namespace d3d
 {
+	void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &mvpMatrix)
+	{
+		// Set vertex buffer stride and offset.=
+		unsigned int stride;
+		unsigned int offset;
+		stride = sizeof( Vertex );
+		offset = 0;
 
+		pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+
+		cbMatrix.Model = mvpMatrix.Model;
+		cbMatrix.View  = mvpMatrix.View;
+		cbMatrix.Proj  = mvpMatrix.Proj;
+
+		pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+		pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pShaderResourceView);
+		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
+
+		SkymapShader.use(pD3D11DeviceContext);
+
+		pD3D11DeviceContext->OMSetDepthStencilState(m_pDSLessEqual, 0);
+
+		pD3D11DeviceContext->RSSetState(m_pRSCullNone);
+		pD3D11DeviceContext->DrawIndexed(NumSphereFaces*3, 0, 0);
+		pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		pD3D11DeviceContext->OMSetDepthStencilState(NULL, 0);
+	}
 void Skymap::createSphere(ID3D11Device*pD3D11Device, int LatLines, int LongLines)
 {
 	XMMATRIX sphereWorld;
@@ -243,36 +272,7 @@ void Skymap::load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 
 }
 
-void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &mvpMatrix)
-{
-	// Set vertex buffer stride and offset.=
-	unsigned int stride;
-	unsigned int offset;
-	stride = sizeof(Vertex); 
-	offset = 0;
 
-	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	pD3D11DeviceContext->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &stride, &offset);
-
-	cbMatrix.Model = mvpMatrix.Model;
-	cbMatrix.View  = mvpMatrix.View;
-	cbMatrix.Proj  = mvpMatrix.Proj;
-
-	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0 );
-	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, &m_pMVPBuffer);
-	pD3D11DeviceContext->PSSetShaderResources( 0, 1, &m_pShaderResourceView);
-	pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState);
-
-	SkymapShader.use(pD3D11DeviceContext);
-
-	pD3D11DeviceContext->OMSetDepthStencilState(m_pDSLessEqual, 0);
-
-	pD3D11DeviceContext->RSSetState(m_pRSCullNone);
-	pD3D11DeviceContext->DrawIndexed(NumSphereFaces * 3, 0, 0 );
-	pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	pD3D11DeviceContext->OMSetDepthStencilState(NULL, 0);
-}
 
 	}
 }
