@@ -6,6 +6,7 @@ namespace byhj
 
 namespace d3d
 {
+
 	void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &mvpMatrix)
 	{
 		// Set vertex buffer stride and offset.=
@@ -17,9 +18,9 @@ namespace d3d
 		pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 
-		cbMatrix.Model = mvpMatrix.Model;
-		cbMatrix.View  = mvpMatrix.View;
-		cbMatrix.Proj  = mvpMatrix.Proj;
+		cbMatrix.Model = mvpMatrix.model;
+		cbMatrix.View  = mvpMatrix.view;
+		cbMatrix.Proj  = mvpMatrix.proj;
 
 		pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
 		pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
@@ -36,6 +37,7 @@ namespace d3d
 
 		pD3D11DeviceContext->OMSetDepthStencilState(NULL, 0);
 	}
+
 void Skymap::createSphere(ID3D11Device*pD3D11Device, int LatLines, int LongLines)
 {
 	XMMATRIX sphereWorld;

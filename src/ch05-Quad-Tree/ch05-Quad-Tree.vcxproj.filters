@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="quadTree.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderSystem.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Utility.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="quadTree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

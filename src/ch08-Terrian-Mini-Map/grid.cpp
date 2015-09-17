@@ -1,14 +1,48 @@
-#include "Geometry.h"
-#include "d3d/d3dUtil.h"
+#include "grid.h"
+#include "d3d/Geometry.h"
 
-void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+namespace byhj
+{
+
+void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
+{
+	//Update the the mvp matrix
+	cbMatrix.model = matrix.model;
+	cbMatrix.view  = matrix.view;
+	cbMatrix.proj  = matrix.proj;
+	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+	pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
+	pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+	pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
+
+	// Set vertex buffer stride and offset
+	unsigned int stride;
+	unsigned int offset;
+	stride = sizeof(Vertex);
+	offset = 0;
+	pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pGridVB, &stride, &offset);
+	pD3D11DeviceContext->IASetIndexBuffer(m_pGridIB, DXGI_FORMAT_R32_UINT, 0);
+
+	GridShader.use(pD3D11DeviceContext);
+	pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+}
+
+void Grid::Shutdown()
+{
+	ReleaseCOM(m_pMVPBuffer)
+	ReleaseCOM(m_pGridVB)
+	ReleaseCOM(m_pGridIB)
+	ReleaseCOM(m_pInputLayout)
+}
+
+void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
 
 	loadHeightMap("../../media/textures/heightmap01.bmp");
 	loadColorMap("../../media/textures/colorm01.bmp");
-	//NormalizeHeightMap();
-	/////////////////////////////Vertex Buffer//////////////////////////////
 
 	d3d::Geometry geom;
 	d3d::Geometry::MeshData gridMesh;
@@ -16,10 +50,11 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 
 	m_VertexCount = gridMesh.VertexData.size();
 	for (int i = 0; i != m_VertexCount; ++i)
-	    gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
+		gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
 
-	CalcNormal(gridMesh);
+	calcNormal(gridMesh);
 
+	m_VertexCount = gridMesh.VertexData.size();
 	m_VertexData.resize(m_VertexCount);
 	for (int i = 0; i != m_VertexCount; ++i)
 	{
@@ -28,6 +63,8 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 		m_VertexData[i].Tex    = gridMesh.VertexData[i].Tex;
 		m_VertexData[i].Color  = m_Colormap[i];
 	}
+
+	/////////////////////////////Vertex Buffer//////////////////////////////
 
 	D3D11_BUFFER_DESC gridVBDesc;
 	gridVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
@@ -70,13 +107,14 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	hr = pD3D11Device->CreateBuffer(&mvpDesc, NULL, &m_pMVPBuffer);
 	DebugHR(hr);
 
-	D3D11_BUFFER_DESC lightDesc;	
+	D3D11_BUFFER_DESC lightDesc;
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	lightDesc.Usage          = D3D11_USAGE_DEFAULT;
 	lightDesc.ByteWidth      = sizeof(LightBuffer);
 	lightDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	lightDesc.CPUAccessFlags = 0;
 	lightDesc.MiscFlags      = 0;
+
 
 	cbLight.ambient  = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
 	cbLight.diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -89,51 +127,56 @@ void Geometry::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	DebugHR(hr);
 }
 
-void Geometry::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+
+void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 {
 	//Shader interface information
-	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc[4];
-	pInputLayoutDesc[0].SemanticName         = "POSITION";
-	pInputLayoutDesc[0].SemanticIndex        = 0;
-	pInputLayoutDesc[0].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[0].InputSlot            = 0;
-	pInputLayoutDesc[0].AlignedByteOffset    = 0;
-	pInputLayoutDesc[0].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[0].InstanceDataStepRate = 0;
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc;
+	D3D11_INPUT_ELEMENT_DESC pInputLayoutDesc;
 
-	pInputLayoutDesc[1].SemanticName         = "NORMAL";
-	pInputLayoutDesc[1].SemanticIndex        = 0;
-	pInputLayoutDesc[1].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[1].InputSlot            = 0;
-	pInputLayoutDesc[1].AlignedByteOffset    = 12;
-	pInputLayoutDesc[1].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[1].InstanceDataStepRate = 0;
+	pInputLayoutDesc.SemanticName         = "POSITION";
+	pInputLayoutDesc.SemanticIndex        = 0;
+	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc.InputSlot            = 0;
+	pInputLayoutDesc.AlignedByteOffset    = 0;
+	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	pInputLayoutDesc[2].SemanticName         = "TEXCOORD";
-	pInputLayoutDesc[2].SemanticIndex        = 0;
-	pInputLayoutDesc[2].Format               = DXGI_FORMAT_R32G32_FLOAT;
-	pInputLayoutDesc[2].InputSlot            = 0;
-	pInputLayoutDesc[2].AlignedByteOffset    = 24;
-	pInputLayoutDesc[2].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[2].InstanceDataStepRate = 0;
+	pInputLayoutDesc.SemanticName         = "NORMAL";
+	pInputLayoutDesc.SemanticIndex        = 0;
+	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc.InputSlot            = 0;
+	pInputLayoutDesc.AlignedByteOffset    = 12;
+	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	pInputLayoutDesc[3].SemanticName         = "COLOR";
-	pInputLayoutDesc[3].SemanticIndex        = 0;
-	pInputLayoutDesc[3].Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc[3].InputSlot            = 0;
-	pInputLayoutDesc[3].AlignedByteOffset    = 32;
-	pInputLayoutDesc[3].InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc[3].InstanceDataStepRate = 0;
-
+	pInputLayoutDesc.SemanticName         = "TEXCOORD";
+	pInputLayoutDesc.SemanticIndex        = 0;
+	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
+	pInputLayoutDesc.InputSlot            = 0;
+	pInputLayoutDesc.AlignedByteOffset    = 24;
+	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 	
+	pInputLayoutDesc.SemanticName         = "COLOR";
+	pInputLayoutDesc.SemanticIndex        = 0;
+	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
+	pInputLayoutDesc.InputSlot            = 0;
+	pInputLayoutDesc.AlignedByteOffset    = 32;
+	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+	pInputLayoutDesc.InstanceDataStepRate = 0;
+	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	GeometryShader.init(pD3D11Device, hWnd);
-	GeometryShader.attachVS(L"grid.vsh", vInputLayoutDesc);
-	GeometryShader.attachPS(L"grid.psh");
-	GeometryShader.end();
+	GridShader.init(pD3D11Device, hWnd);
+	GridShader.attachVS(L"grid.vsh", vInputLayoutDesc);
+	GridShader.attachPS(L"grid.psh");
+	GridShader.end();
 }
 
-void Geometry::loadHeightMap(const char *filename)
+void Grid::loadHeightMap(const char *filename)
 {
 	BITMAPFILEHEADER  bitmapFileHeader;
 	BITMAPINFOHEADER  bitmapInfoHeader;
@@ -165,9 +208,9 @@ void Geometry::loadHeightMap(const char *filename)
 	///////////////////////////////////////////////////////////////
 	int k = 0, index;
 	// Read the image data into the height map.
-	for(int j = 0; j != m_TerrainHeight; ++j)
+	for (int j = 0; j != m_TerrainHeight; ++j)
 	{
-		for(int i = 0; i != m_TerrainWidth; ++i)
+		for (int i = 0; i != m_TerrainWidth; ++i)
 		{
 			height = bitmapImage[k];
 
@@ -182,11 +225,11 @@ void Geometry::loadHeightMap(const char *filename)
 	}
 
 	// Release the bitmap image data.
-	delete [] bitmapImage;
+	delete[] bitmapImage;
 	bitmapImage = 0;
 }
 
-void Geometry::loadColorMap(const char *filename)
+void Grid::loadColorMap(const char *filename)
 {
 	BITMAPFILEHEADER  bitmapFileHeader;
 	BITMAPINFOHEADER  bitmapInfoHeader;
@@ -218,14 +261,14 @@ void Geometry::loadColorMap(const char *filename)
 	///////////////////////////////////////////////////////////////
 	int k = 0, index;
 	// Read the image data into the height map.
-	for(int j = 0; j != m_TerrainHeight; ++j)
+	for (int j = 0; j != m_TerrainHeight; ++j)
 	{
-		for(int i = 0; i != m_TerrainWidth; ++i)
+		for (int i = 0; i != m_TerrainWidth; ++i)
 		{
-            XMFLOAT3 Color;
-			Color.x  = (float)bitmapImage[k]   / 255.0f;
-			Color.y  = (float)bitmapImage[k+1] / 255.0f;
-			Color.z  = (float)bitmapImage[k+2] / 255.0f;
+			XMFLOAT3 Color;
+			Color.x  = (float)bitmapImage[k] / 255.0f;
+			Color.y  = (float)bitmapImage[k + 1] / 255.0f;
+			Color.z  = (float)bitmapImage[k + 2] / 255.0f;
 			m_Colormap.push_back(Color);
 
 			k += 3;
@@ -233,24 +276,25 @@ void Geometry::loadColorMap(const char *filename)
 	}
 
 	// Release the bitmap image data.
-	delete [] bitmapImage;
+	delete[] bitmapImage;
 	bitmapImage = 0;
 }
 
-void Geometry::CalcNormal(d3d::Geometry::MeshData &mesh)
+
+void Grid::calcNormal(d3d::Geometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{
 		int index1 = mesh.IndexData[i];
-		int index2 = mesh.IndexData[i+1];
-		int index3 = mesh.IndexData[i+2];
+		int index2 = mesh.IndexData[i + 1];
+		int index3 = mesh.IndexData[i + 2];
 		XMFLOAT3 pos1 = mesh.VertexData[index1].Pos;
 		XMFLOAT3 pos2 = mesh.VertexData[index2].Pos;
 		XMFLOAT3 pos3 = mesh.VertexData[index3].Pos;
 
 		XMVECTOR v1 = XMLoadFloat3(&pos1);
-        XMVECTOR v2 = XMLoadFloat3(&pos2);
-        XMVECTOR v3 = XMLoadFloat3(&pos3);
+		XMVECTOR v2 = XMLoadFloat3(&pos2);
+		XMVECTOR v3 = XMLoadFloat3(&pos3);
 
 		XMVECTOR edge1 = v1 - v2;
 		XMVECTOR edge2 = v2 - v3;
@@ -271,10 +315,10 @@ void Geometry::CalcNormal(d3d::Geometry::MeshData &mesh)
 
 }
 
-void Geometry::init_texture(ID3D11Device *pD3D11Device)
+void Grid::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,NULL, &m_pTextureSRV, NULL);
+	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, NULL, &m_pTextureSRV, NULL);
 	DebugHR(hr);
 
 	// Create a texture sampler state description.
@@ -296,4 +340,5 @@ void Geometry::init_texture(ID3D11Device *pD3D11Device)
 	// Create the texture sampler state.
 	hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
 	DebugHR(hr);
+}
 }

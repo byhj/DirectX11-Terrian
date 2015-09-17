@@ -16,14 +16,14 @@ class QuadTree
 private:
 	struct Vertex
 	{
-		XMFLOAT3 position;
-		XMFLOAT2 texture;
-		XMFLOAT3 normal;
+		XMFLOAT3 Position;
+		XMFLOAT3 Normal;
+		XMFLOAT2 TexCoord;
 	};
 
 	struct Node
 	{
-		float positionX, positionZ, width;
+		float posX, posZ, width;
 		int   triangleCount;
 		ID3D11Buffer *vertexBuffer, *indexBuffer;
 		Node* nodes[4];

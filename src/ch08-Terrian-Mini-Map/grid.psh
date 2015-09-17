@@ -27,7 +27,7 @@ float4 PS(VS_OUT ps_in) : SV_TARGET
 {
 
    float4 textureColor = tex.Sample(texState, ps_in.Tex);
-
+  // ps_in.Color = normalize(ps_in.Color);
    ps_in.Normal = normalize(ps_in.Normal);
    float4 pixelColor = cbLight.ambient;
 
@@ -36,5 +36,5 @@ float4 PS(VS_OUT ps_in) : SV_TARGET
    float4 diffuse   = intensity * cbLight.diffuse;
 
    pixelColor += diffuse;
-   return saturate(pixelColor * textureColor * float4(ps_in.Color, 1.0f) * 2.0f );
+   return saturate(pixelColor * textureColor * float4(ps_in.Color, 1.0f) * 2.0f);
 }

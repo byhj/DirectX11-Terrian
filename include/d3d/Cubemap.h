@@ -3,14 +3,11 @@
 
 #include "Shader.h"
 #include "d3dDebug.h"
+#include "Utility.h"
 
 #include <vector>
 #include <d3dx11.h>
 #include <xnamath.h>
-#include <dxgi.h>
-#include <d3dcommon.h>
-#include <d3d11.h>
-#include <D3DX11async.h>
 #include "Common.h"
 
 namespace byhj
@@ -23,7 +20,9 @@ class Skymap
 {
 public:
 	Skymap() {}
+	~Skymap() {}
 
+public:
 	void createSphere(ID3D11Device *pD3D11Device, int LatLines, int LongLines);
 	void load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
 	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
