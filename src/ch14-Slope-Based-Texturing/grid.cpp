@@ -1,8 +1,50 @@
 #include "Grid.h"
-
+#include "DirectXTK/DDSTextureLoader.h"
 
 namespace byhj
 {
+void Grid::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+{
+	init_buffer(pD3D11Device, pD3D11DeviceContext);
+	init_shader(pD3D11Device, hWnd);
+	init_texture(pD3D11Device);
+}
+
+void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &model, const XMFLOAT4X4 &view, const XMFLOAT4X4 &proj)
+	{
+		//Update the the mvp matrix
+		cbMatrix.model = model;
+		cbMatrix.view = view;
+		cbMatrix.proj = proj;
+		pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+		pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+
+		pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
+		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pGrassTexSRV);
+		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pSlopeTexSRV);
+		pD3D11DeviceContext->PSSetShaderResources(2, 1, &m_pRockTexSRV);
+		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
+
+		// Set vertex buffer stride and offset
+		unsigned int stride;
+		unsigned int offset;
+		stride = sizeof(Vertex);
+		offset = 0;
+		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pGridVB, &stride, &offset);
+		pD3D11DeviceContext->IASetIndexBuffer(m_pGridIB, DXGI_FORMAT_R32_UINT, 0);
+
+		GeometryShader.use(pD3D11DeviceContext);
+		pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+	}
+
+void Grid::Shutdown()
+{
+	ReleaseCOM(m_pMVPBuffer)
+	ReleaseCOM(m_pGridVB)
+	ReleaseCOM(m_pGridIB)
+	ReleaseCOM(m_pInputLayout)
+}
 
 void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
@@ -124,10 +166,9 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
 	
-
-	GeometryShader.init(pD3D11Device, hWnd);
-	GeometryShader.attachVS(L"grid.vsh", vInputLayoutDesc);
-	GeometryShader.attachPS(L"grid.psh");
+	GeometryShader.init(pD3D11Device, vInputLayoutDesc);
+	GeometryShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
+	GeometryShader.attachPS(L"grid.psh", "PS", "ps_5_0");
 	GeometryShader.end();
 }
 
@@ -222,12 +263,13 @@ void Grid::CalcNormal(d3d::Geometry::MeshData &mesh)
 void Grid::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/grass.dds", NULL,NULL, &m_pGrassTexSRV, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/grass.dds", NULL, &m_pGrassTexSRV, NULL);
 	DebugHR(hr);
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/slope.dds", NULL,NULL, &m_pSlopeTexSRV, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/slope.dds", NULL, &m_pSlopeTexSRV, NULL);
 	DebugHR(hr);
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/rock.dds", NULL,NULL, &m_pRockTexSRV, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/rock.dds", NULL, &m_pRockTexSRV, NULL);
 	DebugHR(hr);
+
 	// Create a texture sampler state description.
 	D3D11_SAMPLER_DESC samplerDesc;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

@@ -42,7 +42,7 @@ private:
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;
-	d3d::Skymap m_Skymap;
+	Skymap m_Skymap;
 
 	float fps = 0.0f;
 	int m_videoCardMemory;

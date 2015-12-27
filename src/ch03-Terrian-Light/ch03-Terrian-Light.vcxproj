@@ -74,6 +74,7 @@
     <ClCompile Include="..\..\include\d3d\Shader.cpp" />
     <ClCompile Include="..\..\include\d3d\Timer.cpp" />
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
+    <ClCompile Include="..\..\include\dxerr.cpp" />
     <ClCompile Include="ch03-Terrian-Light.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="..\..\include\d3d\Shader.h" />
     <ClInclude Include="..\..\include\d3d\Timer.h" />
     <ClInclude Include="..\..\include\d3d\Utility.h" />
+    <ClInclude Include="..\..\include\dxerr.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="RenderSystem.h" />
   </ItemGroup>

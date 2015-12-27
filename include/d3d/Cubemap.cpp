@@ -234,7 +234,7 @@ void Skymap::load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 	D3D11_BUFFER_DESC mvpDesc;	
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
 	mvpDesc.Usage          = D3D11_USAGE_DEFAULT;
-	mvpDesc.ByteWidth      = sizeof(byhj::MatrixBuffer);
+	mvpDesc.ByteWidth      = sizeof(d3d::MatrixBuffer);
 	mvpDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
 	mvpDesc.CPUAccessFlags = 0;
 	mvpDesc.MiscFlags      = 0;
@@ -243,7 +243,7 @@ void Skymap::load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 
 }
 
-void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer &mvpMatrix)
+void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &mvpMatrix)
 {
 	// Set vertex buffer stride and offset.=
 	unsigned int stride;
@@ -254,9 +254,9 @@ void Skymap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const MatrixBuffer
 	pD3D11DeviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	pD3D11DeviceContext->IASetVertexBuffers( 0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 
-	cbMatrix.Model = mvpMatrix.Model;
-	cbMatrix.View  = mvpMatrix.View;
-	cbMatrix.Proj  = mvpMatrix.Proj;
+	cbMatrix.model = mvpMatrix.model;
+	cbMatrix.view = mvpMatrix.view;
+	cbMatrix.proj = mvpMatrix.proj;
 
 	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer.Get(), 0, NULL, &cbMatrix, 0, 0 );
 	pD3D11DeviceContext->VSSetConstantBuffers( 0, 1, m_pMVPBuffer.GetAddressOf());

@@ -56,6 +56,9 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\dxerr.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grid.h">
@@ -83,6 +86,9 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Utility.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\dxerr.h">
       <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>

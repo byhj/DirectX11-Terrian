@@ -2,7 +2,9 @@
 #define COMMON_H
 
 #include <windows.h>
-#include <xnamath.h>
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 namespace byhj
 {
@@ -22,9 +24,9 @@ struct Vertex
 
 struct MatrixBuffer
 {
-	XMFLOAT4X4  Model;
-	XMFLOAT4X4  View;
-	XMFLOAT4X4  Proj;
+	XMFLOAT4X4  model;
+	XMFLOAT4X4  view;
+	XMFLOAT4X4  proj;
 };
 
 struct  LightBuffer
