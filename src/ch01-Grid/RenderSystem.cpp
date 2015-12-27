@@ -268,8 +268,7 @@ void RenderSystem::init_camera()
 void RenderSystem::init_object()
 {
 
-	m_Grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
-	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
+	m_Grid.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 	m_Timer.Reset();
 	m_Font.Init(m_pD3D11Device);
 	m_Camera.Init(GetAppInst(), GetHwnd());
@@ -280,15 +279,14 @@ void RenderSystem::init_object()
 void RenderSystem::TurnZBufferOn()
 {
 	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
-	return;
 }
 
 
 void RenderSystem::TurnZBufferOff()
 {
 	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthDisabledStencilState, 1);
-	return;
 }
+
 void RenderSystem::DrawFps()
 {
 	static bool flag = true;

@@ -1,28 +1,26 @@
 #ifndef CUBEMAP_H
 #define CUBEMAP_H
 
-#include "Shader.h"
-#include "d3dDebug.h"
-#include "Utility.h"
+#include "d3d/Shader.h"
+#include "Common.h"
 
 #include <vector>
-#include <d3dx11.h>
-#include <xnamath.h>
-#include "Common.h"
+#include <dxgi.h>
+#include <d3dcommon.h>
+#include <d3d11.h>
+
+#include <DirectXMath.h> 
+using namespace DirectX;
 
 namespace byhj
 {
 
-namespace d3d
-{
 
 class Skymap
 {
 public:
 	Skymap() {}
-	~Skymap() {}
 
-public:
 	void createSphere(ID3D11Device *pD3D11Device, int LatLines, int LongLines);
 	void load_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
 	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
@@ -42,25 +40,24 @@ private:
 
 	byhj::MatrixBuffer cbMatrix;
 
-	ID3D11Buffer *m_pIndexBuffer;
-	ID3D11Buffer *m_pVertexBuffer;
-	ID3D11Buffer *m_pMVPBuffer;
+	ComPtr<ID3D11Buffer> m_pIndexBuffer;
+	ComPtr<ID3D11Buffer> m_pVertexBuffer;
+	ComPtr<ID3D11Buffer> m_pMVPBuffer;
 
-	int m_VertexCount;
-	int m_IndexCount;
+	int m_VertexCount = 0;
+	int m_IndexCount = 0;
 
 	int NumSphereVertices;
 	int NumSphereFaces;
 
-	ID3D11ShaderResourceView *m_pShaderResourceView;
-	ID3D11DepthStencilState  *m_pDSLessEqual;
-	ID3D11RasterizerState    *m_pRSCullNone;
-	ID3D11SamplerState       *m_pTexSamplerState;
-	Shader SkymapShader;
+	ComPtr<ID3D11ShaderResourceView> m_pShaderResourceView;
+	ComPtr<ID3D11DepthStencilState > m_pDSLessEqual;
+	ComPtr<ID3D11RasterizerState   > m_pRSCullNone;
+	ComPtr<ID3D11SamplerState>       m_pTexSamplerState;
+	d3d::Shader SkymapShader;
 };
 
 
-}
 
 }
 

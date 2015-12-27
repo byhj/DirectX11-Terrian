@@ -11,12 +11,9 @@
 
 #include <WindowsX.h>
 #include <windows.h>
-#include <d3dx11.h>
 #include <dxgi.h>
 #include <d3d11.h>
-#include <xnamath.h>
 #include <d3dcommon.h>
-#include <D3DX11async.h>
 
 #include <ctime>
 #include <algorithm>
@@ -24,8 +21,14 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <memory>
 
-#include "d3dDebug.h"
+#include "d3d/Utility.h"
+#include <DirectXMath.h>
+#include <wrl.h>
+
+using namespace DirectX;
+using namespace Microsoft::WRL;
 
 namespace byhj
 {
@@ -36,20 +39,17 @@ namespace d3d
 class App
 {
 public:
-	App() :m_AppName(L"DirectX11: "), m_WndClassName(L"D3DWindow")
-	{
-
-	}
+	App() = default;
 	virtual ~App() {}
 
 	void InitApp();
 	int Run();
 	LRESULT CALLBACK MessageHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual	void v_Init()  = 0;
+	virtual	void v_Init()     = 0;
 	virtual void v_Shutdown() = 0;
 	virtual void v_Render()   = 0;
-	virtual void v_Update() = 0;
+	virtual void v_Update()   = 0;
 
 	// Convenience overrides for handling mouse input.
 	virtual void v_OnMouseDown(WPARAM btnState, int x, int y){ }
@@ -65,8 +65,8 @@ protected:
 	int   m_PosX;
 	int   m_PosY;
 
-	LPCTSTR m_AppName;
-	LPCTSTR m_WndClassName;
+	LPCTSTR m_AppName      = L"DirectX11:";
+	LPCTSTR m_WndClassName = L"Window";
 
 	//void      GetVideoCardInfo(char &, int &);
 	HINSTANCE GetAppInst() const { return m_hInstance; }

@@ -2,7 +2,7 @@
 #define Grid_H
 
 #include <d3d11.h>
-#include <xnamath.h>
+
 #include <vector>
 
 

@@ -2,7 +2,6 @@
 #define Grid_H
 
 #include <d3d11.h>
-#include <xnamath.h>
 
 
 #include "d3d/Shader.h"
@@ -15,16 +14,17 @@ namespace byhj
 class Grid
 {
 public:
-	Grid() {}
-	~Grid() {}
+	Grid() = default;
+	~Grid() = default;
 
+	void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
 	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
 
-	void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
-	void init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
-
 private:
+
+	void init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
+	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
 
 	d3d::MatrixBuffer cbMatrix;
 

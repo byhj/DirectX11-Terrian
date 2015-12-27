@@ -4,6 +4,12 @@
 namespace byhj
 {
 
+void Grid::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+{
+	init_buffer(pD3D11Device, pD3D11DeviceContext);
+	init_shader(pD3D11Device, hWnd);
+}
+
 void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 {
 	//Update the the mvp matrix
@@ -37,8 +43,9 @@ void Grid::Shutdown()
 void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
+	std::string dir = d3d::TextureMgr::getInstance()->getDir();
+	loadHeightMap( (dir + "heightmap01.bmp").c_str() );
 
-	loadHeightMap("../../media/textures/heightmap01.bmp");
 	d3d::Geometry geom;
 	d3d::Geometry::MeshData gridMesh;
 	geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, gridMesh);
@@ -127,9 +134,9 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 	
-	GridShader.init(pD3D11Device, hWnd);
-	GridShader.attachVS(L"grid.vsh", vInputLayoutDesc);
-	GridShader.attachPS(L"grid.psh");
+	GridShader.init(pD3D11Device, vInputLayoutDesc);
+	GridShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
+	GridShader.attachPS(L"grid.psh", "PS", "ps_5_0");
 	GridShader.end();
 }
 

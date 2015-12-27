@@ -35,7 +35,7 @@ float4 PS(VS_OUT ps_in) : SV_TARGET
 
 	float blendAmount;
 	float4 textureColor;
-	// Determine which texture to use based on height.
+	// Determine which texture to use based on normal y. 0.0(flat), 1.0f
 	float  slope = 1.0f - ps_in.Normal.y;
 	if(slope < 0.2)
 	{

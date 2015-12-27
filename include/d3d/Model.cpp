@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "DirectXTK/WICTextureLoader.h"
 
 namespace byhj
 {
@@ -32,7 +33,7 @@ void Model::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 	HRESULT hr;
 	// Create the texture sampler state.
 	hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	///////////////////////////////////////////////////////////////////
 	D3D11_BUFFER_DESC cbMaterialDesc;	
@@ -43,7 +44,7 @@ void Model::initModel(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Dev
 	cbMaterialDesc.CPUAccessFlags = 0;
 	cbMaterialDesc.MiscFlags      = 0;
 	hr = pD3D11Device->CreateBuffer(&cbMaterialDesc, NULL, &m_pMatBuffer);
-	DebugHR(hr);
+	//DebugHR(hr);
 
 	D3D11_BLEND_DESC blendDesc;
 	ZeroMemory( &blendDesc, sizeof(blendDesc) );
@@ -114,9 +115,9 @@ void Model::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	InputLayout.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(InputLayout);
 
-	ModelShader.init(pD3D11Device, hWnd);
-	ModelShader.attachVS(L"model.vsh", vInputLayoutDesc);
-	ModelShader.attachPS(L"model.psh");
+	ModelShader.init(pD3D11Device, vInputLayoutDesc);
+	ModelShader.attachVS(L"model.vsh", "VS", "vs_5_0");
+	ModelShader.attachPS(L"model.psh", "PS", "ps_5_0");
 	ModelShader.end();
 }
 
@@ -363,8 +364,8 @@ ID3D11ShaderResourceView * Model::TextureFromFile(const char* path, std::string 
 	LPCWSTR sw = stemp.c_str();
 
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, sw, NULL,NULL, &m_pTexture, NULL);
-	DebugHR(hr);
+	hr = CreateWICTextureFromFile(pD3D11Device, sw, NULL,  &m_pTexture);
+
 	return m_pTexture;
 }
 

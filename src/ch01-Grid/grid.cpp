@@ -4,6 +4,13 @@
 namespace byhj
 {
 
+void Grid::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+{
+	init_buffer(pD3D11Device, pD3D11DeviceContext);
+	init_shader(pD3D11Device, hWnd);
+}
+
+
 void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 {
 	//Update the the mvp matrix
@@ -122,9 +129,9 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 	
 
-	GridShader.init(pD3D11Device, hWnd);
-	GridShader.attachVS(L"grid.vsh", vInputLayoutDesc);
-	GridShader.attachPS(L"grid.psh");
+	GridShader.init(pD3D11Device, vInputLayoutDesc);
+	GridShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
+	GridShader.attachPS(L"grid.psh", "PS", "ps_5_0");
 	GridShader.end();
 }
 

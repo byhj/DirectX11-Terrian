@@ -32,8 +32,8 @@ public:
 	{
 		ModelShader.use(pD3D11DeviceContext);
 
-		pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState );
-
+		pD3D11DeviceContext->PSSetSamplers( 0, 1, &m_pTexSamplerState);
+		
 		for (int i = 0; i < this->meshes.size(); i++)
 		{
 		   float blendFactor[] = {0.4f, 0.4f, 0.4f, 0.3f};
@@ -74,21 +74,37 @@ public:
 	{
 		return vIndex;
 	}
+	std::vector<XMFLOAT3>  GetVertexData()
+	{
+		return vPos;
+	}
+	std::vector<unsigned long> GetIndexData()
+	{
+		return vIndex;
+	}
+	int GetIndexCount()
+	{
+		return vIndex.size();
+	}
+	int GetVertexCount()
+	{
+		return vPos.size();
+	}
 private:
 
 	//One model may include many meshes
 	std::vector<Mesh> meshes;
 	std::string directory;
 	std::vector<Texture> textures_loaded;	
-
-	ID3D11Device *pD3D11Device;
-	ID3D11DeviceContext *pD3D11DeviceContext; 
-	ID3D11ShaderResourceView *m_pTexture;
 	HWND hWnd;
 	Shader ModelShader;
-	ID3D11SamplerState   *m_pTexSamplerState;
-	ID3D11Buffer *m_pMatBuffer;
-	ID3D11BlendState* Transparency;
+
+	ID3D11Device *             pD3D11Device;
+	ID3D11DeviceContext *      pD3D11DeviceContext;
+	ID3D11ShaderResourceView * m_pTexture;
+	ID3D11SamplerState *       m_pTexSamplerState;
+	ID3D11Buffer *             m_pMatBuffer;
+	ID3D11BlendState *         Transparency;
 
 	std::vector<XMFLOAT3> vPos;
 	std::vector<unsigned long> vIndex;	

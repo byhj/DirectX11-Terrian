@@ -1,16 +1,15 @@
 #ifndef D3DMESH_H
 #define D3DMESH_H
 
-
-#include <d3d11.h>
-#include <D3DX11.h>
-#include <windows.h>
-#include <d3dx11.h>
-#include <xnamath.h>
-#include <D3DX10math.h>
-
 #include "d3d/Shader.h"
 #include "d3d/d3dDebug.h"
+#include <d3d11.h>
+#include <windows.h>
+
+#include <DirectXMath.h> 
+using namespace DirectX;
+
+
 
 // Std. Includes
 #include <string>
@@ -145,8 +144,8 @@ namespace byhj
 			ID3D11Buffer *m_pVertexBuffer;
 			ID3D11Buffer *m_pMVPBuffer;
 
-			int m_VertexCount;
-			int m_IndexCount;
+			int m_VertexCount = 0;
+			int m_IndexCount = 0;
 
 			ID3D11ShaderResourceView *m_pShaderResourceView;
 			ID3D11DepthStencilView   *m_pDepthStencilView;

@@ -1,7 +1,7 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
 
-#include <xnamath.h>
+
 #include "d3d/d3dFrustum.h"
 
 

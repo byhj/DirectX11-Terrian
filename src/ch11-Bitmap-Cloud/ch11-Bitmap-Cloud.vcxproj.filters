@@ -21,9 +21,6 @@
     <ClCompile Include="ch10-Terrian-Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\d3d\Timer.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -45,11 +42,20 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Cubemap.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="skyPlane.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\d3d\Timer.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -71,6 +77,18 @@
     <ClInclude Include="..\..\include\d3d\Utility.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Cubemap.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="skyPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cubemap.psh">
@@ -83,6 +101,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="grid.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="skyplane.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="skyplane.psh">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

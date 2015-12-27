@@ -2,7 +2,7 @@
 #define Geometry_H
 
 #include <d3d11.h>
-#include <xnamath.h>
+
 
 #include "d3d/Utility.h"
 #include "d3d/Shader.h"

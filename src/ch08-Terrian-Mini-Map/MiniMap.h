@@ -1,7 +1,7 @@
 #ifndef _MINIMAPCLASS_H_
 #define _MINIMAPCLASS_H_
 
-#include <xnamath.h>
+
 #include "d3d/d3dBitmap.h"
 
 
