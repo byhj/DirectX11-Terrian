@@ -262,9 +262,7 @@ void RenderSystem::init_object()
 {
 
 
-	m_Grid.init_buffer(m_pD3D11Device, m_pD3D11DeviceContext);
-	m_Grid.init_shader(m_pD3D11Device, GetHwnd() );
-	m_Grid.init_texture(m_pD3D11Device);
+	m_Grid.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
 	m_Skymap.createSphere(m_pD3D11Device, 10, 10);
 	m_Skymap.load_texture(m_pD3D11Device, L"../../media/textures/skymap.dds");
