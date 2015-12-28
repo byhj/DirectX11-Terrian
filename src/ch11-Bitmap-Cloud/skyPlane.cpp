@@ -8,9 +8,39 @@ namespace byhj
 
 void SkyPlane::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 {
+
+
 	init_buffer(pD3D11Device, pD3D11DeviceContext);
 	init_shader(pD3D11Device, hWnd);
 	init_texture(pD3D11Device);
+}
+
+void SkyPlane::Update()
+{
+
+	// Increment the translation values to simulate the moving clouds.
+	m_SkyPlaneBuffer.Translation.x += m_TranslationSpeed[0];
+	m_SkyPlaneBuffer.Translation.y += m_TranslationSpeed[1];
+	m_SkyPlaneBuffer.Translation.z += m_TranslationSpeed[2];
+	m_SkyPlaneBuffer.Translation.w += m_TranslationSpeed[3];
+
+	// Keep the values in the zero to one range.
+	if (m_SkyPlaneBuffer.Translation.x > 1.0f) 
+	{ 
+		m_SkyPlaneBuffer.Translation.x -= 1.0f;
+	}
+	if (m_SkyPlaneBuffer.Translation.y > 1.0f)
+	{
+		m_SkyPlaneBuffer.Translation.y -= 1.0f;
+	}
+	if (m_SkyPlaneBuffer.Translation.z > 1.0f)
+	{
+		m_SkyPlaneBuffer.Translation.z -= 1.0f;
+	}
+	if (m_SkyPlaneBuffer.Translation.w > 1.0f)
+	{
+		m_SkyPlaneBuffer.Translation.w -= 1.0f;
+	}
 }
 
 void SkyPlane::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
@@ -21,8 +51,9 @@ void SkyPlane::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::Matri
 	cbMatrix.proj  = matrix.proj;
 	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
 	pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
-	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pLightBuffer);
-	pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pSkyPlaneBuffer);
+	pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pCloudTexSRV1);
+	pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pCloudTexSRV2);
 	pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
 
 	// Set vertex buffer stride and offset
@@ -48,8 +79,148 @@ void SkyPlane::Shutdown()
 
 void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
-	HRESULT hr;
+	float skyPlaneWidth = 10.0f;
+	float skyPlaneTop = 0.5f;
+	float skyPlaneBottom = 0.0f;
 
+	int skyPlaneResolution = 10;
+	int textureRepeat = 4;
+
+	m_SkyPlaneBuffer.Brightness  = 0.65f;
+
+	// Setup the cloud translation speed increments.
+	m_TranslationSpeed[0] = 0.0003f;   // First texture X translation speed.
+	m_TranslationSpeed[1] = 0.0f;      // First texture Z translation speed.
+	m_TranslationSpeed[2] = 0.00015f;  // Second texture X translation speed.
+	m_TranslationSpeed[3] = 0.0f;      // Second texture Z translation speed.
+
+	// Initialize the texture translation values.
+	m_SkyPlaneBuffer.Translation.x = 0.0f;
+	m_SkyPlaneBuffer.Translation.y = 0.0f;
+	m_SkyPlaneBuffer.Translation.z = 0.0f;
+	m_SkyPlaneBuffer.Translation.w = 0.0f;
+
+	float quadSize, radius, constant, textureDelta;
+	int i, j, index;
+	float positionX, positionY, positionZ, tu, tv;
+
+
+	// Create the array to hold the sky plane coordinates.
+	m_pSkyPlaneVertex = new SkyPlaneType[(skyPlaneResolution + 1) * (skyPlaneResolution + 1)];
+
+	// Determine the size of each quad on the sky plane.
+	quadSize = skyPlaneWidth / (float)skyPlaneResolution;
+
+	// Calculate the radius of the sky plane based on the width.
+	radius = skyPlaneWidth / 2.0f;
+
+	// Calculate the height constant to increment by.
+	constant = (skyPlaneTop - skyPlaneBottom) / (radius * radius);
+
+	// Calculate the texture coordinate increment value.
+	textureDelta = (float)textureRepeat / (float)skyPlaneResolution;
+
+	// Loop through the sky plane and build the coordinates based on the increment values given.
+	for (j=0; j <= skyPlaneResolution; j++)
+	{
+		for (i=0; i <= skyPlaneResolution; i++)
+		{
+			// Calculate the vertex coordinates.
+			positionX = (-0.5f * skyPlaneWidth) + ((float)i * quadSize);
+			positionZ = (-0.5f * skyPlaneWidth) + ((float)j * quadSize);
+			positionY = skyPlaneTop - (constant * ((positionX * positionX) + (positionZ * positionZ)));
+
+			// Calculate the texture coordinates.
+			tu = (float)i * textureDelta;
+			tv = (float)j * textureDelta;
+
+			// Calculate the index into the sky plane array to add this coordinate.
+			index = j * (skyPlaneResolution + 1) + i;
+
+			// Add the coordinates to the sky plane array.
+			m_pSkyPlaneVertex[index].x = positionX;
+			m_pSkyPlaneVertex[index].y = positionY;
+			m_pSkyPlaneVertex[index].z = positionZ;
+			m_pSkyPlaneVertex[index].u = tu;
+			m_pSkyPlaneVertex[index].v = tv;
+		}
+	}
+
+
+
+
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	HRESULT result;
+	int i, j, index, index1, index2, index3, index4;
+
+
+	// Calculate the number of pVertexData in the sky plane mesh.
+	m_VertexCount = (skyPlaneResolution + 1) * (skyPlaneResolution + 1) * 6;
+
+	// Set the index count to the same as the vertex count.
+	m_IndexCount = m_VertexCount;
+
+	// Create the vertex array.
+	Vertex* pVertexData = new Vertex[m_VertexCount];
+
+
+	// Create the index array.
+	unsigned long* pIndexData = new unsigned long[m_IndexCount];
+
+	// Initialize the index into the vertex array.
+	index = 0;
+
+	// Load the vertex and index array with the sky plane array data.
+	for (j=0; j < skyPlaneResolution; j++)
+	{
+		for (i=0; i < skyPlaneResolution; i++)
+		{
+			index1 = j * (skyPlaneResolution + 1) + i;
+			index2 = j * (skyPlaneResolution + 1) + (i + 1);
+			index3 = (j + 1) * (skyPlaneResolution + 1) + i;
+			index4 = (j + 1) * (skyPlaneResolution + 1) + (i + 1);
+
+			// Triangle 1 - Upper Left
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index1].x, m_pSkyPlaneVertex[index1].y, m_pSkyPlaneVertex[index1].z);
+			pVertexData[index].Tex = XMFLOAT2(m_pSkyPlaneVertex[index1].u, m_pSkyPlaneVertex[index1].v);
+			pIndexData[index] = index;
+			index++;
+
+			// Triangle 1 - Upper Right
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index2].x, m_pSkyPlaneVertex[index2].y, m_pSkyPlaneVertex[index2].z);
+			pVertexData[index].Tex= XMFLOAT2(m_pSkyPlaneVertex[index2].u, m_pSkyPlaneVertex[index2].v);
+			pIndexData[index] = index;
+			index++;
+
+			// Triangle 1 - Bottom Left
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index3].x, m_pSkyPlaneVertex[index3].y, m_pSkyPlaneVertex[index3].z);
+			pVertexData[index].Tex= XMFLOAT2(m_pSkyPlaneVertex[index3].u, m_pSkyPlaneVertex[index3].v);
+			pIndexData[index] = index;
+			index++;
+
+			// Triangle 2 - Bottom Left
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index3].x, m_pSkyPlaneVertex[index3].y, m_pSkyPlaneVertex[index3].z);
+			pVertexData[index].Tex= XMFLOAT2(m_pSkyPlaneVertex[index3].u, m_pSkyPlaneVertex[index3].v);
+			pIndexData[index] = index;
+			index++;
+
+			// Triangle 2 - Upper Right
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index2].x, m_pSkyPlaneVertex[index2].y, m_pSkyPlaneVertex[index2].z);
+			pVertexData[index].Tex= XMFLOAT2(m_pSkyPlaneVertex[index2].u, m_pSkyPlaneVertex[index2].v);
+			pIndexData[index] = index;
+			index++;
+
+			// Triangle 2 - Bottom Right
+			pVertexData[index].Pos = XMFLOAT3(m_pSkyPlaneVertex[index4].x, m_pSkyPlaneVertex[index4].y, m_pSkyPlaneVertex[index4].z);
+			pVertexData[index].Tex= XMFLOAT2(m_pSkyPlaneVertex[index4].u, m_pSkyPlaneVertex[index4].v);
+			pIndexData[index] = index;
+			index++;
+		}
+	}
+
+
+	HRESULT hr;
 
 	/////////////////////////////Vertex Buffer//////////////////////////////
 
@@ -62,13 +233,12 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	SkyPlaneVBDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA SkyPlaneVBO;
-	SkyPlaneVBO.pSysMem = &m_VertexData[0];
+	SkyPlaneVBO.pSysMem = &pVertexData;
 	hr = pD3D11Device->CreateBuffer(&SkyPlaneVBDesc, &SkyPlaneVBO, &m_pSkyPlaneVB);
 	DebugHR(hr);
 
 	/////////////////////////////Index Buffer//////////////////////////////
 
-	m_IndexCount =  SkyPlaneMesh.IndexData.size();
 	D3D11_BUFFER_DESC SkyPlaneIBDesc;
 	SkyPlaneIBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
 	SkyPlaneIBDesc.ByteWidth           = sizeof(UINT) * m_IndexCount;
@@ -78,7 +248,7 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	SkyPlaneIBDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA girdIBO;
-	girdIBO.pSysMem = &SkyPlaneMesh.IndexData[0];
+	girdIBO.pSysMem = &pIndexData;
 	hr = pD3D11Device->CreateBuffer(&SkyPlaneIBDesc, &girdIBO, &m_pSkyPlaneIB);
 	DebugHR(hr);
 
@@ -94,20 +264,18 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	hr = pD3D11Device->CreateBuffer(&mvpDesc, NULL, &m_pMVPBuffer);
 	DebugHR(hr);
 
-	D3D11_BUFFER_DESC lightDesc;
+	D3D11_BUFFER_DESC skyPlaneDesc;
 	ZeroMemory(&mvpDesc, sizeof(D3D11_BUFFER_DESC));
-	lightDesc.Usage          = D3D11_USAGE_DEFAULT;
-	lightDesc.ByteWidth      = sizeof(SkyPlaneBuffer);
-	lightDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
-	lightDesc.CPUAccessFlags = 0;
-	lightDesc.MiscFlags      = 0;
+	skyPlaneDesc.Usage          = D3D11_USAGE_DEFAULT;
+	skyPlaneDesc.ByteWidth      = sizeof(SkyPlaneBuffer);
+	skyPlaneDesc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
+	skyPlaneDesc.CPUAccessFlags = 0;
+	skyPlaneDesc.MiscFlags      = 0;
 
-
-	cbLight.ambient  = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
 
 	D3D11_SUBRESOURCE_DATA lightVBO;
-	lightVBO.pSysMem = &cbLight;
-	hr = pD3D11Device->CreateBuffer(&lightDesc, &lightVBO, &m_pSkyPlaneBuffer);
+	lightVBO.pSysMem = &m_pSkyPlaneVertex;
+	hr = pD3D11Device->CreateBuffer(&skyPlaneDesc, &lightVBO, &m_pSkyPlaneBuffer);
 	DebugHR(hr);
 }
 
@@ -145,15 +313,6 @@ void SkyPlane::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	pInputLayoutDesc.SemanticName         = "COLOR";
-	pInputLayoutDesc.SemanticIndex        = 0;
-	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc.InputSlot            = 0;
-	pInputLayoutDesc.AlignedByteOffset    = 32;
-	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc.InstanceDataStepRate = 0;
-	vInputLayoutDesc.push_back(pInputLayoutDesc);
-
 
 	SkyPlaneShader.init(pD3D11Device, vInputLayoutDesc);
 	SkyPlaneShader.attachVS(L"SkyPlane.vsh", "VS", "vs_5_0");
@@ -164,7 +323,9 @@ void SkyPlane::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 void SkyPlane::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, &m_pTextureSRV, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/cloud001.dds", NULL, &m_pCloudTexSRV1, NULL);
+	DebugHR(hr);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/cloud002.dds", NULL, &m_pCloudTexSRV2, NULL);
 	DebugHR(hr);
 
 	// Create a texture sampler state description.

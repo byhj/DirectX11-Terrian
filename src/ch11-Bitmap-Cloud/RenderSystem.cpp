@@ -36,6 +36,8 @@ void RenderSystem::v_Render()
 	XMStoreFloat4x4(&m_Matrix.model, XMMatrixTranspose(gridModel));
 	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix);
 
+	m_SkyPlane.Render(m_pD3D11DeviceContext, m_Matrix);
+
 /////////////////////////////////////////////////////////////////////
 
 	m_Matrix.view._14 = 0.0f;
@@ -263,6 +265,7 @@ void RenderSystem::init_object()
 
 
 	m_Grid.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	m_SkyPlane.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
 	m_Skymap.createSphere(m_pD3D11Device, 10, 10);
 	m_Skymap.load_texture(m_pD3D11Device, L"../../media/textures/skymap.dds");

@@ -9,6 +9,7 @@
 #include "d3d/Cubemap.h"
 
 #include "Grid.h"
+#include "skyPlane.h"
 
 namespace byhj
 {
@@ -39,6 +40,8 @@ private:
 	void DrawInfo(); 
 
 	byhj::Grid m_Grid;
+	byhj::SkyPlane m_SkyPlane;
+
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;

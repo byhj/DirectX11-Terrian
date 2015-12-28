@@ -17,7 +17,7 @@ class SkyPlane
 {
 public:
 	SkyPlane() = default;
-	SkyPlane(const SkyPlane &);
+	SkyPlane(const SkyPlane &) = default;
 	~SkyPlane() = default;
      
 	struct SkyPlaneType
@@ -30,19 +30,17 @@ public:
 		XMFLOAT3 Pos;
 		XMFLOAT2 Tex;
 	};
+	struct SkyPlaneBuffer
+	{
+		XMFLOAT4 Translation;
+	    FLOAT    Brightness;
+		XMFLOAT3 padding; 
+	};
 
 	void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
+	void Update();
 	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
-
-
-	int GetIndexCount() const;
-
-	ID3D11ShaderResourceView * GetCloundTexture1();
-	ID3D11ShaderResourceView * GetCloundTexture2();
-
-	float GetBrightness();
-	float GetTranslation(int);
 
 private:
 
@@ -54,20 +52,23 @@ private:
 	ID3D11Buffer *m_pSkyPlaneVB;
 	ID3D11Buffer *m_pSkyPlaneIB;
 
-	ID3D11Buffer        *m_pMVPBuffer   = nullptr;
+	ID3D11Buffer        *m_pMVPBuffer        = nullptr;
 	ID3D11Buffer        *m_pSkyPlaneBuffer   = nullptr;
-	ID3D11InputLayout   *m_pInputLayout = nullptr;
+	ID3D11InputLayout   *m_pInputLayout      = nullptr;
 
-	ID3D11ShaderResourceView *m_pTextureSRV;
+	ID3D11ShaderResourceView *m_pCloudTexSRV1;
+	ID3D11ShaderResourceView *m_pCloudTexSRV2;
 	ID3D11SamplerState       *m_pTexSamplerState;
 
 	d3d::MatrixBuffer cbMatrix;
 	d3d::Shader SkyPlaneShader;
+	SkyPlaneBuffer m_SkyPlaneBuffer;
+	SkyPlaneType *m_pSkyPlaneVertex = nullptr;
 
-	int m_VertexCount, m_IndexCount;
-	float m_Brightness;
-	float m_TranslationSpeed[4];
-	float m_TextureTranslation[4];
+	int m_VertexCount = 0;
+	int m_IndexCount = 0;
+	float m_Brightness = 0;
+	float m_TranslationSpeed[4] ={ 0 };
 };
 
 }
