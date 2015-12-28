@@ -24,10 +24,6 @@ public:
 	void v_Shutdown();
 
 	void UpdateScene();
-	
-	
-	
-
 
 private:
 	void init_device();

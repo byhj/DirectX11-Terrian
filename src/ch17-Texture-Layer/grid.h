@@ -63,17 +63,17 @@ private:
 	ID3D11Buffer        *m_pGridVB      = nullptr;
 	ID3D11Buffer        *m_pGridIB      = nullptr;
 	ID3D11Buffer        *m_pMVPBuffer   = nullptr;
-	ID3D11Buffer        *m_pLightBuffer   = nullptr;
+	ID3D11Buffer        *m_pLightBuffer = nullptr;
 	ID3D11InputLayout   *m_pInputLayout = nullptr;
 
-	ID3D11SamplerState       *m_pTexSamplerState;
-	ID3D11ShaderResourceView *m_pNormalTex1SRV;
-	ID3D11ShaderResourceView *m_pNormalTex2SRV;
-	ID3D11ShaderResourceView *m_pTextureSRV;
-	ID3D11ShaderResourceView *m_pColor1TexSRV;
-	ID3D11ShaderResourceView *m_pColor2TexSRV;
-	ID3D11ShaderResourceView *m_pStoneTexSRV;
-	ID3D11ShaderResourceView *m_pAlphaTexSRV;
+	ID3D11SamplerState       *m_pTexSamplerState = nullptr;
+	ID3D11ShaderResourceView *m_pNormalTex1SRV   = nullptr;
+	ID3D11ShaderResourceView *m_pNormalTex2SRV   = nullptr;
+	ID3D11ShaderResourceView *m_pTextureSRV      = nullptr;
+	ID3D11ShaderResourceView *m_pColor1TexSRV    = nullptr;
+	ID3D11ShaderResourceView *m_pColor2TexSRV    = nullptr;
+	ID3D11ShaderResourceView *m_pStoneTexSRV     = nullptr;
+	ID3D11ShaderResourceView *m_pAlphaTexSRV     = nullptr;
 
 	int m_VertexCount  = 0;
 	int m_IndexCount   = 0;

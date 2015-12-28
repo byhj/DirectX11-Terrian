@@ -51,6 +51,11 @@ void SkyPlane::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::Matri
 	cbMatrix.proj  = matrix.proj;
 	pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
 	pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
+
+	//update data
+	pD3D11DeviceContext->UpdateSubresource(m_pSkyPlaneBuffer,  0, NULL, &m_SkyPlaneBuffer, 0, 0);
+	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pSkyPlaneBuffer);
+
 	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pSkyPlaneBuffer);
 	pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pCloudTexSRV1);
 	pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pCloudTexSRV2);
@@ -152,7 +157,7 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	int i, j, index, index1, index2, index3, index4;
+	int index1, index2, index3, index4;
 
 
 	// Calculate the number of pVertexData in the sky plane mesh.

@@ -17,8 +17,8 @@ SamplerState g_SampleState : register(s0);
 
 struct VS_OUT
 {
-  float Pos : SV_POSITION;
-  float Tex : TEXCOORD0;
+  float4 Pos : SV_POSITION;
+  float2 Tex : TEXCOORD0;
 };
 
 float4 PS(VS_OUT vs_out): SV_TARGET
@@ -26,15 +26,15 @@ float4 PS(VS_OUT vs_out): SV_TARGET
   float2 sampleLoc;
 
   sampleLoc.x = vs_out.Tex.x + g_TranslationX1;
-  sampleLoc.z = vs_out.Tex.z + g_TranslationZ1;
+  sampleLoc.y = vs_out.Tex.y + g_TranslationZ1;
   float4 texColor1 = g_CloundTex1.Sample(g_SampleState, sampleLoc);
 
   sampleLoc.x = vs_out.Tex.x + g_TranslationX2;
-  sampleLoc.z = vs_out.Tex.z + g_TranslationZ2;
+  sampleLoc.y = vs_out.Tex.y + g_TranslationZ2;
   float4 texColor2 = g_CloundTex2.Sample(g_SampleState, sampleLoc);
 
   float4 color =lerp(texColor1, texColor2, 0.5);
-  float4 color = color * g_Brightness;
+  color = color * g_Brightness;
 
   return color;
 }

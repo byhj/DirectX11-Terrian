@@ -1,5 +1,5 @@
  
-cbuffer d3d::MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	float4x4 model;
 	float4x4 view;

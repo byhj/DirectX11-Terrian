@@ -1,4 +1,4 @@
-cbuffer Light
+cbuffer Light : register(b0)
 {
    float4 ambient;
    float4 diffuse;

@@ -36,8 +36,6 @@ void RenderSystem::v_Render()
 	XMStoreFloat4x4(&m_Matrix.model, XMMatrixTranspose(gridModel));
 	m_Grid.Render(m_pD3D11DeviceContext, m_Matrix);
 
-	m_SkyPlane.Render(m_pD3D11DeviceContext, m_Matrix);
-
 /////////////////////////////////////////////////////////////////////
 
 	m_Matrix.view._14 = 0.0f;
@@ -49,6 +47,8 @@ void RenderSystem::v_Render()
 	XMMATRIX sphereWorld = XMMatrixIdentity();
 	XMStoreFloat4x4(&m_Matrix.model, XMMatrixTranspose(sphereWorld));
 	m_Skymap.Render(m_pD3D11DeviceContext,m_Matrix);
+
+	m_SkyPlane.Render(m_pD3D11DeviceContext, m_Matrix);
 
 	DrawInfo();
 
