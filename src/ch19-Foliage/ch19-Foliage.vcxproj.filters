@@ -39,6 +39,15 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\dxerr.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Foliage.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\Timer.h">
@@ -62,5 +71,22 @@
     <ClInclude Include="..\..\include\d3d\Utility.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\dxerr.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Foliage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="foliage.vsh">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="foliage.psh">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

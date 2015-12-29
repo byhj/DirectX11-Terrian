@@ -1,0 +1,21 @@
+
+
+struct VS_OUT
+{
+   float4 Pos : SV_POSITION;
+   float2 Tex : TEXCOORD0;
+   float3 Color : TEXCOORD1;
+};
+
+Texture2D foliageTex : register(t0);
+SamplerState SampleState : register(s0);
+
+
+float4 FoliagePS(VS_OUT vs_out) : SV_TARGET
+{
+    float4 texColor = foilageTex.Sample(SampleState, vs_in.Tex);
+	float4 color = texColor * float4(vs_in.Color, 1.0f); 
+	color = saturate(color);
+
+	return color;
+}
