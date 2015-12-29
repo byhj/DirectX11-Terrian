@@ -8,8 +8,6 @@ namespace byhj
 
 void SkyPlane::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 {
-
-
 	init_buffer(pD3D11Device, pD3D11DeviceContext);
 	init_shader(pD3D11Device, hWnd);
 	init_texture(pD3D11Device);
@@ -56,7 +54,6 @@ void SkyPlane::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::Matri
 	pD3D11DeviceContext->UpdateSubresource(m_pSkyPlaneBuffer,  0, NULL, &m_SkyPlaneBuffer, 0, 0);
 	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pSkyPlaneBuffer);
 
-	pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &m_pSkyPlaneBuffer);
 	pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pCloudTexSRV1);
 	pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pCloudTexSRV2);
 	pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
@@ -167,11 +164,11 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	m_IndexCount = m_VertexCount;
 
 	// Create the vertex array.
-	Vertex* pVertexData = new Vertex[m_VertexCount];
+	std::vector<Vertex> pVertexData(m_VertexCount);
 
 
 	// Create the index array.
-	unsigned long* pIndexData = new unsigned long[m_IndexCount];
+	std::vector<UINT> pIndexData(m_IndexCount, 0);
 
 	// Initialize the index into the vertex array.
 	index = 0;
@@ -238,7 +235,7 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	SkyPlaneVBDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA SkyPlaneVBO;
-	SkyPlaneVBO.pSysMem = &pVertexData;
+	SkyPlaneVBO.pSysMem = &pVertexData[0];
 	hr = pD3D11Device->CreateBuffer(&SkyPlaneVBDesc, &SkyPlaneVBO, &m_pSkyPlaneVB);
 	DebugHR(hr);
 
@@ -253,7 +250,7 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	SkyPlaneIBDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA girdIBO;
-	girdIBO.pSysMem = &pIndexData;
+	girdIBO.pSysMem = &pIndexData[0];
 	hr = pD3D11Device->CreateBuffer(&SkyPlaneIBDesc, &girdIBO, &m_pSkyPlaneIB);
 	DebugHR(hr);
 
@@ -279,7 +276,7 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 
 
 	D3D11_SUBRESOURCE_DATA lightVBO;
-	lightVBO.pSysMem = &m_pSkyPlaneVertex;
+	lightVBO.pSysMem = &m_SkyPlaneBuffer;
 	hr = pD3D11Device->CreateBuffer(&skyPlaneDesc, &lightVBO, &m_pSkyPlaneBuffer);
 	DebugHR(hr);
 }
@@ -300,20 +297,11 @@ void SkyPlane::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	pInputLayoutDesc.SemanticName         = "NORMAL";
-	pInputLayoutDesc.SemanticIndex        = 0;
-	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
-	pInputLayoutDesc.InputSlot            = 0;
-	pInputLayoutDesc.AlignedByteOffset    = 12;
-	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
-	pInputLayoutDesc.InstanceDataStepRate = 0;
-	vInputLayoutDesc.push_back(pInputLayoutDesc);
-
 	pInputLayoutDesc.SemanticName         = "TEXCOORD";
 	pInputLayoutDesc.SemanticIndex        = 0;
 	pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
 	pInputLayoutDesc.InputSlot            = 0;
-	pInputLayoutDesc.AlignedByteOffset    = 24;
+	pInputLayoutDesc.AlignedByteOffset    = 12;
 	pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);

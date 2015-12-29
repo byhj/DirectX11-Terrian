@@ -22,7 +22,7 @@ void RenderSystem::v_Init()
 
 void RenderSystem::v_Update()
 {
-
+   m_SkyPlane.Update();
 }
 void RenderSystem::v_Render()
 {
@@ -264,17 +264,19 @@ void RenderSystem::init_object()
 {
 
 
-	m_Grid.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
-	m_SkyPlane.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+
 
 	m_Skymap.createSphere(m_pD3D11Device, 10, 10);
 	m_Skymap.load_texture(m_pD3D11Device, L"../../media/textures/skymap.dds");
 	m_Skymap.init_shader(m_pD3D11Device, GetHwnd() );
-
+	m_Grid.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	m_SkyPlane.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
 	m_Timer.Reset();
 	m_Font.Init(m_pD3D11Device);
 	m_Camera.Init(GetAppInst(), GetHwnd());
+
+
 }
 
 
