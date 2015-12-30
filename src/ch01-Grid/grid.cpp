@@ -130,8 +130,8 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	
 
 	GridShader.init(pD3D11Device, vInputLayoutDesc);
-	GridShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
-	GridShader.attachPS(L"grid.psh", "PS", "ps_5_0");
+	GridShader.attachVS(L"grid.vsh", "GridVS", "vs_5_0");
+	GridShader.attachPS(L"grid.psh", "GridPS", "ps_5_0");
 	GridShader.end();
 }
 

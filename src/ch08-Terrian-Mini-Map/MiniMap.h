@@ -3,6 +3,9 @@
 
 
 #include "d3d/d3dBitmap.h"
+#include <DirectXMath.h>
+
+using namespace DirectX;
 
 
 class MiniMap
@@ -21,7 +24,7 @@ public:
 	bool Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMMATRIX &Model,  
 		        const XMMATRIX &View, const XMMATRIX &Proj);
 
-	void PositionUpdate(float positionX, float positionZ)
+	void PositionUpdate(float positionX, float positionZ);
 
 	void Shutdown();
 private:

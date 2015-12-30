@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "d3d/Geometry.h"
+#include "DirectXTK/DDSTextureLoader.h"
 
 namespace byhj
 {
@@ -170,9 +171,9 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-	GridShader.init(pD3D11Device, hWnd);
-	GridShader.attachVS(L"grid.vsh", vInputLayoutDesc);
-	GridShader.attachPS(L"grid.psh");
+	GridShader.init(pD3D11Device, vInputLayoutDesc);
+	GridShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
+	GridShader.attachPS(L"grid.psh", "PS", "ps_5_0");
 	GridShader.end();
 }
 
@@ -318,7 +319,7 @@ void Grid::calcNormal(d3d::Geometry::MeshData &mesh)
 void Grid::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = D3DX11CreateShaderResourceViewFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, NULL, &m_pTextureSRV, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,  &m_pTextureSRV, NULL);
 	DebugHR(hr);
 
 	// Create a texture sampler state description.
