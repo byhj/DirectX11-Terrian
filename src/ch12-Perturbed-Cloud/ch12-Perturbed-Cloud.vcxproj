@@ -72,6 +72,10 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
+    <ClCompile Include="ch12-Perturbed-Cloud.cpp" />
+    <ClCompile Include="grid.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="skyPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
@@ -83,6 +87,17 @@
     <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h" />
     <ClInclude Include="..\..\include\dxerr.h" />
+    <ClInclude Include="grid.h" />
+    <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="skyPlane.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="cubemap.psh" />
+    <FxCompile Include="cubemap.vsh" />
+    <FxCompile Include="grid.psh" />
+    <FxCompile Include="grid.vsh" />
+    <FxCompile Include="skyplane.psh" />
+    <FxCompile Include="skyplane.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
