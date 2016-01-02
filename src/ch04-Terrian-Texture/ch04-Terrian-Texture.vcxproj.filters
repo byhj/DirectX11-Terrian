@@ -18,10 +18,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="grid.psh">
+    <None Include="Terrain.vsh">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="grid.vsh">
+    <None Include="Terrain.psh">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -30,9 +30,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="grid.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\d3d\Timer.cpp">
@@ -62,12 +59,12 @@
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Timer.h">
@@ -96,6 +93,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

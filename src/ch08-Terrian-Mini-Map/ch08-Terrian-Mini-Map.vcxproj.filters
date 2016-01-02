@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\include\dxerr.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Bitmap.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniMap.h">
@@ -93,6 +96,9 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\dxerr.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Bitmap.h">
       <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>

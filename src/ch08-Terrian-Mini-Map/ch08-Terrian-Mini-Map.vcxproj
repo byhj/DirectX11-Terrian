@@ -65,6 +65,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\include\d3d\App.cpp" />
     <ClCompile Include="..\..\include\d3d\Camera.cpp" />
+    <ClCompile Include="..\..\include\d3d\Bitmap.cpp" />
     <ClCompile Include="..\..\include\d3d\Font.cpp" />
     <ClCompile Include="..\..\include\d3d\Geometry.cpp" />
     <ClCompile Include="..\..\include\d3d\Shader.cpp" />
@@ -80,6 +81,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
     <ClInclude Include="..\..\include\d3d\Camera.h" />
+    <ClInclude Include="..\..\include\d3d\Bitmap.h" />
     <ClInclude Include="..\..\include\d3d\Font.h" />
     <ClInclude Include="..\..\include\d3d\Geometry.h" />
     <ClInclude Include="..\..\include\d3d\Shader.h" />

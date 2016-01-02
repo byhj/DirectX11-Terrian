@@ -2,7 +2,7 @@
 #define _MINIMAPCLASS_H_
 
 
-#include "d3d/d3dBitmap.h"
+#include "d3d/Bitmap.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;
@@ -34,7 +34,7 @@ private:
 	float m_mapSizeX, m_mapSizeY, m_terrainWidth, m_terrainHeight;
 	XMMATRIX m_viewMatrix;
 
-	D3DBitmap *m_pMiniMap, *m_pBorder, *m_pLocation;
+	d3d::Bitmap *m_pMiniMap, *m_pBorder, *m_pLocation;
 };
 
 }

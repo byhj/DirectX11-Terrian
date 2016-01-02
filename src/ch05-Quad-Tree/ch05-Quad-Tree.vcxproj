@@ -71,9 +71,9 @@
     <ClCompile Include="..\..\include\d3d\Timer.cpp" />
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="ch05-Quad-Tree.cpp" />
-    <ClCompile Include="grid.cpp" />
     <ClCompile Include="quadTree.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
@@ -83,13 +83,13 @@
     <ClInclude Include="..\..\include\d3d\Shader.h" />
     <ClInclude Include="..\..\include\d3d\Timer.h" />
     <ClInclude Include="..\..\include\d3d\Utility.h" />
-    <ClInclude Include="grid.h" />
     <ClInclude Include="quadTree.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="grid.psh" />
-    <None Include="grid.vsh" />
+    <FxCompile Include="Terrain.psh" />
+    <FxCompile Include="Terrain.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

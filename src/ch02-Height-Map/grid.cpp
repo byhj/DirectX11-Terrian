@@ -43,8 +43,9 @@ void Grid::Shutdown()
 void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 {
 	HRESULT hr;
-	std::string dir = d3d::TextureMgr::getInstance()->getDir();
-	loadHeightMap( (dir + "heightmap01.bmp").c_str() );
+	auto dir = d3d::TextureMgr::getInstance()->getDir() + "heightmap01.bmp";
+
+	load_heightMap( dir.c_str() );
 
 	d3d::Geometry geom;
 	d3d::Geometry::MeshData gridMesh;
@@ -52,9 +53,9 @@ void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11De
 
 	m_VertexCount = gridMesh.VertexData.size();
 	for (int i = 0; i != m_VertexCount; ++i)
-		gridMesh.VertexData[i].Pos.y = m_Hightmap[i].y / 10.0f;
+		gridMesh.VertexData[i].Pos.y = m_HightmapData[i].y / 10.0f;
 
-	calcNormal(gridMesh);
+	calc_normal(gridMesh);
 
 	/////////////////////////////Vertex Buffer//////////////////////////////
 	m_VertexCount = gridMesh.VertexData.size();
@@ -135,12 +136,12 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 	
 	GridShader.init(pD3D11Device, vInputLayoutDesc);
-	GridShader.attachVS(L"grid.vsh", "VS", "vs_5_0");
-	GridShader.attachPS(L"grid.psh", "PS", "ps_5_0");
+	GridShader.attachVS(L"grid.vsh", "GridVS", "vs_5_0");
+	GridShader.attachPS(L"grid.psh", "GridPS", "ps_5_0");
 	GridShader.end();
 }
 
-void Grid::loadHeightMap(const char *filename)
+void Grid::load_heightMap(const char *filename)
 {
 	BITMAPFILEHEADER  bitmapFileHeader;
 	BITMAPINFOHEADER  bitmapInfoHeader;
@@ -182,7 +183,7 @@ void Grid::loadHeightMap(const char *filename)
 			Pos.x = (float)i;
 			Pos.y = (float)height;
 			Pos.z = (float)j;
-			m_Hightmap.push_back(Pos);
+			m_HightmapData.push_back(Pos);
 
 			k += 3;
 		}
@@ -193,7 +194,7 @@ void Grid::loadHeightMap(const char *filename)
 	bitmapImage = 0;
 }
 
-void Grid::calcNormal(d3d::Geometry::MeshData &mesh)
+void Grid::calc_normal(d3d::Geometry::MeshData &mesh)
 {
 	for (int i = 0; i != mesh.IndexData.size(); i += 3)
 	{

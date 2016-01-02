@@ -1,5 +1,5 @@
-#ifndef Grid_H
-#define Grid_H
+#ifndef Terrain_H
+#define Terrain_H
 
 #include <d3d11.h>
 #include <vector>
@@ -14,11 +14,11 @@ namespace byhj
 {
 
 
-	class Grid
+	class Terrain
 	{
 	public:
-		Grid()  = default;
-		~Grid() = default;
+		Terrain()  = default;
+		~Terrain() = default;
 
 		void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
 		void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
@@ -28,10 +28,12 @@ namespace byhj
 
 		void init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
 		void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
+		void init_texture(ID3D11Device *pD3D11Device);
+
 		void load_heightMap(const char *filename);
 		void calc_normal(d3d::Geometry::MeshData &mesh);
 
-		d3d::MatrixBuffer cbMatrix;
+
 
 		struct  Vertex
 		{
@@ -39,9 +41,6 @@ namespace byhj
 			XMFLOAT3 Normal;
 			XMFLOAT2 Tex;
 		};
-
-		d3d::Shader GridShader;
-		std::vector<XMFLOAT3> m_HightmapData;
 
 		struct LightBuffer
 		{
@@ -52,12 +51,18 @@ namespace byhj
 		};
 		LightBuffer cbLight;
 
+		d3d::MatrixBuffer cbMatrix;
+		d3d::Shader TerrainShader;
+		std::vector<XMFLOAT3> m_HightmapData;
 
-		ID3D11Buffer        *m_pLightBuffer   = nullptr;
-		ID3D11Buffer        *m_pGridVB      = nullptr;
-		ID3D11Buffer        *m_pGridIB      = nullptr;
-		ID3D11Buffer        *m_pMVPBuffer   = nullptr;
-		ID3D11InputLayout   *m_pInputLayout = nullptr;
+		ID3D11Buffer        *m_pLightBuffer          = nullptr;
+		ID3D11Buffer        *m_pTerrainVB            = nullptr;
+		ID3D11Buffer        *m_pTerrainIB            = nullptr;
+		ID3D11Buffer        *m_pMVPBuffer            = nullptr;
+		ID3D11InputLayout   *m_pInputLayout          = nullptr;
+
+		ID3D11ShaderResourceView *m_pTextureSRV      = nullptr;
+		ID3D11SamplerState       *m_pTexSamplerState = nullptr;
 
 		int m_VertexCount  = 0;
 		int m_IndexCount   = 0;
@@ -67,3 +72,5 @@ namespace byhj
 
 }
 #endif
+
+

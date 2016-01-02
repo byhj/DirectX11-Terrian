@@ -7,7 +7,7 @@ struct VS_OUT
 };
 
 
-float4 PS(VS_OUT vs_out) : SV_TARGET
+float4 GridPS(VS_OUT vs_out) : SV_TARGET
 {
    vs_out.Normal = normalize(vs_out.Normal);
    float nz =  abs(vs_out.Normal.z);

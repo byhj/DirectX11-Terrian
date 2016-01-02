@@ -23,6 +23,8 @@ public:
 	void v_Render();
 	void v_Shutdown();
 
+	void UpdateScene();
+	
 private:
 	void init_device();
 	void init_camera();
@@ -30,13 +32,12 @@ private:
 
 	void BeginScene();
 	void EndScene();
-    void EnableZbuffer();
-	void DisabLeZbuffer();
+	void TurnZBufferOn();
+	void TurnZBufferOff();
 	void DrawFps();
 	void DrawInfo(); 
 
 	byhj::Grid m_Grid;
-
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;

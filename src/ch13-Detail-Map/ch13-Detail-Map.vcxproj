@@ -64,6 +64,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\include\d3d\App.cpp" />
+    <ClCompile Include="..\..\include\d3d\Bitmap.cpp" />
     <ClCompile Include="..\..\include\d3d\Camera.cpp" />
     <ClCompile Include="..\..\include\d3d\Font.cpp" />
     <ClCompile Include="..\..\include\d3d\Geometry.cpp" />
@@ -72,9 +73,13 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
+    <ClCompile Include="ch13-Detail-Map.cpp" />
+    <ClCompile Include="grid.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
+    <ClInclude Include="..\..\include\d3d\Bitmap.h" />
     <ClInclude Include="..\..\include\d3d\Camera.h" />
     <ClInclude Include="..\..\include\d3d\Font.h" />
     <ClInclude Include="..\..\include\d3d\Geometry.h" />
@@ -83,6 +88,12 @@
     <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h" />
     <ClInclude Include="..\..\include\dxerr.h" />
+    <ClInclude Include="grid.h" />
+    <ClInclude Include="RenderSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="grid.psh" />
+    <FxCompile Include="grid.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

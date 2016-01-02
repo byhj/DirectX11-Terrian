@@ -1,17 +1,18 @@
-
-#include "grid.h"
+#include "Terrain.h"
 #include "d3d/Geometry.h"
+#include "DirectXTK/DDSTextureLoader.h"
 
 namespace byhj
 {
 
-	void Grid::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+	void Terrain::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 	{
 		init_buffer(pD3D11Device, pD3D11DeviceContext);
 		init_shader(pD3D11Device, hWnd);
+		init_texture(pD3D11Device);
 	}
 
-	void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
+	void Terrain::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 	{
 		//Update the the mvp matrix
 		cbMatrix.model = matrix.model;
@@ -27,23 +28,26 @@ namespace byhj
 		unsigned int offset;
 		stride = sizeof(Vertex);
 		offset = 0;
-		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pGridVB, &stride, &offset);
-		pD3D11DeviceContext->IASetIndexBuffer(m_pGridIB, DXGI_FORMAT_R32_UINT, 0);
+		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pTerrainVB, &stride, &offset);
+		pD3D11DeviceContext->IASetIndexBuffer(m_pTerrainIB, DXGI_FORMAT_R32_UINT, 0);
 
-		GridShader.use(pD3D11DeviceContext);
+		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
+
+		TerrainShader.use(pD3D11DeviceContext);
 		pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
 
 	}
 
-	void Grid::Shutdown()
+	void Terrain::Shutdown()
 	{
-		ReleaseCOM(m_pGridVB)
-		ReleaseCOM(m_pGridIB)
-		ReleaseCOM(m_pMVPBuffer)
-		ReleaseCOM(m_pInputLayout)
+		ReleaseCOM(m_pTerrainVB)
+			ReleaseCOM(m_pTerrainIB)
+			ReleaseCOM(m_pMVPBuffer)
+			ReleaseCOM(m_pInputLayout)
 	}
 
-	void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
+	void Terrain::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
 	{
 		HRESULT hr;
 		auto dir = d3d::TextureMgr::getInstance()->getDir() + "heightmap01.bmp";
@@ -51,44 +55,44 @@ namespace byhj
 		load_heightMap(dir.c_str());
 
 		d3d::Geometry geom;
-		d3d::Geometry::MeshData gridMesh;
-		geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, gridMesh);
+		d3d::Geometry::MeshData TerrainMesh;
+		geom.CreateGrid(160.0, 160.0, m_TerrainWidth, m_TerrainHeight, TerrainMesh);
 
-		m_VertexCount = gridMesh.VertexData.size();
+		m_VertexCount = TerrainMesh.VertexData.size();
 		for (int i = 0; i != m_VertexCount; ++i)
-			gridMesh.VertexData[i].Pos.y = m_HightmapData[i].y / 10.0f;
+			TerrainMesh.VertexData[i].Pos.y = m_HightmapData[i].y / 10.0f;
 
-		calc_normal(gridMesh);
+		calc_normal(TerrainMesh);
 
 		/////////////////////////////Vertex Buffer//////////////////////////////
-		m_VertexCount = gridMesh.VertexData.size();
-		D3D11_BUFFER_DESC gridVBDesc;
-		gridVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
-		gridVBDesc.ByteWidth           = sizeof(Vertex) * m_VertexCount;
-		gridVBDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
-		gridVBDesc.CPUAccessFlags      = 0;
-		gridVBDesc.MiscFlags           = 0;
-		gridVBDesc.StructureByteStride = 0;
+		m_VertexCount = TerrainMesh.VertexData.size();
+		D3D11_BUFFER_DESC TerrainVBDesc;
+		TerrainVBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
+		TerrainVBDesc.ByteWidth           = sizeof(Vertex) * m_VertexCount;
+		TerrainVBDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+		TerrainVBDesc.CPUAccessFlags      = 0;
+		TerrainVBDesc.MiscFlags           = 0;
+		TerrainVBDesc.StructureByteStride = 0;
 
-		D3D11_SUBRESOURCE_DATA gridVBO;
-		gridVBO.pSysMem = &gridMesh.VertexData[0];
-		hr = pD3D11Device->CreateBuffer(&gridVBDesc, &gridVBO, &m_pGridVB);
+		D3D11_SUBRESOURCE_DATA TerrainVBO;
+		TerrainVBO.pSysMem = &TerrainMesh.VertexData[0];
+		hr = pD3D11Device->CreateBuffer(&TerrainVBDesc, &TerrainVBO, &m_pTerrainVB);
 		DebugHR(hr);
 
 		/////////////////////////////Index Buffer//////////////////////////////
 
-		m_IndexCount =  gridMesh.IndexData.size();
-		D3D11_BUFFER_DESC gridIBDesc;
-		gridIBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
-		gridIBDesc.ByteWidth           = sizeof(UINT) * m_IndexCount;
-		gridIBDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
-		gridIBDesc.CPUAccessFlags      = 0;
-		gridIBDesc.MiscFlags           = 0;
-		gridIBDesc.StructureByteStride = 0;
+		m_IndexCount =  TerrainMesh.IndexData.size();
+		D3D11_BUFFER_DESC TerrainIBDesc;
+		TerrainIBDesc.Usage               = D3D11_USAGE_IMMUTABLE;
+		TerrainIBDesc.ByteWidth           = sizeof(UINT) * m_IndexCount;
+		TerrainIBDesc.BindFlags           = D3D11_BIND_INDEX_BUFFER;
+		TerrainIBDesc.CPUAccessFlags      = 0;
+		TerrainIBDesc.MiscFlags           = 0;
+		TerrainIBDesc.StructureByteStride = 0;
 
 		D3D11_SUBRESOURCE_DATA girdIBO;
-		girdIBO.pSysMem = &gridMesh.IndexData[0];
-		hr = pD3D11Device->CreateBuffer(&gridIBDesc, &girdIBO, &m_pGridIB);
+		girdIBO.pSysMem = &TerrainMesh.IndexData[0];
+		hr = pD3D11Device->CreateBuffer(&TerrainIBDesc, &girdIBO, &m_pTerrainIB);
 		DebugHR(hr);
 
 		////////////////////////////////Const Buffer//////////////////////////////////////
@@ -115,7 +119,7 @@ namespace byhj
 
 		cbLight.ambient  = XMFLOAT4(0.05f, 0.05f, 0.05f, 1.0f);
 		cbLight.diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cbLight.lightDir = XMFLOAT3(0.0f, 0.0f, 0.75f);
+		cbLight.lightDir = XMFLOAT3(-0.5f, -1.0f, 0.0f);
 		cbLight.pad      = 0.0f;
 
 		D3D11_SUBRESOURCE_DATA lightVBO;
@@ -126,7 +130,7 @@ namespace byhj
 	}
 
 
-	void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
+	void Terrain::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	{
 		//Shader interface information
 		std::vector<D3D11_INPUT_ELEMENT_DESC> vInputLayoutDesc;
@@ -159,13 +163,40 @@ namespace byhj
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-		GridShader.init(pD3D11Device, vInputLayoutDesc);
-		GridShader.attachVS(L"grid.vsh", "GridVS", "vs_5_0");
-		GridShader.attachPS(L"grid.psh", "GridPS", "ps_5_0");
-		GridShader.end();
+		TerrainShader.init(pD3D11Device, vInputLayoutDesc);
+		TerrainShader.attachVS(L"Terrain.vsh", "TerrainVS", "vs_5_0");
+		TerrainShader.attachPS(L"Terrain.psh", "TerrainPS", "ps_5_0");
+		TerrainShader.end();
+	}
+	
+	void Terrain::init_texture(ID3D11Device *pD3D11Device)
+	{
+		HRESULT hr;
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, &m_pTextureSRV, NULL);
+		DebugHR(hr);
+
+		// Create a texture sampler state description.
+		D3D11_SAMPLER_DESC samplerDesc;
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		// Create the texture sampler state.
+		hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
+		DebugHR(hr);
 	}
 
-	void Grid::load_heightMap(const char *filename)
+	void Terrain::load_heightMap(const char *filename)
 	{
 		BITMAPFILEHEADER  bitmapFileHeader;
 		BITMAPINFOHEADER  bitmapInfoHeader;
@@ -218,7 +249,7 @@ namespace byhj
 		bitmapImage = 0;
 	}
 
-	void Grid::calc_normal(d3d::Geometry::MeshData &mesh)
+	void Terrain::calc_normal(d3d::Geometry::MeshData &mesh)
 	{
 		for (int i = 0; i != mesh.IndexData.size(); i += 3)
 		{
@@ -253,3 +284,5 @@ namespace byhj
 	}
 
 }
+
+

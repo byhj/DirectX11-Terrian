@@ -17,21 +17,19 @@ namespace byhj
 class Grid
 {
 public:
-	Grid() {}
-	~Grid() {}
+	Grid()  = default;
+	~Grid() = default;
 
 	void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
 	void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 	void Shutdown();
 
-
-
 private:
 
 	void init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
 	void init_shader(ID3D11Device *pD3D11Device, HWND hWnd);
-	void loadHeightMap(const char *filename);
-	void calcNormal(d3d::Geometry::MeshData &mesh);
+	void load_heightMap(const char *filename);
+	void calc_normal(d3d::Geometry::MeshData &mesh);
 
 	d3d::MatrixBuffer cbMatrix;
 
@@ -43,7 +41,7 @@ private:
 	};
 
 	d3d::Shader GridShader;
-	std::vector<XMFLOAT3> m_Hightmap;
+	std::vector<XMFLOAT3> m_HightmapData;
 
 	ID3D11Buffer        *m_pGridVB      = nullptr;
 	ID3D11Buffer        *m_pGridIB      = nullptr;

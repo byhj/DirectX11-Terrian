@@ -7,7 +7,7 @@
 #include "d3d/Timer.h"
 #include "d3d/Camera.h"
 
-#include "Grid.h"
+#include "Terrain.h"
 
 namespace byhj
 {
@@ -19,14 +19,11 @@ public:
 	~RenderSystem();
 
 	void v_Init();
+	void v_Update();
 	void v_Render();
 	void v_Shutdown();
 
 	void UpdateScene();
-	
-	
-	
-
 
 private:
 	void init_device();
@@ -40,7 +37,7 @@ private:
 	void DrawFps();
 	void DrawInfo(); 
 
-	byhj::Grid m_Grid;
+	byhj::Terrain m_Terrain;
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;

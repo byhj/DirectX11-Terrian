@@ -24,9 +24,6 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\d3d\Timer.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -51,12 +48,12 @@
     <ClCompile Include="quadTree.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\Timer.h">
@@ -83,13 +80,16 @@
     <ClInclude Include="quadTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="grid.psh">
+    <FxCompile Include="Terrain.psh">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="grid.vsh">
+    </FxCompile>
+    <FxCompile Include="Terrain.vsh">
       <Filter>Resource Files</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

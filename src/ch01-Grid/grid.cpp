@@ -35,6 +35,7 @@ void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuf
 
 void Grid::Shutdown()
 {
+	//Remember to release the Com objects
 	ReleaseCOM(m_pMVPBuffer)
 	ReleaseCOM(m_pGridVB)
 	ReleaseCOM(m_pGridIB)
@@ -47,6 +48,7 @@ void Grid::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11De
 
 	/////////////////////////////Vertex Buffer//////////////////////////////
 
+	//Create a grid to make a terrain
 	d3d::Geometry geom;
 	d3d::Geometry::MeshData gridMesh;
 	geom.CreateGrid(160.0, 160.0, 50, 50, gridMesh);
@@ -128,7 +130,6 @@ void Grid::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 	pInputLayoutDesc.InstanceDataStepRate = 0;
 	vInputLayoutDesc.push_back(pInputLayoutDesc);
 	
-
 	GridShader.init(pD3D11Device, vInputLayoutDesc);
 	GridShader.attachVS(L"grid.vsh", "GridVS", "vs_5_0");
 	GridShader.attachPS(L"grid.psh", "GridPS", "ps_5_0");

@@ -38,14 +38,15 @@ bool MiniMap::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenH
 	m_terrainWidth = terrainWidth;
 	m_terrainHeight = terrainHeight;
 
-	m_pMiniMap = new D3DBitmap;
-	result = m_pMiniMap->Init(device, screenWidth, screenHeight, L"../Engine/data/colorm01.dds", 150, 150);
+	HRESULT hr;
+	m_pMiniMap = new d3d::Bitmap;
+	hr = m_pMiniMap->Init(device, screenWidth, screenHeight, L"../Engine/data/colorm01.dds", 150, 150);
 
-	m_pBorder = new D3DBitmap;
-	result = m_pBorder->Init(device, screenWidth, screenHeight, L"../Engine/data/border01.dds", 154, 154);
+	m_pBorder = new d3d::Bitmap;
+	hr = m_pBorder->Init(device, screenWidth, screenHeight, L"../Engine/data/border01.dds", 154, 154);
 
-	m_pLocation = new D3DBitmap;
-	result = m_pLocation->Init(device, screenWidth, screenHeight, L"../Engine/data/point01.dds", 3, 3);
+	m_pLocation = new d3d::Bitmap;
+	hr = m_pLocation->Init(device, screenWidth, screenHeight, L"../Engine/data/point01.dds", 3, 3);
 
 
 	return true;
@@ -57,7 +58,7 @@ void MiniMap::Shutdown()
 	// Release the point bitmap object.
 	if(m_pLocation)
 	{
-		m_pLocation->shutdown();
+		m_pLocation->Shutdown();
 		delete m_pLocation;
 		m_pLocation = 0;
 	}
@@ -65,7 +66,7 @@ void MiniMap::Shutdown()
 	// Release the border bitmap object.
 	if(m_pBorder)
 	{
-		m_pBorder->shutdown();
+		m_pBorder->Shutdown();
 		delete m_pBorder;
 		m_pBorder = 0;
 	}
@@ -73,7 +74,7 @@ void MiniMap::Shutdown()
 	// Release the mini-map bitmap object.
 	if(m_pMiniMap)
 	{
-		m_pMiniMap>shutdown();
+		m_pMiniMap>Shutdown();
 		delete m_pMiniMap;
 		m_pMiniMap = 0;
 	}

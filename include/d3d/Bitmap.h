@@ -28,12 +28,13 @@ namespace byhj
 				        const XMFLOAT4X4 &View, const XMFLOAT4X4&Proj);
             void Update();
         	void Shutdown();
-
-        private:
 			void init_window(int ScreenWidth, int ScreenHeight, int BitmapWidth, int BitmapHeight);
 			bool init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
 			bool init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
 			void init_texture(ID3D11Device *pD3D11Device);
+
+        private:
+
 
         	d3d::MatrixBuffer cbMatrix;
         

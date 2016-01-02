@@ -3,8 +3,12 @@
 
 
 #include "d3d/d3dFrustum.h"
+#include "grid.h"
 
+#include <d3d11.h>
+#include <DirectXMath.h>
 
+using namespace DirectX;
 
 namespace byhj
 {
@@ -16,27 +20,27 @@ class QuadTree
 private:
 	struct Vertex
 	{
-		XMFLOAT3 Position;
-		XMFLOAT3 Normal;
-		XMFLOAT2 TexCoord;
+		XMFLOAT3 position;
+		XMFLOAT3 normal;
+		XMFLOAT2 texture;
 	};
 
 	struct Node
 	{
-		float posX, posZ, width;
-		int   triangleCount;
+		float positionX, positionZ, width;
+		int triangleCount;
 		ID3D11Buffer *vertexBuffer, *indexBuffer;
 		Node* nodes[4];
 	};
 
 public:
-	 QuadTree();
-	 QuadTree(const QuadTree &qtree);
-	~QuadTree();
+	 QuadTree() = default;
+	 QuadTree(const QuadTree &qtree) = default;
+	~QuadTree() = default;
 
-	bool Init(TerrainClass*, ID3D11Device* pD3D11Device);
+	bool Init(Grid*, ID3D11Device* pD3D11Device);
 	void Shutdown();
-	void Render(FrustumClass*, ID3D11DeviceContext* pD3D11DeviceContext, TerrainShaderClass*);
+	void Render(ID3D11DeviceContext* pD3D11DeviceContext);
 
 	int GetDrawCount();
 
@@ -46,13 +50,13 @@ private:
 	int  CountTriangles(float, float, float);
 	bool IsTriangleContained(int, float, float, float);
 	void ReleaseNode(Node*);
-	void RenderNode(Node*, FrustumClass*, ID3D11DeviceContext*, TerrainShaderClass*);
+	void RenderNode(Node*, ID3D11DeviceContext*);
 
 private:
 
-	int m_triangleCount, m_drawCount;
-	Vertex* m_vertexList;
-	Node* m_parentNode;
+	int m_TriangleCount, m_DrawCount;
+	Vertex* m_pVertexList = nullptr;
+	Node* m_pParentNode = nullptr;
 };
 
 

@@ -7,10 +7,6 @@ namespace byhj
 	{
 		void Bitmap::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 		{
-			init_buffer(pD3D11Device, pD3D11DeviceContext);
-			init_texture(pD3D11Device);
-			init_shader(pD3D11Device, hWnd);
-
 		}
 
 		void Bitmap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &Model,
