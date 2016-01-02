@@ -21,7 +21,7 @@ struct VS_OUT
   float2 Tex : TEXCOORD0;
 };
 
-float4 PS(VS_OUT vs_out): SV_TARGET
+float4 SkyPlanePS(VS_OUT vs_out): SV_TARGET
 {
   float2 sampleLoc;
 

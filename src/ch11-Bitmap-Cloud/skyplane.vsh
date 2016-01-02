@@ -18,7 +18,7 @@ struct VS_OUT
   float2 Tex : TEXCOORD0;
 };
 
-VS_OUT VS(VS_IN vs_in)
+VS_OUT SkyPlaneVS(VS_IN vs_in)
 {
 
    VS_OUT vs_out;

@@ -14,7 +14,7 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Framework">
-      <UniqueIdentifier>{10a16ea4-b794-4d09-84b1-be62325ba4b4}</UniqueIdentifier>
+      <UniqueIdentifier>{11da13b3-2e19-4dd4-b1d8-1c8b704dfa10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,8 +24,8 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Timer.cpp">
-      <Filter>Framework</Filter>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\d3d\App.cpp">
       <Filter>Framework</Filter>
@@ -42,20 +42,20 @@
     <ClCompile Include="..\..\include\d3d\Shader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Timer.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Cubemap.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\dxerr.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Skymap.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,10 +65,10 @@
     <None Include="cubemap.vsh">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="grid.vsh">
+    <None Include="Terrain.vsh">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="grid.psh">
+    <None Include="Terrain.psh">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -76,8 +76,8 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Timer.h">
-      <Filter>Framework</Filter>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\App.h">
       <Filter>Framework</Filter>
@@ -94,20 +94,20 @@
     <ClInclude Include="..\..\include\d3d\Shader.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Timer.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\d3d\Utility.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Cubemap.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="grid.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\dxerr.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Skymap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

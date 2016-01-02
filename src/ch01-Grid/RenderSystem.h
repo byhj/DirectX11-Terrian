@@ -31,7 +31,7 @@ private:
 	void BeginScene();
 	void EndScene();
     void EnableZbuffer();
-	void DisabLeZbuffer();
+	void DisableZbuffer();
 	void DrawFps();
 	void DrawInfo(); 
 

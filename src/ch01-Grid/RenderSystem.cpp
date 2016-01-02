@@ -281,7 +281,7 @@ void RenderSystem::EnableZbuffer()
 }
 
 
-void RenderSystem::DisabLeZbuffer()
+void RenderSystem::DisableZbuffer()
 {
 	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthDisabledStencilState, 1);
 }

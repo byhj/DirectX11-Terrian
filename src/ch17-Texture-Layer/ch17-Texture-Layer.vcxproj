@@ -63,10 +63,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="grid.psh" />
-    <None Include="grid.vsh" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\include\d3d\App.cpp" />
     <ClCompile Include="..\..\include\d3d\Camera.cpp" />
     <ClCompile Include="..\..\include\d3d\Font.cpp" />
@@ -77,8 +73,8 @@
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
     <ClCompile Include="ch17-Texture-Layer.cpp" />
-    <ClCompile Include="grid.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
@@ -90,8 +86,12 @@
     <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h" />
     <ClInclude Include="..\..\include\dxerr.h" />
-    <ClInclude Include="grid.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Terrain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="terrain.psh" />
+    <FxCompile Include="terrain.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

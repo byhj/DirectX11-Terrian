@@ -51,11 +51,11 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="ch13-Detail-Map.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,15 +92,15 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="grid.h">
+    <ClInclude Include="Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="grid.vsh">
+    <FxCompile Include="Terrain.psh">
       <Filter>Resource Files</Filter>
     </FxCompile>
-    <FxCompile Include="grid.psh">
+    <FxCompile Include="Terrain.vsh">
       <Filter>Resource Files</Filter>
     </FxCompile>
   </ItemGroup>

@@ -14,12 +14,24 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Framework">
-      <UniqueIdentifier>{57e9fd63-ec9f-49d5-9fcb-2552060f20e2}</UniqueIdentifier>
+      <UniqueIdentifier>{411540e3-d981-4a12-bbee-fa2700e9b8da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\d3d\Timer.cpp">
-      <Filter>Framework</Filter>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="skyPlane.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ch11-Bitmap-Cloud.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skymap.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\d3d\App.cpp">
       <Filter>Framework</Filter>
@@ -36,6 +48,9 @@
     <ClCompile Include="..\..\include\d3d\Shader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Timer.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\include\d3d\Utility.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -45,25 +60,19 @@
     <ClCompile Include="..\..\include\dxerr.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="skyPlane.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ch11-Bitmap-Cloud.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Cubemap.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\d3d\Timer.h">
-      <Filter>Framework</Filter>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="skyPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skymap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\d3d\App.h">
       <Filter>Framework</Filter>
@@ -80,6 +89,9 @@
     <ClInclude Include="..\..\include\d3d\Shader.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Timer.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\d3d\Utility.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -89,36 +101,24 @@
     <ClInclude Include="..\..\include\dxerr.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="skyPlane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Cubemap.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cubemap.psh">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="cubemap.vsh">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="grid.psh">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="grid.vsh">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="skyplane.psh">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="skyplane.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Terrain.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Terrain.psh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="skymap.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="skymap.psh">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

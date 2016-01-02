@@ -308,8 +308,8 @@ void SkyPlane::init_shader(ID3D11Device *pD3D11Device, HWND hWnd)
 
 
 	SkyPlaneShader.init(pD3D11Device, vInputLayoutDesc);
-	SkyPlaneShader.attachVS(L"SkyPlane.vsh", "VS", "vs_5_0");
-	SkyPlaneShader.attachPS(L"SkyPlane.psh", "PS", "ps_5_0");
+	SkyPlaneShader.attachVS(L"SkyPlane.vsh", "SkyPlaneVS", "vs_5_0");
+	SkyPlaneShader.attachPS(L"SkyPlane.psh", "SkyPlanePS", "ps_5_0");
 	SkyPlaneShader.end();
 }
 

@@ -89,7 +89,7 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
-    <ClCompile Include="ch07-Color-Map.cpp" />
+    <ClCompile Include="ch09-Terrian-Blend.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
   </ItemGroup>

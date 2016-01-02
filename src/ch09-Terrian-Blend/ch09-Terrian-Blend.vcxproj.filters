@@ -61,9 +61,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ch07-Color-Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="grid.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -96,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="..\..\include\dxerr.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="ch09-Terrian-Blend.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

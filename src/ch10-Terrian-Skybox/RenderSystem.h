@@ -6,14 +6,14 @@
 #include "d3d/Font.h"
 #include "d3d/Timer.h"
 #include "d3d/Camera.h"
-#include "d3d/Cubemap.h"
 
-#include "Grid.h"
+#include "Skymap.h"
+#include "Terrain.h"
 
 namespace byhj
 {
 
-class RenderSystem : public d3d::App
+	class RenderSystem : public d3d::App
 {
 public:
 	RenderSystem();
@@ -24,8 +24,6 @@ public:
 	void v_Render();
 	void v_Shutdown();
 
-	void UpdateScene();
-
 private:
 	void init_device();
 	void init_camera();
@@ -33,17 +31,21 @@ private:
 
 	void BeginScene();
 	void EndScene();
-	void TurnZBufferOn();
-	void TurnZBufferOff();
+    void EnableZbuffer();
+	void DisableZbuffer();
+	void EnableCulling();
+	void DisableCulling();
+
 	void DrawFps();
 	void DrawInfo(); 
 
-	byhj::Grid m_Grid;
+	byhj::Terrain m_Terrain;
+	byhj::Skymap m_Skymap;
+
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;
-	Skymap m_Skymap;
-
+	
 	float fps = 0.0f;
 	int m_videoCardMemory;
 	std::wstring m_videoCardInfo;
@@ -57,6 +59,7 @@ private:
 	ID3D11DepthStencilState  *m_pDepthStencilState          = nullptr;
 	ID3D11DepthStencilState  *m_pDepthDisabledStencilState  = nullptr;
 	ID3D11RasterizerState    *m_pRasterState                = nullptr;
+	ID3D11RasterizerState    *m_pRasterStateNoCulling       = nullptr;
 
 	d3d::MatrixBuffer m_Matrix;
 };

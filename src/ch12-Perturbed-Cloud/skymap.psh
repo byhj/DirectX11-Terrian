@@ -1,0 +1,26 @@
+
+struct VS_OUT
+{
+  float4 Pos: SV_POSITION;
+  float3 Tex: TEXCOORD;
+}; 
+
+TextureCube Skymap;
+SamplerState texState;
+
+float4 SkymapPS(VS_OUT ps_in): SV_TARGET
+{
+	float4 apexColor = float4(0.0f, 0.15f, 0.66f, 1.0f);
+    float4 centerColor =  float4(0.81f, 0.38f, 0.66f, 1.0f);
+
+   // Determine the position on the sky dome where this pixel is located.
+	float height = ps_in.Tex.y;
+	// The value ranges from -1.0f to +1.0f so change it to only positive values.
+	if(height < 0.0f)
+		height = 0.0f;
+
+	float4 pixelColor = lerp(centerColor, apexColor, height);
+
+	return pixelColor;
+   // return Skymap.Sample(texState, ps_in.Tex);
+}

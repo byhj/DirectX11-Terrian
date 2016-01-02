@@ -7,7 +7,7 @@
 #include "d3d/Timer.h"
 #include "d3d/Camera.h"
 
-#include "Grid.h"
+#include "Terrain.h"
 
 namespace byhj
 {
@@ -23,12 +23,6 @@ public:
 	void v_Render();
 	void v_Shutdown();
 
-	void UpdateScene();
-	
-	
-	
-
-
 private:
 	void init_device();
 	void init_camera();
@@ -36,10 +30,13 @@ private:
 
 	void BeginScene();
 	void EndScene();
+    void EnableZbuffer();
+	void DisableZbuffer();
 	void DrawFps();
 	void DrawInfo(); 
 
-	Grid m_Grid;
+	byhj::Terrain m_Terrain;
+
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;
@@ -54,9 +51,9 @@ private:
 	ID3D11RenderTargetView   *m_pRenderTargetView           = nullptr;
 	ID3D11DepthStencilView   *m_pDepthStencilView           = nullptr;
 	ID3D11Texture2D          *m_pDepthStencilBuffer         = nullptr;
+	ID3D11DepthStencilState  *m_pDepthStencilState          = nullptr;
+	ID3D11DepthStencilState  *m_pDepthDisabledStencilState  = nullptr;
 	ID3D11RasterizerState    *m_pRasterState                = nullptr;
-	ID3D11DepthStencilState  *m_pDepthStencilState = nullptr;
-	ID3D11DepthStencilState  *m_pDepthDisabledStencilState = nullptr;
 
 	d3d::MatrixBuffer m_Matrix;
 };

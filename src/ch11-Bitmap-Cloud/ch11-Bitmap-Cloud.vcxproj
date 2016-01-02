@@ -65,7 +65,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\include\d3d\App.cpp" />
     <ClCompile Include="..\..\include\d3d\Camera.cpp" />
-    <ClCompile Include="..\..\include\d3d\Cubemap.cpp" />
     <ClCompile Include="..\..\include\d3d\Font.cpp" />
     <ClCompile Include="..\..\include\d3d\Geometry.cpp" />
     <ClCompile Include="..\..\include\d3d\Shader.cpp" />
@@ -74,14 +73,14 @@
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
     <ClCompile Include="ch11-Bitmap-Cloud.cpp" />
-    <ClCompile Include="grid.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="Skymap.cpp" />
     <ClCompile Include="skyPlane.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\App.h" />
     <ClInclude Include="..\..\include\d3d\Camera.h" />
-    <ClInclude Include="..\..\include\d3d\Cubemap.h" />
     <ClInclude Include="..\..\include\d3d\Font.h" />
     <ClInclude Include="..\..\include\d3d\Geometry.h" />
     <ClInclude Include="..\..\include\d3d\Shader.h" />
@@ -89,21 +88,32 @@
     <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h" />
     <ClInclude Include="..\..\include\dxerr.h" />
-    <ClInclude Include="grid.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="Skymap.h" />
     <ClInclude Include="skyPlane.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cubemap.psh" />
-    <None Include="cubemap.vsh" />
-    <None Include="grid.psh" />
-    <None Include="grid.vsh" />
+    <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="skyplane.psh">
       <FileType>Document</FileType>
     </None>
     <None Include="skyplane.vsh">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Terrain.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Terrain.vsh">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="skymap.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="skymap.vsh">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
