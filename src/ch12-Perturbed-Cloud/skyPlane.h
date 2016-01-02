@@ -32,9 +32,10 @@ public:
 	};
 	struct SkyPlaneBuffer
 	{
-		XMFLOAT4 Translation;
+		FLOAT    Translation;
+		FLOAT    Scale;
 	    FLOAT    Brightness;
-		XMFLOAT3 padding; 
+		FLOAT    padding; 
 	};
 
 	void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);

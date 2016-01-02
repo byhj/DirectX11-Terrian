@@ -15,30 +15,13 @@ void SkyPlane::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11Devic
 
 void SkyPlane::Update()
 {
+	m_SkyPlaneBuffer.Translation += 0.0001f;
+	if (m_SkyPlaneBuffer.Translation  > 1.0f)
+	{
+		m_SkyPlaneBuffer.Translation  -= 1.0f;
+	}
 
-	// Increment the translation values to simulate the moving clouds.
-	m_SkyPlaneBuffer.Translation.x += m_TranslationSpeed[0];
-	m_SkyPlaneBuffer.Translation.y += m_TranslationSpeed[1];
-	m_SkyPlaneBuffer.Translation.z += m_TranslationSpeed[2];
-	m_SkyPlaneBuffer.Translation.w += m_TranslationSpeed[3];
 
-	// Keep the values in the zero to one range.
-	if (m_SkyPlaneBuffer.Translation.x > 1.0f) 
-	{ 
-		m_SkyPlaneBuffer.Translation.x -= 1.0f;
-	}
-	if (m_SkyPlaneBuffer.Translation.y > 1.0f)
-	{
-		m_SkyPlaneBuffer.Translation.y -= 1.0f;
-	}
-	if (m_SkyPlaneBuffer.Translation.z > 1.0f)
-	{
-		m_SkyPlaneBuffer.Translation.z -= 1.0f;
-	}
-	if (m_SkyPlaneBuffer.Translation.w > 1.0f)
-	{
-		m_SkyPlaneBuffer.Translation.w -= 1.0f;
-	}
 }
 
 void SkyPlane::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
@@ -88,19 +71,10 @@ void SkyPlane::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D
 	int skyPlaneResolution = 10;
 	int textureRepeat = 4;
 
-	m_SkyPlaneBuffer.Brightness  = 0.65f;
+	m_SkyPlaneBuffer.Brightness  = 0.5f;
+	m_SkyPlaneBuffer.Scale = 0.3f;
+	m_SkyPlaneBuffer.Translation = 0.0f;
 
-	// Setup the cloud translation speed increments.
-	m_TranslationSpeed[0] = 0.0003f;   // First texture X translation speed.
-	m_TranslationSpeed[1] = 0.0f;      // First texture Z translation speed.
-	m_TranslationSpeed[2] = 0.00015f;  // Second texture X translation speed.
-	m_TranslationSpeed[3] = 0.0f;      // Second texture Z translation speed.
-
-	// Initialize the texture translation values.
-	m_SkyPlaneBuffer.Translation.x = 0.0f;
-	m_SkyPlaneBuffer.Translation.y = 0.0f;
-	m_SkyPlaneBuffer.Translation.z = 0.0f;
-	m_SkyPlaneBuffer.Translation.w = 0.0f;
 
 	float quadSize, radius, constant, textureDelta;
 	int i, j, index;
@@ -318,7 +292,7 @@ void SkyPlane::init_texture(ID3D11Device *pD3D11Device)
 	HRESULT hr;
 	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/cloud001.dds", NULL, &m_pCloudTexSRV1, NULL);
 	DebugHR(hr);
-	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/cloud002.dds", NULL, &m_pCloudTexSRV2, NULL);
+	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures//perturb001.dds", NULL, &m_pCloudTexSRV2, NULL);
 	DebugHR(hr);
 
 	// Create a texture sampler state description.

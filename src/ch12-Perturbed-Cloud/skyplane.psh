@@ -1,17 +1,14 @@
 
 cbuffer SkyBuffer : register(b0)
 {
-  float g_TranslationX1;
-  float g_TranslationZ1;
-  float g_TranslationX2;
-  float g_TranslationZ2;
-
+  float g_Translation;
+  float g_Scale;
   float g_Brightness;
-  float3 padding;
+  float padding;
 };
 
-Texture2D g_CloundTex1 : register(t0);
-Texture2D g_CloundTex2 : register(t1);
+Texture2D g_CloundTex  : register(t0);
+Texture2D g_PerturbTex : register(t1);
 
 SamplerState g_SampleState : register(s0);
 
@@ -23,20 +20,16 @@ struct VS_OUT
 
 float4 PS(VS_OUT vs_out): SV_TARGET
 {
-  float2 sampleLoc;
+  vs_out.Tex.x += g_Translation;
 
-  sampleLoc.x = vs_out.Tex.x + g_TranslationX1;
-  sampleLoc.y = vs_out.Tex.y + g_TranslationZ1;
-  float4 texColor1 = g_CloundTex1.Sample(g_SampleState, sampleLoc);
+  float4 perturbValue = g_PerturbTex.Sample(g_SampleState, vs_out.Tex);
+  perturbValue *= g_Scale;
+  perturbValue.xy = perturbValue + vs_out.Tex + g_Translation;
 
-  sampleLoc.x = vs_out.Tex.x + g_TranslationX2;
-  sampleLoc.y = vs_out.Tex.y + g_TranslationZ2;
-  float4 texColor2 = g_CloundTex2.Sample(g_SampleState, sampleLoc);
+  float4 texColor = g_CloundTex.Sample(g_SampleState, perturbValue.xy);
+  texColor *= g_Brightness;
 
-  float4 color =lerp(texColor1, texColor2, 0.5);
-  color = color * g_Brightness;
-
-  return color;
+  return texColor;
 }
 
 

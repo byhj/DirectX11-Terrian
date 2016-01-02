@@ -57,6 +57,9 @@
     <ClCompile Include="ch12-Perturbed-Cloud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\d3d\Cubemap.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\Timer.h">
@@ -95,25 +98,28 @@
     <ClInclude Include="skyPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\d3d\Cubemap.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="grid.vsh">
+    <None Include="skyplane.vsh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="skyplane.psh">
+    </None>
+    <None Include="skyplane.psh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="skyplane.vsh">
+    </None>
+    <None Include="grid.vsh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="grid.psh">
+    </None>
+    <None Include="grid.psh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="cubemap.psh">
+    </None>
+    <None Include="cubemap.vsh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="cubemap.vsh">
+    </None>
+    <None Include="cubemap.psh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

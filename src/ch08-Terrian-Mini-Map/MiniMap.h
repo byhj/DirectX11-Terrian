@@ -7,6 +7,8 @@
 
 using namespace DirectX;
 
+namespace byhj
+{
 
 class MiniMap
 {
@@ -35,4 +37,5 @@ private:
 	D3DBitmap *m_pMiniMap, *m_pBorder, *m_pLocation;
 };
 
+}
 #endif

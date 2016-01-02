@@ -1,6 +1,10 @@
 
 #include "minimap.h"
 
+
+namespace byhj
+{
+
 MiniMap::MiniMap()
 {
 	m_pMiniMap  = 0;
@@ -125,4 +129,6 @@ void MiniMap::PositionUpdate(float positionX, float positionZ)
 	m_pointLocationY = m_pointLocationY - 1;
 
 	return;
+}
+
 }

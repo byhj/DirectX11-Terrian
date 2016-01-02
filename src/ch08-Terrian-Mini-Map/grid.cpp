@@ -5,6 +5,13 @@
 namespace byhj
 {
 
+void Grid::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+{
+	init_buffer(pD3D11Device, pD3D11DeviceContext);
+	init_shader(pD3D11Device, hWnd);
+	init_texture(pD3D11Device);
+}
+
 void Grid::Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
 {
 	//Update the the mvp matrix
@@ -319,7 +326,7 @@ void Grid::calcNormal(d3d::Geometry::MeshData &mesh)
 void Grid::init_texture(ID3D11Device *pD3D11Device)
 {
 	HRESULT hr;
-	hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,  &m_pTextureSRV, NULL);
+	hr =  CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL,  &m_pTextureSRV, NULL);
 	DebugHR(hr);
 
 	// Create a texture sampler state description.
