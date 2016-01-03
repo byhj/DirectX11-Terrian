@@ -25,8 +25,7 @@ namespace byhj
 			const XMFLOAT4X4 &View, const XMFLOAT4X4&Proj);
 		void Update();
 		void Shutdown();
-
-		void SetPos(int posX, int posY, int width, int height);
+		void  SetPos(int sw, int sh, int posX, int posY, int width, int height);
 
 
 	private:
@@ -57,6 +56,8 @@ namespace byhj
 		int m_posY;
 		int m_width;
 		int m_height;
+		int m_sw;
+		int m_sh;
 
 		d3d::Shader D3DRTTShader;
 	};

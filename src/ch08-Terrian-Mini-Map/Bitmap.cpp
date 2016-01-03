@@ -42,12 +42,14 @@ namespace byhj
 			ReleaseCOM(m_pIndexBuffer)
 		}
 
-		void Bitmap::SetPos(int posX, int posY, int width, int height)
+		void Bitmap::SetPos(int sw, int sh, int posX, int posY, int width, int height)
 		{
 			m_posX  = posX;
 			m_posY  = posY;
 			m_width = width;
 			m_height = height;
+			m_sw = sw;
+			m_sh = sh;
 		}
 
 		void Bitmap::init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext)
@@ -64,26 +66,37 @@ namespace byhj
 			{
 				IndexData[i] = i;
 			}
+			// Calculate the screen coordinates of the left side of the bitmap.
+			float left = (float)((m_sw / 2) * -1) + (float)m_posX;
+
+			// Calculate the screen coordinates of the right side of the bitmap.
+			float  right = left + (float)m_width;
+
+			// Calculate the screen coordinates of the top of the bitmap.
+			float  top = (float)(m_sh / 2) - (float)m_posY;
+
+			// Calculate the screen coordinates of the bottom of the bitmap.
+			float  bottom = top - (float)m_height;
 
 			// First triangle.
-			VertexData[0].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Top left.
+			VertexData[0].Pos = XMFLOAT3(left, top, 0.0f);  // Top left.
 			VertexData[0].Tex = XMFLOAT2(0.0f, 0.0f);
 
-			VertexData[1].Pos = XMFLOAT3(m_posX + m_width, m_posY, 0.0f);  // Bottom right.
-			VertexData[1].Tex = XMFLOAT2(1.0f, 0.0f);
+			VertexData[1].Pos = XMFLOAT3(right, bottom, 0.0f);  // Bottom right.
+			VertexData[1].Tex = XMFLOAT2(1.0f, 1.0f);
 
-			VertexData[2].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
-			VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
+			VertexData[2].Pos = XMFLOAT3(left, bottom, 0.0f);  // Bottom left.
+			VertexData[2].Tex = XMFLOAT2(0.0f, 1.0f);
 
 			// Second triangle.
-			VertexData[3].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
-			VertexData[3].Tex = XMFLOAT2(1.0f, 1.0f);
+			VertexData[3].Pos = XMFLOAT3(left, top, 0.0f);  // Bottom left.
+			VertexData[3].Tex = XMFLOAT2(0.0f, 0.0f);
 
-			VertexData[4].Pos = XMFLOAT3(m_posX , m_posY - m_height, 0.0f); // Top right.
+			VertexData[4].Pos = XMFLOAT3(right, top, 0.0f); // Top right.
 			VertexData[4].Tex = XMFLOAT2(0.0f, 1.0f);
 
-			VertexData[5].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Bottom right.
-			VertexData[5].Tex = XMFLOAT2(0.0f, 0.0f);
+			VertexData[5].Pos = XMFLOAT3(right, bottom, 0.0f);  // Bottom right.
+			VertexData[5].Tex = XMFLOAT2(1.0f, 1.0f);
 
 			///////////////////////////Index Buffer ////////////////////////////////
 

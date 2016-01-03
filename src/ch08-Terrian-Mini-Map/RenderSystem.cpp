@@ -31,11 +31,14 @@ void RenderSystem::v_Render()
 	BeginScene();
 
 	m_Matrix.view = m_Camera.GetViewMatrix();
-	//m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
+	m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
+
 	XMMATRIX orthMat = XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, 0.1f, 1000.0f);
-	XMFLOAT4X4 temp;
-	XMStoreFloat4x4(&temp, orthMat);
-	m_Bitmap.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, temp);
+	XMFLOAT4X4 orth, identity;
+	XMStoreFloat4x4(&orth, orthMat);
+	XMStoreFloat4x4(&identity, XMMatrixIdentity());
+
+	m_Bitmap.Render(m_pD3D11DeviceContext, identity, identity, orth);
 
 	EndScene();
 
@@ -248,7 +251,8 @@ void RenderSystem::init_camera()
 	ZeroMemory(&vp, sizeof(D3D11_VIEWPORT));
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
 	vp.Width    = static_cast<FLOAT>(m_ScreenWidth);
 	vp.Height   = static_cast<FLOAT>(m_ScreenHeight);
 	m_pD3D11DeviceContext->RSSetViewports(1, &vp);
@@ -271,9 +275,9 @@ void RenderSystem::init_camera()
 void RenderSystem::init_object()
 {
 
-	//m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
-	m_Bitmap.SetPos(0.0f, 0.0f, 200.0f, 200.0f);
+	m_Bitmap.SetPos(m_ScreenWidth, m_ScreenHeight, 10, 10, 200, 200);
 	m_Bitmap.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
 	m_Timer.Reset();
