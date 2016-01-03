@@ -32,10 +32,10 @@ void RenderSystem::v_Render()
 
 	m_Matrix.view = m_Camera.GetViewMatrix();
 	//m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
-
+	XMMATRIX orthMat = XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, 0.1f, 1000.0f);
 	XMFLOAT4X4 temp;
-	XMStoreFloat4x4(&temp, XMMatrixIdentity());
-	m_Bitmap.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, m_Matrix.proj);
+	XMStoreFloat4x4(&temp, orthMat);
+	m_Bitmap.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, temp);
 
 	EndScene();
 

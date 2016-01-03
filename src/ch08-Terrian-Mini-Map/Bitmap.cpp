@@ -76,8 +76,8 @@ namespace byhj
 			VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
 
 			// Second triangle.
-			VertexData[2].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
-			VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
+			VertexData[3].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
+			VertexData[3].Tex = XMFLOAT2(1.0f, 1.0f);
 
 			VertexData[4].Pos = XMFLOAT3(m_posX , m_posY - m_height, 0.0f); // Top right.
 			VertexData[4].Tex = XMFLOAT2(0.0f, 1.0f);
