@@ -8,6 +8,7 @@
 #include "d3d/Camera.h"
 
 #include "Terrain.h"
+#include "Bitmap.h"
 
 namespace byhj
 {
@@ -36,6 +37,7 @@ private:
 	void DrawInfo(); 
 
 	byhj::Terrain m_Terrain;
+	byhj::Bitmap  m_Bitmap;
 
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;

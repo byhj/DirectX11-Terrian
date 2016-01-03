@@ -3,6 +3,7 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <vector>
 
 #include "d3d/Shader.h"
 #include "d3d/Utility.h"
@@ -28,13 +29,14 @@ namespace byhj
 				        const XMFLOAT4X4 &View, const XMFLOAT4X4&Proj);
             void Update();
         	void Shutdown();
-			void init_window(int ScreenWidth, int ScreenHeight, int BitmapWidth, int BitmapHeight);
-			bool init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
-			bool init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
-			void init_texture(ID3D11Device *pD3D11Device);
+
+			void init_window(int posX, int posY, int width, int height);
+
 
         private:
-
+			void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
+			void init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
+			void init_texture(ID3D11Device *pD3D11Device);
 
         	d3d::MatrixBuffer cbMatrix;
         

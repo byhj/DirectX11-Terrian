@@ -3,10 +3,11 @@
 
 namespace byhj
 {
-	namespace d3d
-	{
 		void Bitmap::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
 		{
+			init_buffer(pD3D11Device, pD3D11DeviceContext);
+			init_shader(pD3D11Device, hWnd);
+			init_texture(pD3D11Device);
 		}
 
 		void Bitmap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &Model,
@@ -41,7 +42,7 @@ namespace byhj
 			ReleaseCOM(m_pIndexBuffer)
 		}
 
-		void Bitmap::init_window(int posX, int posY, int width, int height)
+		void Bitmap::SetPos(int posX, int posY, int width, int height)
 		{
 			m_posX  = posX;
 			m_posY  = posY;
@@ -53,13 +54,11 @@ namespace byhj
 		{
 			HRESULT hr;
 
-			Vertex *VertexData;
-			unsigned long *IndexData;
 			m_VertexCount = 6;
 			m_IndexCount = 6;
 
 			std::vector<Vertex> VertexData(6);
-			std::vector<UINT> IndexData(6, 0);
+			std::vector<UINT> IndexData(6);
 
 			for (int i = 0; i != m_IndexCount; ++i)
 			{
@@ -70,21 +69,21 @@ namespace byhj
 			VertexData[0].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Top left.
 			VertexData[0].Tex = XMFLOAT2(0.0f, 0.0f);
 
-			VertexData[1].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
-			VertexData[1].Tex = XMFLOAT2(1.0f, 1.0f);
+			VertexData[1].Pos = XMFLOAT3(m_posX + m_width, m_posY, 0.0f);  // Bottom right.
+			VertexData[1].Tex = XMFLOAT2(1.0f, 0.0f);
 
-			VertexData[2].Pos = XMFLOAT3(m_posX, m_posY - m_height, 0.0f);  // Bottom left.
-			VertexData[2].Tex = XMFLOAT2(0.0f, 1.0f);
+			VertexData[2].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
+			VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
 
 			// Second triangle.
-			VertexData[3].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);   // Top left.
-			VertexData[3].Tex = XMFLOAT2(0.0f, 0.0f);
+			VertexData[2].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom left.
+			VertexData[2].Tex = XMFLOAT2(1.0f, 1.0f);
 
-			VertexData[4].Pos = XMFLOAT3(m_posX + m_width, m_posY, 0.0f); // Top right.
-			VertexData[4].Tex = XMFLOAT2(1.0f, 0.0f);
+			VertexData[4].Pos = XMFLOAT3(m_posX , m_posY - m_height, 0.0f); // Top right.
+			VertexData[4].Tex = XMFLOAT2(0.0f, 1.0f);
 
-			VertexData[5].Pos = XMFLOAT3(m_posX + m_width, m_posY - m_height, 0.0f);  // Bottom right.
-			VertexData[5].Tex = XMFLOAT2(1.0f, 1.0f);
+			VertexData[5].Pos = XMFLOAT3(m_posX, m_posY, 0.0f);  // Bottom right.
+			VertexData[5].Tex = XMFLOAT2(0.0f, 0.0f);
 
 			///////////////////////////Index Buffer ////////////////////////////////
 
@@ -137,26 +136,6 @@ namespace byhj
 			mvpBufferDesc.CPUAccessFlags = 0;
 			mvpBufferDesc.MiscFlags      = 0;
 			hr = pD3D11Device->CreateBuffer(&mvpBufferDesc, NULL, &m_pMVPBuffer);
-			DebugHR(hr);
-
-			// Create a texture sampler state description.
-			D3D11_SAMPLER_DESC samplerDesc;
-			samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-			samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-			samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-			samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-			samplerDesc.MipLODBias = 0.0f;
-			samplerDesc.MaxAnisotropy = 1;
-			samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-			samplerDesc.BorderColor[0] = 0;
-			samplerDesc.BorderColor[1] = 0;
-			samplerDesc.BorderColor[2] = 0;
-			samplerDesc.BorderColor[3] = 0;
-			samplerDesc.MinLOD = 0;
-			samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-			// Create the texture sampler state.
-			hr = pD3D11Device->CreateSamplerState(&samplerDesc, &m_pTexSamplerState);
 			DebugHR(hr);
 
 		}
@@ -223,5 +202,5 @@ namespace byhj
 			DebugHR(hr);
 
 	}
-  }
+
 }

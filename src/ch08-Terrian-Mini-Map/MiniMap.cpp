@@ -5,26 +5,9 @@
 namespace byhj
 {
 
-MiniMap::MiniMap()
-{
-	m_pMiniMap  = 0;
-	m_pBorder   = 0;
-	m_pLocation = 0;
-}
 
-
-MiniMap::MiniMap(const MiniMap& other)
-{
-}
-
-
-MiniMap::~MiniMap()
-{
-}
-
-
-bool MiniMap::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight, 
-						float terrainWidth,  float terrainHeight, XMMATRIX viewMatrix)
+bool MiniMap::Init(ID3D11Device* pD3D11Device, ID3D11DeviceContext pD3D11DeviceContext, int screenWidth, int screenHeight,
+		           float terrainWidth, float terrainHeight, XMMATRIX viewMatrix)
 {
 	bool result;
 
@@ -32,8 +15,6 @@ bool MiniMap::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenH
 	m_mapLocationY = 75;
 	m_mapSizeX = 150.0f;
 	m_mapSizeY = 150.0f;
-
-	m_viewMatrix = viewMatrix;
 
 	m_terrainWidth = terrainWidth;
 	m_terrainHeight = terrainHeight;
@@ -55,31 +36,7 @@ bool MiniMap::Init(ID3D11Device* device, HWND hwnd, int screenWidth, int screenH
 
 void MiniMap::Shutdown()
 {
-	// Release the point bitmap object.
-	if(m_pLocation)
-	{
-		m_pLocation->Shutdown();
-		delete m_pLocation;
-		m_pLocation = 0;
-	}
 
-	// Release the border bitmap object.
-	if(m_pBorder)
-	{
-		m_pBorder->Shutdown();
-		delete m_pBorder;
-		m_pBorder = 0;
-	}
-
-	// Release the mini-map bitmap object.
-	if(m_pMiniMap)
-	{
-		m_pMiniMap>Shutdown();
-		delete m_pMiniMap;
-		m_pMiniMap = 0;
-	}
-
-	return;
 }
 
 

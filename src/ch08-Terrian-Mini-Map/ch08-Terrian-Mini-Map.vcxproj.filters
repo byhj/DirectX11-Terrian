@@ -21,9 +21,6 @@
     <ClCompile Include="ch08-Terrian-Mini-Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MiniMap.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\d3d\Timer.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -48,23 +45,20 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="grid.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\dxerr.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\d3d\Bitmap.cpp">
-      <Filter>Framework</Filter>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MiniMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\d3d\Timer.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -89,30 +83,30 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\dxerr.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\d3d\Bitmap.h">
-      <Filter>Framework</Filter>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="grid.psh">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="grid.vsh">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="bitmap.vsh">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="bitmap.psh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Terrain.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Terrain.psh">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

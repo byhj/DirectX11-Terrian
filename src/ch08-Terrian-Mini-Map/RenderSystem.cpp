@@ -31,9 +31,11 @@ void RenderSystem::v_Render()
 	BeginScene();
 
 	m_Matrix.view = m_Camera.GetViewMatrix();
-	m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
+	//m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
 
-	DrawInfo();
+	XMFLOAT4X4 temp;
+	XMStoreFloat4x4(&temp, XMMatrixIdentity());
+	m_Bitmap.Render(m_pD3D11DeviceContext, m_Matrix.model, m_Matrix.view, m_Matrix.proj);
 
 	EndScene();
 
@@ -227,6 +229,7 @@ void RenderSystem::BeginScene()
 
 	m_pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_pD3D11DeviceContext->RSSetState(m_pRasterState);
+	m_pD3D11DeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 	m_pD3D11DeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 	m_pD3D11DeviceContext->ClearRenderTargetView(m_pRenderTargetView, bgColor);
 	m_pD3D11DeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -245,8 +248,7 @@ void RenderSystem::init_camera()
 	ZeroMemory(&vp, sizeof(D3D11_VIEWPORT));
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
+
 	vp.Width    = static_cast<FLOAT>(m_ScreenWidth);
 	vp.Height   = static_cast<FLOAT>(m_ScreenHeight);
 	m_pD3D11DeviceContext->RSSetViewports(1, &vp);
@@ -269,7 +271,11 @@ void RenderSystem::init_camera()
 void RenderSystem::init_object()
 {
 
-	m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	//m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+
+	m_Bitmap.SetPos(0.0f, 0.0f, 200.0f, 200.0f);
+	m_Bitmap.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+
 	m_Timer.Reset();
 	m_Font.Init(m_pD3D11Device);
 	m_Camera.Init(GetAppInst(), GetHwnd());
