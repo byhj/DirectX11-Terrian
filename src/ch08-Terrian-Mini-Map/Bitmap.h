@@ -20,18 +20,18 @@ namespace byhj
 		~Bitmap() = default;
 
 
-		void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
+		void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd, WCHAR *texFile);
 		void Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &Model,
 			const XMFLOAT4X4 &View, const XMFLOAT4X4&Proj);
 		void Update();
 		void Shutdown();
-		void  SetPos(int sw, int sh, int posX, int posY, int width, int height);
+		void SetPos(int sw, int sh, int posX, int posY, int width, int height);
 
 
 	private:
 		void init_buffer (ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);
 		void init_shader (ID3D11Device *pD3D11Device, HWND hWnd);
-		void init_texture(ID3D11Device *pD3D11Device);
+		void init_texture(ID3D11Device *pD3D11Device, WCHAR *texFile);
 
 		d3d::MatrixBuffer cbMatrix;
 

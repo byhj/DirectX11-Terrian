@@ -4,6 +4,7 @@
 
 #include <DirectXMath.h>
 #include <d3d11.h>
+#include "Bitmap.h"
 
 using namespace DirectX;
 
@@ -19,26 +20,27 @@ public:
 
 public:
 
-	bool Init(ID3D11Device* pD3D11Device, ID3D11DeviceContext pD3D11DeviceContext,  int screenWidth, int screenHeight, 
-		       float terrainWidth,  float terrainHeight, XMMATRIX viewMatrix);
-
+	bool Init(ID3D11Device* pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext,  HWND hwnd, 
+		       int screenWidth, int screenHeight, float terrainWidth,  float terrainHeight);
 
 	bool Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMMATRIX &Model,  
 		        const XMMATRIX &View, const XMMATRIX &Proj);
 
-	void Update(float positionX, float positionZ);
+	void Update(float posX, float posZ);
 
 	void Shutdown();
 
+	void SetBack(int sw, int sh, int posX, int posY, int width, int height, WCHAR *texFile);
+	void SetBorder(int sw, int sh, int posX, int posY, int width, int height, WCHAR *texFile);
+	void SetLocation(int sw, int sh, int posX, int posY, int width, int height, WCHAR *texFile);
+	
 private:
-	int m_mapLocationX, m_mapLocationY, m_pointLocationX, m_pointLocationY;
-	float m_mapSizeX, m_mapSizeY, m_terrainWidth, m_terrainHeight;
 	
 	XMFLOAT4X4 m_viewMatrix;
 
-	d3d::Bitmap *m_pMiniMap  = nullptr;
-    d3d::Bitmap *m_pBorder   = nullptr;
-	d3d::Bitmap *m_pLocation = nullptr;
+	Bitmap *m_pBack     = nullptr;
+	Bitmap *m_pBorder   = nullptr;
+	Bitmap *m_pLocation = nullptr;
 };
 
 }

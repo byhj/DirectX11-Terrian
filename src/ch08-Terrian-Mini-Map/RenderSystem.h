@@ -37,7 +37,9 @@ private:
 	void DrawInfo(); 
 
 	byhj::Terrain m_Terrain;
-	byhj::Bitmap  m_Bitmap;
+	byhj::Bitmap  m_Back;
+	byhj::Bitmap  m_Border;
+	byhj::Bitmap  m_Location;
 
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;

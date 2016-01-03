@@ -38,7 +38,13 @@ void RenderSystem::v_Render()
 	XMStoreFloat4x4(&orth, orthMat);
 	XMStoreFloat4x4(&identity, XMMatrixIdentity());
 
-	m_Bitmap.Render(m_pD3D11DeviceContext, identity, identity, orth);
+	DisableZbuffer();
+
+	m_Border.Render(m_pD3D11DeviceContext, identity, identity, orth);
+	m_Back.Render(m_pD3D11DeviceContext, identity, identity, orth);
+	m_Location.Render(m_pD3D11DeviceContext, identity, identity, orth);
+
+	EnableZbuffer();
 
 	EndScene();
 
@@ -277,8 +283,14 @@ void RenderSystem::init_object()
 
 	m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
-	m_Bitmap.SetPos(m_ScreenWidth, m_ScreenHeight, 10, 10, 200, 200);
-	m_Bitmap.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	m_Back.SetPos(m_ScreenWidth, m_ScreenHeight, 10, 10, 150, 150);
+	m_Back.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures/colorm01.dds");
+
+	m_Border.SetPos(m_ScreenWidth, m_ScreenHeight, 8, 8, 154, 154);
+	m_Border.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures//border01.dds");
+
+	m_Location.SetPos(m_ScreenWidth, m_ScreenHeight, 80, 80, 3, 3);
+	m_Location.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures/point01.dds");
 
 	m_Timer.Reset();
 	m_Font.Init(m_pD3D11Device);

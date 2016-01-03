@@ -23,7 +23,15 @@ namespace byhj
 		void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
 		void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 		void Shutdown();
+		int GetWidth()
+		{
+			return m_TerrainWidth;
+		}
 
+		int GetHeight()
+		{
+			return m_TerrainHeight;
+		}
 	private:
 
 		void init_buffer(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext);

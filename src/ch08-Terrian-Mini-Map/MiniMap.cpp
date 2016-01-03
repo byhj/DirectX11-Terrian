@@ -6,28 +6,10 @@ namespace byhj
 {
 
 
-bool MiniMap::Init(ID3D11Device* pD3D11Device, ID3D11DeviceContext pD3D11DeviceContext, int screenWidth, int screenHeight,
-		           float terrainWidth, float terrainHeight, XMMATRIX viewMatrix)
+bool MiniMap::Init(ID3D11Device* pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hwnd, 
+	                int screenWidth, int screenHeight, float terrainWidth, float terrainHeight)
+
 {
-	bool result;
-
-	m_mapLocationX = 150;
-	m_mapLocationY = 75;
-	m_mapSizeX = 150.0f;
-	m_mapSizeY = 150.0f;
-
-	m_terrainWidth = terrainWidth;
-	m_terrainHeight = terrainHeight;
-
-	HRESULT hr;
-	m_pMiniMap = new d3d::Bitmap;
-	hr = m_pMiniMap->Init(device, screenWidth, screenHeight, L"../Engine/data/colorm01.dds", 150, 150);
-
-	m_pBorder = new d3d::Bitmap;
-	hr = m_pBorder->Init(device, screenWidth, screenHeight, L"../Engine/data/border01.dds", 154, 154);
-
-	m_pLocation = new d3d::Bitmap;
-	hr = m_pLocation->Init(device, screenWidth, screenHeight, L"../Engine/data/point01.dds", 3, 3);
 
 
 	return true;

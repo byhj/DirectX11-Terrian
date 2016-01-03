@@ -3,11 +3,11 @@
 
 namespace byhj
 {
-		void Bitmap::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd)
+		void Bitmap::Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd, WCHAR *texFile)
 		{
 			init_buffer(pD3D11Device, pD3D11DeviceContext);
 			init_shader(pD3D11Device, hWnd);
-			init_texture(pD3D11Device);
+			init_texture(pD3D11Device, texFile);
 		}
 
 		void Bitmap::Render(ID3D11DeviceContext *pD3D11DeviceContext, const XMFLOAT4X4 &Model,
@@ -188,10 +188,10 @@ namespace byhj
 		}
 
 
-		void Bitmap::init_texture(ID3D11Device *pD3D11Device)
+		void Bitmap::init_texture(ID3D11Device *pD3D11Device, WCHAR *texFile)
 		{
 			HRESULT hr;
-			hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/colorm01.dds", NULL, &m_pTextureSRV, NULL);
+			hr = CreateDDSTextureFromFile(pD3D11Device, texFile, NULL, &m_pTextureSRV, NULL);
 			DebugHR(hr);
 
 			// Create a texture sampler state description.

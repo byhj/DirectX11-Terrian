@@ -23,6 +23,7 @@ VS_OUT BitmapVS(VS_IN vs_in)
  
    VS_OUT vs_out;
    vs_in.Pos.w = 1.0f;
+
    vs_out.Pos = mul(vs_in.Pos, view);
    vs_out.Pos = mul(vs_out.Pos, proj);
 
