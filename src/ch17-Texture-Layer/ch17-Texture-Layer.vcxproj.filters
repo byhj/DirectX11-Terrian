@@ -91,11 +91,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="terrain.psh">
+    <None Include="terrain.psh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="terrain.vsh">
+    </None>
+    <None Include="terrain.vsh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

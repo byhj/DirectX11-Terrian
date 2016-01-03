@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -51,19 +48,11 @@
     <ClInclude Include="..\..\include\dxerr.h">
       <Filter>Framework</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="grid.psh">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="grid.vsh">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="grid.cpp">
+    <ClInclude Include="Terrain.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -97,5 +86,16 @@
     <ClCompile Include="ch09-Terrian-Blend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Terrain.psh">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain.vsh">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

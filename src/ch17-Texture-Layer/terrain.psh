@@ -12,12 +12,21 @@ struct VS_OUT
 	float3 Normal    : NORMAL;
 	float2 Tex       : TEXCOORD0;
 	float3 Tangent   : TANGENT;
-	float3 BiTangent : BITANGENT;
+	float3 BiTangent : BINORMAL;
 	float3 worldPos  : POSITION;
+	float2 Tex2      : TEXCOORD1;
 };
 
-Texture2D tex	      : register(t0);
-Texture2D texNormal	  : register(t1);
+Texture2D g_ColorTex1 : register(t0);
+Texture2D g_ColorTex2 : register(t1);
+Texture2D g_ColorTex3 : register(t2);
+Texture2D g_ColorTex4 : register(t3);
+
+//alpha texture contains the 3 texture layer masks in rgb channel
+Texture2D g_AlphaTex  : register(t4);
+
+Texture2D g_NormalTex1  : register(t5);
+Texture2D g_NormalTex2  : register(t6);
 
 SamplerState texState : register(s0);
 
@@ -27,21 +36,34 @@ float4 TerrainPS(VS_OUT ps_in) : SV_TARGET
     ps_in.Normal    = normalize(ps_in.Normal);
 	ps_in.Tangent   = normalize(ps_in.Tangent);
 	ps_in.BiTangent = normalize(ps_in.BiTangent);
+	float3x3 texSpace = float3x3(ps_in.Tangent, ps_in.BiTangent , ps_in.Normal);
 	
-	float4 texColor = tex.Sample(texState, ps_in.Tex);
+	float4 normalMap1 = g_NormalTex1.Sample(texState, ps_in.Tex);
+	float4 normalMap2 = g_NormalTex2.Sample(texState, ps_in.Tex);
 
-	  float4 normalMap = texNormal.Sample(texState, ps_in.Tex );
 	//Change normal map range from [0, 1] to [-1, 1]
-	  normalMap = (2.0f * normalMap) - 1.0f;
-	  float3x3 texSpace = float3x3(ps_in.Tangent, ps_in.BiTangent , ps_in.Normal);
-	  ps_in.Normal = normalize( mul(normalMap, texSpace) );
+	normalMap1 = (2.0f * normalMap1) - 1.0f;
+	normalMap2 = (2.0f * normalMap2) - 1.0f;
+	float3 normal1 = normalize( mul(normalMap1, texSpace) );
+	float3 normal2 = normalize( mul(normalMap2, texSpace) );
+    float intensity1 = dot(lightDir, normal1);
+	float intensity2 = dot(lightDir, normal2);
 
-	//calc the diffuse light with normal map
-      float intensity = dot(lightDir, ps_in.Normal);
-      float4 diff = saturate( max(intensity, 0.0f) * diffuse );
-	
-	   //Add the bumping to texture
-	   float4 pixelColor = saturate(ambient + diff) * texColor;
+	float4 texColor1 = g_ColorTex1.Sample(texState, ps_in.Tex);
+	float4 texColor2 = g_ColorTex2.Sample(texState, ps_in.Tex);
+	float4 texColor3 = g_ColorTex3.Sample(texState, ps_in.Tex);
+	float4 texColor4 = g_ColorTex4.Sample(texState, ps_in.Tex);
+	texColor1 = saturate(intensity1 * texColor1);
+	texColor2 = saturate(intensity1 * texColor2);
+	texColor3 = saturate(intensity1 * texColor3);
+	texColor4 = saturate(intensity2 * texColor4);
+
+	//use alphatex to mask the color texture
+	float4 alphaMap = g_AlphaTex.Sample(texState, ps_in.Tex2);
+	float4 pixelColor = texColor1;
+	pixelColor = lerp(pixelColor, texColor2, alphaMap.r);
+	pixelColor = lerp(pixelColor, texColor3, alphaMap.g);
+	pixelColor = lerp(pixelColor, texColor4, alphaMap.b);
 
 	return pixelColor;
 }

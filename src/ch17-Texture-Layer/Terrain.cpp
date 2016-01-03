@@ -31,8 +31,17 @@ namespace byhj
 		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pTerrainVB, &stride, &offset);
 		pD3D11DeviceContext->IASetIndexBuffer(m_pTerrainIB, DXGI_FORMAT_R32_UINT, 0);
 
-		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
-		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pNormalTexSRV);
+		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pColorTex1SRV);
+		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pColorTex2SRV);
+		pD3D11DeviceContext->PSSetShaderResources(2, 1, &m_pColorTex3SRV);
+		pD3D11DeviceContext->PSSetShaderResources(3, 1, &m_pColorTex4SRV);
+
+		pD3D11DeviceContext->PSSetShaderResources(4, 1, &m_pAlphaTexSRV);
+
+		pD3D11DeviceContext->PSSetShaderResources(5, 1, &m_pNormalTex1SRV);
+		pD3D11DeviceContext->PSSetShaderResources(6, 1, &m_pNormalTex2SRV);
+
+
 		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
 
 		TerrainShader.use(pD3D11DeviceContext);
@@ -63,8 +72,10 @@ namespace byhj
 		for (int i = 0; i != m_VertexCount; ++i)
 			TerrainMesh.VertexData[i].Pos.y = m_HightmapData[i].y / 10.0f;
 
+
 		calc_normal(TerrainMesh);
 		calc_bump(TerrainMesh);
+		//calc_tex(TerrainMesh);
 
 		/////////////////////////////Vertex Buffer//////////////////////////////
 		m_VertexCount = TerrainMesh.VertexData.size();
@@ -151,7 +162,7 @@ namespace byhj
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 12;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
@@ -160,7 +171,7 @@ namespace byhj
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 24;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
@@ -169,16 +180,25 @@ namespace byhj
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 32;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
 
-		pInputLayoutDesc.SemanticName         = "BITANGENT";
+		pInputLayoutDesc.SemanticName         = "BINORMAL";
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 44;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
+		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+		pInputLayoutDesc.InstanceDataStepRate = 0;
+		vInputLayoutDesc.push_back(pInputLayoutDesc);
+
+		pInputLayoutDesc.SemanticName         = "TEXCOORD";
+		pInputLayoutDesc.SemanticIndex        = 1;
+		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
+		pInputLayoutDesc.InputSlot            = 0;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
@@ -192,10 +212,22 @@ namespace byhj
 	void Terrain::init_texture(ID3D11Device *pD3D11Device)
 	{
 		HRESULT hr;
-		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, &m_pTextureSRV, NULL);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt001.dds", NULL, &m_pColorTex1SRV, NULL);
 		DebugHR(hr);
-		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/bump.dds", NULL, &m_pNormalTexSRV, NULL);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt004.dds", NULL, &m_pColorTex2SRV, NULL);
 		DebugHR(hr);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt002.dds", NULL, &m_pColorTex3SRV, NULL);
+		DebugHR(hr);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/stone001.dds", NULL, &m_pColorTex4SRV, NULL);
+		DebugHR(hr);
+
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/normal001.dds", NULL, &m_pNormalTex1SRV, NULL);
+		DebugHR(hr);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/normal002.dds", NULL, &m_pNormalTex2SRV, NULL);
+		DebugHR(hr);
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/alpha001.dds", NULL, &m_pAlphaTexSRV, NULL);
+		DebugHR(hr);
+
 		// Create a texture sampler state description.
 		D3D11_SAMPLER_DESC samplerDesc;
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -313,6 +345,7 @@ namespace byhj
 			m_VertexData[i].Pos = mesh.VertexData[i].Pos;
 			m_VertexData[i].Normal = mesh.VertexData[i].Normal;
 			m_VertexData[i].Tex = mesh.VertexData[i].Tex;
+			m_VertexData[i].Tex2 = mesh.VertexData[i].Tex;
 			m_VertexData[i].Tangent = XMFLOAT3(0.0f, 0.0f, 0.0f);
 			m_VertexData[i].BiTangent = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		}
@@ -384,6 +417,71 @@ namespace byhj
 			XMVECTOR bitan = XMLoadFloat3(&m_VertexData[i].BiTangent);
 			XMVECTOR bitangent = XMVector3Normalize(bitan);
 			XMStoreFloat3(&m_VertexData[i].BiTangent, bitangent);
+		}
+	}
+	void Terrain::calc_tex(d3d::Geometry::MeshData &mesh)
+	{
+		int i, j, index, index1, index2, index3, index4;
+		float incrementSize, tu2Left, tu2Right, tv2Top, tv2Bottom;
+
+		// Setup the increment size for the second set of textures (alpha map).
+		incrementSize = 1.0f / 31.0f;
+
+		// Initialize the texture increments.
+		tu2Left = 0.0f;
+		tu2Right = incrementSize;
+		tv2Bottom = 1.0f;
+		tv2Top = 1.0f - incrementSize;
+
+		// Load the terrain model with the height map terrain data.
+		index = 0;
+
+		for (j=0; j < (m_TerrainHeight - 1); j++)
+		{
+			for (i=0; i < (m_TerrainWidth - 1); i++)
+			{
+				// Upper left.
+				m_VertexData[index].Tex2.x = tu2Left;
+				m_VertexData[index].Tex2.y = tv2Top;
+				index++;
+
+				// Upper right.
+				m_VertexData[index].Tex2.x = tu2Right;
+				m_VertexData[index].Tex2.y = tv2Top;
+				index++;
+
+				// Bottom left.
+				m_VertexData[index].Tex2.x = tu2Left;
+				m_VertexData[index].Tex2.y = tv2Bottom;
+				index++;
+
+				// Bottom left.
+				m_VertexData[index].Tex2.x = tu2Left;
+				m_VertexData[index].Tex2.y = tv2Bottom;
+				index++;
+
+				// Upper right.
+				m_VertexData[index].Tex2.x = tu2Right;
+				m_VertexData[index].Tex2.y = tv2Top;
+				index++;
+
+				// Bottom right.
+				m_VertexData[index].Tex2.x = tu2Right;
+				m_VertexData[index].Tex2.y = tv2Bottom;
+				index++;
+
+				// Increment the tu texture coords for the alpha map.
+				tu2Left += incrementSize;
+				tu2Right += incrementSize;
+			}
+
+			// Reset the tu texture coordinate increments for the alpha map.
+			tu2Left = 0.0f;
+			tu2Right = incrementSize;
+
+			// Increment the tv texture coords for the alpha map.
+			tv2Top -= incrementSize;
+			tv2Bottom -= incrementSize;
 		}
 	}
 

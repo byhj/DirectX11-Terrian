@@ -33,18 +33,15 @@ namespace byhj
 		void load_heightMap(const char *filename);
 		void calc_normal(d3d::Geometry::MeshData &mesh);
 	    void calc_bump(d3d::Geometry::MeshData &mesh);
+		void calc_tex(d3d::Geometry::MeshData &mesh);
 
 		struct Vertex {
-			// Position
 			XMFLOAT3 Pos;
-			// Normal
 			XMFLOAT3 Normal;
-			// TexCoords
 			XMFLOAT2 Tex;
-
 			XMFLOAT3 Tangent;
-
 			XMFLOAT3 BiTangent;
+			XMFLOAT2 Tex2;
 		};
 
 		struct LightBuffer
@@ -67,8 +64,14 @@ namespace byhj
 		ID3D11Buffer        *m_pMVPBuffer            = nullptr;
 		ID3D11InputLayout   *m_pInputLayout          = nullptr;
 
-		ID3D11ShaderResourceView *m_pTextureSRV      = nullptr;
-		ID3D11ShaderResourceView *m_pNormalTexSRV    = nullptr;
+		ID3D11ShaderResourceView *m_pColorTex1SRV      = nullptr;
+		ID3D11ShaderResourceView *m_pColorTex2SRV      = nullptr;
+		ID3D11ShaderResourceView *m_pColorTex3SRV      = nullptr;
+		ID3D11ShaderResourceView *m_pColorTex4SRV      = nullptr;
+		ID3D11ShaderResourceView *m_pNormalTex1SRV    = nullptr;
+		ID3D11ShaderResourceView *m_pNormalTex2SRV    = nullptr;
+	    ID3D11ShaderResourceView *m_pAlphaTexSRV    = nullptr;
+
 		ID3D11SamplerState       *m_pTexSamplerState = nullptr;
 
 		int m_VertexCount  = 0;

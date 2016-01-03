@@ -90,8 +90,12 @@
     <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="terrain.psh" />
-    <FxCompile Include="terrain.vsh" />
+    <None Include="terrain.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="terrain.vsh">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

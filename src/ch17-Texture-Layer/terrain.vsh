@@ -12,7 +12,8 @@ struct VS_IN
 	float3 Normal    : NORMAL;
     float2 Tex       : TEXCOORD0;
 	float3 Tangent   : TANGENT;
-	float3 BiTangent : BITANGENT;
+	float3 BiTangent : BINORMAL;
+	float2 Tex2      : TEXCOORD1;
 };
 
 struct VS_OUT
@@ -21,8 +22,9 @@ struct VS_OUT
 	float3 Normal    : NORMAL;
     float2 Tex       : TEXCOORD0;
 	float3 Tangent   : TANGENT;
-	float3 BiTangent : BITANGENT;
+	float3 BiTangent : BINORMAL;
 	float3 worldPos  : POSITION;
+	float2 Tex2      : TEXCOORD1;
 };
 
 VS_OUT TerrainVS( VS_IN vs_in )
@@ -41,6 +43,7 @@ VS_OUT TerrainVS( VS_IN vs_in )
    vs_out.worldPos  = mul(vs_in.Pos, model);
 
    vs_out.Tex = vs_in.Tex * 8.0f;
- 
+   vs_out.Tex2 = vs_in.Tex2;
+
    return vs_out;
 }
