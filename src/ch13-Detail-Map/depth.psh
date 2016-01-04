@@ -1,0 +1,28 @@
+
+
+struct VS_OUT
+{
+    float4 Pos    : SV_POSITION;
+    float3 Normal : NORMAL;
+	float2 Tex    : TEXCOORD;
+	float3 Color  : COLOR0;
+	float4 DepthPos : TEXCOORD1;
+};
+
+
+float4 DepthPS(VS_OUT vs_out) : SV_TARGET
+{
+
+  float4 color;
+  float depthValue = vs_out.DepthPos.z / vs_out.DepthPos.w;
+  if (depthValue < 0.9f)
+  {
+     color = float4(0.0f, 1.0f, 0.0f, 1.0f);
+  }
+  else
+  {
+     color = float4(1.0f, 0.0f, 0.0f, 1.0f);
+  }
+
+  return color;
+}

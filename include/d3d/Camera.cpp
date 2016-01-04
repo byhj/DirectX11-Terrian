@@ -145,6 +145,8 @@ void Camera::UpdateCamera()
 	//Set the camera matrix
 	camView = XMMatrixLookAtLH( camPosition, camTarget, camUp );
 	XMStoreFloat4x4(&m_camView, XMMatrixTranspose(camView));
+
+	XMStoreFloat4(&m_camPosition, camPosition);
 }
 
 XMFLOAT4X4  Camera::GetViewMatrix()

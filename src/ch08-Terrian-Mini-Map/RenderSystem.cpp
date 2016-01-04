@@ -42,9 +42,17 @@ void RenderSystem::v_Render()
 
 	m_Border.Render(m_pD3D11DeviceContext, identity, identity, orth);
 	m_Back.Render(m_pD3D11DeviceContext, identity, identity, orth);
-	m_Location.Render(m_pD3D11DeviceContext, identity, identity, orth);
+
+	XMFLOAT4 camPos = m_Camera.GetCamPos();
+    XMMATRIX transMat  = XMMatrixTranslation(camPos.x, camPos.z, 0.0f);
+	std::cout << camPos.x << " " << camPos.y << std::endl;
+	XMFLOAT4X4 trans;
+	XMStoreFloat4x4(&trans, XMMatrixTranspose(transMat));
+	m_Location.Render(m_pD3D11DeviceContext, trans, identity, orth);
 
 	EnableZbuffer();
+
+	DrawInfo();
 
 	EndScene();
 
@@ -283,13 +291,13 @@ void RenderSystem::init_object()
 
 	m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
 
-	m_Back.SetPos(m_ScreenWidth, m_ScreenHeight, 10, 10, 150, 150);
+	m_Back.SetPos(m_ScreenWidth, m_ScreenHeight, m_ScreenWidth - 160, 10, 150, 150);
 	m_Back.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures/colorm01.dds");
 
-	m_Border.SetPos(m_ScreenWidth, m_ScreenHeight, 8, 8, 154, 154);
+	m_Border.SetPos(m_ScreenWidth, m_ScreenHeight, m_ScreenWidth - 162, 8, 154, 154);
 	m_Border.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures//border01.dds");
 
-	m_Location.SetPos(m_ScreenWidth, m_ScreenHeight, 80, 80, 3, 3);
+	m_Location.SetPos(m_ScreenWidth, m_ScreenHeight, m_ScreenWidth - 80, 80, 3, 3);
 	m_Location.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd(), L"../../media/textures/point01.dds");
 
 	m_Timer.Reset();

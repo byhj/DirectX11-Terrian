@@ -23,6 +23,7 @@ namespace byhj
 		void Init(ID3D11Device *pD3D11Device, ID3D11DeviceContext *pD3D11DeviceContext, HWND hWnd);
 		void Render(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 		void Shutdown();
+		void RenderDepth(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix);
 
 	private:
 
@@ -40,6 +41,7 @@ namespace byhj
 			XMFLOAT3 Normal;
 			XMFLOAT2 Tex;
 			XMFLOAT3 Color;
+			XMFLOAT2 Tex2;
 		};
 
 
@@ -54,6 +56,7 @@ namespace byhj
 
 		d3d::MatrixBuffer cbMatrix;
 		d3d::Shader TerrainShader;
+		d3d::Shader DepthShader;
 		std::vector<XMFLOAT3> m_HightmapData;
 		std::vector<XMFLOAT3> m_ColormapData;
 		std::vector<Vertex> m_VertexData;
@@ -65,6 +68,7 @@ namespace byhj
 		ID3D11InputLayout   *m_pInputLayout          = nullptr;
 
 		ID3D11ShaderResourceView *m_pTextureSRV      = nullptr;
+		ID3D11ShaderResourceView *m_pDetailTexSRV    = nullptr;
 		ID3D11SamplerState       *m_pTexSamplerState = nullptr;
 
 		int m_VertexCount  = 0;

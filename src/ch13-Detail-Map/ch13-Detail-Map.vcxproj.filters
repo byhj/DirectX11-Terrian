@@ -57,6 +57,9 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\d3d\Timer.h">
@@ -95,13 +98,28 @@
     <ClInclude Include="Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Terrain.psh">
+    <None Include="bitmap.vsh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Terrain.vsh">
+    </None>
+    <None Include="bitmap.psh">
       <Filter>Resource Files</Filter>
-    </FxCompile>
+    </None>
+    <None Include="Terrain.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Terrain.psh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="depth.vsh">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="depth.psh">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

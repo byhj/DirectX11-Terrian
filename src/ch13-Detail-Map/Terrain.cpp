@@ -32,13 +32,35 @@ namespace byhj
 		pD3D11DeviceContext->IASetIndexBuffer(m_pTerrainIB, DXGI_FORMAT_R32_UINT, 0);
 
 		pD3D11DeviceContext->PSSetShaderResources(0, 1, &m_pTextureSRV);
+		pD3D11DeviceContext->PSSetShaderResources(1, 1, &m_pDetailTexSRV);
 		pD3D11DeviceContext->PSSetSamplers(0, 1, &m_pTexSamplerState);
 
 		TerrainShader.use(pD3D11DeviceContext);
 		pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
 
 	}
+	void Terrain::RenderDepth(ID3D11DeviceContext *pD3D11DeviceContext, const d3d::MatrixBuffer &matrix)
+	{
+		//Update the the mvp matrix
+		cbMatrix.model = matrix.model;
+		cbMatrix.view  = matrix.view;
+		cbMatrix.proj  = matrix.proj;
+		pD3D11DeviceContext->UpdateSubresource(m_pMVPBuffer, 0, NULL, &cbMatrix, 0, 0);
+		pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &m_pMVPBuffer);
 
+
+		// Set vertex buffer stride and offset
+		unsigned int stride;
+		unsigned int offset;
+		stride = sizeof(Vertex);
+		offset = 0;
+		pD3D11DeviceContext->IASetVertexBuffers(0, 1, &m_pTerrainVB, &stride, &offset);
+		pD3D11DeviceContext->IASetIndexBuffer(m_pTerrainIB, DXGI_FORMAT_R32_UINT, 0);
+
+		DepthShader.use(pD3D11DeviceContext);
+		pD3D11DeviceContext->DrawIndexed(m_IndexCount, 0, 0);
+
+	}
 	void Terrain::Shutdown()
 	{
 		ReleaseCOM(m_pTerrainVB)
@@ -161,16 +183,16 @@ namespace byhj
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 12;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
 
 		pInputLayoutDesc.SemanticName         = "TEXCOORD";
 		pInputLayoutDesc.SemanticIndex        = 0;
-		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32_FLOAT;
+		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 24;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
@@ -179,7 +201,7 @@ namespace byhj
 		pInputLayoutDesc.SemanticIndex        = 0;
 		pInputLayoutDesc.Format               = DXGI_FORMAT_R32G32B32_FLOAT;
 		pInputLayoutDesc.InputSlot            = 0;
-		pInputLayoutDesc.AlignedByteOffset    = 32;
+		pInputLayoutDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
 		pInputLayoutDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
 		pInputLayoutDesc.InstanceDataStepRate = 0;
 		vInputLayoutDesc.push_back(pInputLayoutDesc);
@@ -188,6 +210,11 @@ namespace byhj
 		TerrainShader.attachVS(L"terrain.vsh", "TerrainVS", "vs_5_0");
 		TerrainShader.attachPS(L"terrain.psh", "TerrainPS", "ps_5_0");
 		TerrainShader.end();
+
+		DepthShader.init(pD3D11Device, vInputLayoutDesc);
+		DepthShader.attachVS(L"depth.vsh", "DepthVS", "vs_5_0");
+		DepthShader.attachPS(L"depth.psh", "DepthPS", "ps_5_0");
+		DepthShader.end();
 	}
 	
 	void Terrain::init_texture(ID3D11Device *pD3D11Device)
@@ -195,7 +222,8 @@ namespace byhj
 		HRESULT hr;
 		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/dirt01.dds", NULL, &m_pTextureSRV, NULL);
 		DebugHR(hr);
-
+		hr = CreateDDSTextureFromFile(pD3D11Device, L"../../media/textures/detail001.dds", NULL, &m_pDetailTexSRV, NULL);
+		DebugHR(hr);
 		// Create a texture sampler state description.
 		D3D11_SAMPLER_DESC samplerDesc;
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

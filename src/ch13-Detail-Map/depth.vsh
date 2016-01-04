@@ -23,7 +23,7 @@ struct VS_OUT
 	float4 DepthPos : TEXCOORD1;
 };
 
-VS_OUT TerrainVS( VS_IN vs_in)
+VS_OUT DepthVS( VS_IN vs_in)
 {	
  
    VS_OUT vs_out;

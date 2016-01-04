@@ -18,6 +18,7 @@ void RenderSystem::v_Init()
 	init_device();
 	init_camera();
 	init_object();
+	init_fbo();
 }
 
 void RenderSystem::v_Update()
@@ -28,7 +29,27 @@ void RenderSystem::v_Update()
 void RenderSystem::v_Render()
 {
 
+	float bgColor[4] ={ 0.0f, 0.0f, 0.0f, 1.0f };
+	m_pD3D11DeviceContext->OMSetRenderTargets(1, &m_pRTTRTV, m_pDepthStencilView);
+	m_pD3D11DeviceContext->ClearRenderTargetView(m_pRTTRTV, bgColor);
+	m_pD3D11DeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	m_Matrix.view = m_Camera.GetViewMatrix();
+	m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);	
+	
+	
 	BeginScene();
+
+	DisableZbuffer();
+
+	XMMATRIX orthMat = XMMatrixOrthographicLH(m_ScreenWidth, m_ScreenHeight, 0.1f, 1000.0f);
+	XMFLOAT4X4 orth, identity;
+	XMStoreFloat4x4(&orth, orthMat);
+	XMStoreFloat4x4(&identity, XMMatrixIdentity());
+	m_Bitmap.SetTexture(m_pRTTSRV);
+	m_Bitmap.Render(m_pD3D11DeviceContext, identity, identity, orth);
+
+	EnableZbuffer();
 
 	m_Matrix.view = m_Camera.GetViewMatrix();
 	m_Terrain.Render(m_pD3D11DeviceContext, m_Matrix);
@@ -50,6 +71,43 @@ void RenderSystem::v_Shutdown()
 	ReleaseCOM(m_pRenderTargetView);
 }
 
+void RenderSystem::init_fbo()
+{
+	D3D11_TEXTURE2D_DESC textureDesc;
+	HRESULT result;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	textureDesc.Width = m_ScreenWidth;
+	textureDesc.Height = m_ScreenHeight;
+	textureDesc.MipLevels  = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	//Create the render target texture
+	result = m_pD3D11Device->CreateTexture2D(&textureDesc, NULL, &m_pRTTRenderTargetTexture);
+
+
+	//Setup the description of the render target view
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	result = m_pD3D11Device->CreateRenderTargetView(m_pRTTRenderTargetTexture, &renderTargetViewDesc, &m_pRTTRTV);
+
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+	result = m_pD3D11Device->CreateShaderResourceView(m_pRTTRenderTargetTexture, &shaderResourceViewDesc, &m_pRTTSRV);
+
+}
 
 void RenderSystem::init_device()
 {
@@ -270,6 +328,9 @@ void RenderSystem::init_object()
 {
 
 	m_Terrain.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+	m_Bitmap.SetPos(m_ScreenWidth, m_ScreenHeight, m_ScreenWidth - 160, 10, 150, 150);
+	m_Bitmap.Init(m_pD3D11Device, m_pD3D11DeviceContext, GetHwnd());
+
 	m_Timer.Reset();
 	m_Font.Init(m_pD3D11Device);
 	m_Camera.Init(GetAppInst(), GetHwnd());

@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\include\d3d\Utility.cpp" />
     <ClCompile Include="..\..\include\DirectXTK\DDSTextureLoader.cpp" />
     <ClCompile Include="..\..\include\dxerr.cpp" />
+    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="ch13-Detail-Map.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -88,12 +89,31 @@
     <ClInclude Include="..\..\include\d3d\Utility.h" />
     <ClInclude Include="..\..\include\DirectXTK\DDSTextureLoader.h" />
     <ClInclude Include="..\..\include\dxerr.h" />
+    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Terrain.psh" />
-    <FxCompile Include="Terrain.vsh" />
+    <None Include="bitmap.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="bitmap.vsh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Terrain.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Terrain.vsh">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="depth.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="depth.vsh">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

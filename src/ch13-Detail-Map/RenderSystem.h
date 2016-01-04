@@ -8,6 +8,7 @@
 #include "d3d/Camera.h"
 
 #include "Terrain.h"
+#include "Bitmap.h"
 
 namespace byhj
 {
@@ -22,11 +23,12 @@ public:
 	void v_Update();
 	void v_Render();
 	void v_Shutdown();
-
+	
 private:
 	void init_device();
 	void init_camera();
 	void init_object();
+	void init_fbo();
 
 	void BeginScene();
 	void EndScene();
@@ -36,11 +38,12 @@ private:
 	void DrawInfo(); 
 
 	byhj::Terrain m_Terrain;
+	byhj::Bitmap  m_Bitmap;
 
 	d3d::Font m_Font;
 	d3d::Timer m_Timer;
 	d3d::Camera m_Camera;
-
+	
 	float fps = 0.0f;
 	int m_videoCardMemory;
 	std::wstring m_videoCardInfo;
@@ -54,6 +57,10 @@ private:
 	ID3D11DepthStencilState  *m_pDepthStencilState          = nullptr;
 	ID3D11DepthStencilState  *m_pDepthDisabledStencilState  = nullptr;
 	ID3D11RasterizerState    *m_pRasterState                = nullptr;
+
+	ID3D11Texture2D          *m_pRTTRenderTargetTexture;
+	ID3D11RenderTargetView   *m_pRTTRTV;
+	ID3D11ShaderResourceView *m_pRTTSRV;
 
 	d3d::MatrixBuffer m_Matrix;
 };

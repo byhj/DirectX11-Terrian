@@ -18,23 +18,37 @@ struct VS_OUT
     float3 Normal : NORMAL;
 	float2 Tex    : TEXCOORD;
 	float3 Color  : COLOR0;
+	float4 DepthPos : TEXCOORD1;
 };
 
-Texture2D tex     : register(t0);
-SamplerState texState : register(s0);
 
-float4 TerrainPS(VS_OUT ps_in) : SV_TARGET
+Texture2D g_ColorTex    : register(t0);
+Texture2D g_DetailTex   : register(t1);
+
+SamplerState g_TexState : register(s0);
+
+float4 TerrainPS(VS_OUT vs_out) : SV_TARGET
 {
 
-   float4 textureColor = tex.Sample(texState, ps_in.Tex);
-  // ps_in.Color = normalize(ps_in.Color);
-   ps_in.Normal = normalize(ps_in.Normal);
+   float4 texColor = g_ColorTex.Sample(g_TexState, vs_out.Tex.xy);
+
+   float depthValue = vs_out.DepthPos.z / vs_out.DepthPos.w;
+
+   //Check if the depth value is closse to the screen, if so we will apply the detail texture
+    if (depthValue < 0.9)
+	{
+	 float4 detailColor = g_DetailTex.Sample(g_TexState, vs_out.Tex.xy);
+	 float detailBrightness = 1.8f;
+	// texColor = texColor * detailColor * detailBrightness;
+   }
+
+   vs_out.Normal = normalize(vs_out.Normal);
    float4 pixelColor = cbLight.ambient;
 
    float3 lightDir  = -(cbLight.lightDir);
-   float  intensity = max( dot(lightDir, ps_in.Normal), 0.0f);
+   float  intensity = max( dot(lightDir, vs_out.Normal), 0.0f);
    float4 diffuse   = intensity * cbLight.diffuse;
 
    pixelColor += diffuse;
-   return saturate(pixelColor * textureColor * float4(ps_in.Color, 1.0f) * 2.0f);
+   return texColor; //saturate(pixelColor * texColor * float4(vs_out.Color, 1.0f) * 2.0f);
 }
